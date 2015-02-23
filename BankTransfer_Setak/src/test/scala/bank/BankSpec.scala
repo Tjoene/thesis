@@ -12,7 +12,7 @@ import akka.setak.SetakJUnit
 import akka.setak.SetakFlatSpec
 import akka.setak.Commons._
 
-class MySpec extends SetakJUnit {
+class BankSpec extends SetakJUnit {
 
     var account1: ActorRef = _
     var account2: ActorRef = _
@@ -26,12 +26,12 @@ class MySpec extends SetakJUnit {
         account2 = actorOf(new Account("Johnny", 0)).start
     }
 
-    private def process() {
+    private def process(expected: Int) {
         account1 ! Transfer(account2, 500) // Freddy is generous and gives all his money to Johnny.        
         account1 ! Receive(50, "The Bank") // The bank rewards Freddy for his transaction.
 
         val result = (account1 ? Balance).mapTo[Int].get // Freddy wants to view his saldo on his account.
-        assert(result == 50, "The returned value is not 50, but %d".format(result))
+        assert(result == expected, "Expected %d, but got %d".format(expected, result))
     }
 
     @Test
@@ -41,7 +41,7 @@ class MySpec extends SetakJUnit {
         val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(transfer1 -> receive1 -> balance1)
-        process()
+        process(50)
     }
 
     @Test
@@ -51,7 +51,7 @@ class MySpec extends SetakJUnit {
         val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(receive1 -> transfer1 -> balance1)
-        process()
+        process(50)
     }
 
     @Test
@@ -61,7 +61,7 @@ class MySpec extends SetakJUnit {
         val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(balance1 -> transfer1 -> receive1)
-        process()
+        process(500)
     }
 
     @Test
@@ -71,6 +71,6 @@ class MySpec extends SetakJUnit {
         val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(balance1 -> receive1 -> transfer1)
-        process()
+        process(500)
     }
 }

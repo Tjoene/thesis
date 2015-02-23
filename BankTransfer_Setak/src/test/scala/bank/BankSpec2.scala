@@ -12,7 +12,7 @@ import akka.setak.SetakJUnit
 import akka.setak.SetakFlatSpec
 import akka.setak.Commons._
 
-class MySpec2 extends SetakJUnit {
+class BankSpec2 extends SetakJUnit {
 
     akka.setak.TestConfig.maxTryForStability = 10
     akka.setak.TestConfig.sleepInterval = 10
@@ -30,14 +30,11 @@ class MySpec2 extends SetakJUnit {
         account2 = actorOf(new Account("Johnny", 0)).start
     }
 
-    private def process() {
+    private def process(expected: Int) {
         account1 ! Transfer(account2, 500) // Freddy is generous and gives all his money to Johnny.        
 
-        val res1 = (account1 ? Balance).mapTo[Int].get // Freddy wants to view his saldo on his account.
-        assert(res1 == 0, "The returned value for Freddy is not 0, but %d".format(res1))
-    
-        val res2 = (account2 ? Balance).mapTo[Int].get // Freddy wants to view his saldo on his account.
-        assert(res2 == 500, "The returned value for Johnny is not 500, but %d".format(res2))    
+        val result = (account2 ? Balance).mapTo[Int].get // Freddy wants to view his saldo on his account.
+        assert(result == expected, "Expected %d, but got %d".format(expected, result))
     }
 
     @Test
@@ -48,7 +45,7 @@ class MySpec2 extends SetakJUnit {
         val balance2  = testMessageEnvelop(anyActorRef, account2, Balance)
 
         setSchedule(transfer1 -> receive1, receive1 -> balance2, balance1 -> balance2)
-        process()
+        process(500)
     }
 
     @Test
@@ -59,6 +56,6 @@ class MySpec2 extends SetakJUnit {
         val balance2  = testMessageEnvelop(anyActorRef, account2, Balance)
 
         setSchedule(transfer1 -> receive1, balance2 -> receive1)
-        process()
+        process(0)
     }
 }

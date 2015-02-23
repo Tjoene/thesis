@@ -53,11 +53,9 @@ object Resolvers {
 }
 
 object Dependencies {
-  val actor     = "se.scalablesolutions.akka" % "akka-actor" % "1.2-RC6"//"com.typesafe.akka" % "akka-actor" % "2.0.5"
-  val junit     = "junit" % "junit" % "4.5"
-  val setak     = "edu.illinois" %% "setak" % "1.0-SNAPSHOT"
+  val setak = "edu.illinois" %% "setak" % "1.0-SNAPSHOT"
 
-  val deps = Seq (actor, junit, setak)
+  val deps = Seq (setak)
 }
 
 object MyFreakingBuild extends Build {
