@@ -19,7 +19,7 @@ import akka.bita.pattern.Patterns.ask
 
 class BankSpec extends TestHelper with FunSpec {
 
-    val name = "bank"
+    val name = "bank1"
 
     // feel free to change these parameters to test the bank with various configurations.
     implicit val timeout = Timeout(5000.millisecond)
@@ -34,7 +34,7 @@ class BankSpec extends TestHelper with FunSpec {
 
     var generatedSchedulesNum = -1
 
-    describe("Bank Test") {
+    describe("TestCase Bank #1") {
 
         // // This test will keep on generating random schedules for 10 seconds until an bug is trigger. 
         // it(" should test randomly within a timeout", Tag("random-timeout")) {

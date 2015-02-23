@@ -25,7 +25,7 @@
 //     implicit val timeout = Timeout(5000.millisecond)
 //     var random = false
 
-//     val name = "bank"
+//     val name = "bank1"
 //     var allTracesDir = "test-results/" + name + "/"
 
 //     var generatedSchedulesNum = -1

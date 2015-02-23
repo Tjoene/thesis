@@ -1,4 +1,4 @@
-package bank2
+package bank3
 
 import akka.bita.Scheduler
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
@@ -17,9 +17,17 @@ import org.scalatest._
 import akka.bita.RandomScheduleHelper
 import akka.bita.pattern.Patterns.ask
 
+/**
+ * NOTE: these tests are a copy-paste of bank2, with the exception that there is a 1 second
+ *       delay introduced in the Bank actor between Transfer and the Withdraw message.
+ *       This is to demonstrate that Bita doesn't take in account the time when generating
+ *       different schedules. This may lead to different executions paths.
+ * 
+ *       This is a path in our testbench that we can not ignore.
+ */
 class BankSpec extends TestHelper with FunSpec {
 
-    val name = "bank2"
+    val name = "bank3"
 
     // feel free to change these parameters to test the bank with various configurations.
     implicit val timeout = Timeout(5000.millisecond)
@@ -34,7 +42,7 @@ class BankSpec extends TestHelper with FunSpec {
 
     var generatedSchedulesNum = -1
 
-    describe("TestCase Bank #2") {
+    describe("TestCase Bank #3") {
 
         // // This test will keep on generating random schedules for 10 seconds until an bug is trigger. 
         // it(" should test randomly within a timeout", Tag("random-timeout")) {

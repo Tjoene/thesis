@@ -17,7 +17,7 @@
 
 ## What's included
 
-In this repo you'll serveral folders:
+In this repo you'll see serveral folders:
 
 ```
 thesis/
