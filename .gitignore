@@ -1,6 +1,10 @@
+*.class
+*.log
+
 # Ignore all sbt specific folders inside the different test projects
 
 */project/target/
 */project/project/
 */target/
 */test-results/
+
