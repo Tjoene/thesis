@@ -37,7 +37,7 @@ class Bank(var amount: Int) extends Actor {
         }
 
         case x:Int => {
-            println("BANK:   registered an amount of %d".format(x))
+            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(x) + Console.RESET)
             this.amount = x
         } 
         
@@ -48,7 +48,7 @@ class Bank(var amount: Int) extends Actor {
             } pipeTo sender
         }
 
-        case _ => println("BANK: 'FATAL ERROR'")
+        case _ => println(Console.YELLOW + Console.BOLD + "BANK: 'FATAL ERROR'" + Console.RESET)
     }
 
     def setAmount(amount: Int) = {

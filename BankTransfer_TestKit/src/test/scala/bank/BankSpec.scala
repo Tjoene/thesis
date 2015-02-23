@@ -2,25 +2,15 @@ package bank
 
 import com.typesafe.config.ConfigFactory
 
-import akka.actor.ActorSystem
-import akka.actor.Props
-import akka.actor.Actor
-import akka.actor.ActorRef
-import akka.actor.actorRef2Scala
-import akka.actor.Props
-import akka.actor.ActorSystem
+import akka.actor.{ ActorSystem, Props, Actor, ActorRef }
 
 import akka.util.duration._
 
-import akka.testkit.EventFilter
-import akka.testkit.{TestKit, ImplicitSender}
+import akka.testkit.{ EventFilter, TestKit, ImplicitSender, CallingThreadDispatcher }
 
-import org.scalatest.FunSuiteLike
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.BeforeAndAfter
+import org.scalatest.{ FunSuiteLike, BeforeAndAfter, BeforeAndAfterAll }
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.BeforeAndAfterAll
-import akka.testkit.CallingThreadDispatcher
+import org.scalatest.junit.JUnitRunner
 
 class BankSpec(_system: ActorSystem) extends TestKit(_system) 
     with ImplicitSender
@@ -31,7 +21,14 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
 
     //#####################################################################################################
 
+    // Inject an ActorSystem with custom config
     def this() = this(ActorSystem("MySpec", ConfigFactory.parseString("""
+            akka.loglevel = WARNING
+            akka.stdout-loglevel = DEBUG
+            akka.actor.default-dispatcher.throughput = 5    
+            akka.actor.debug.receive = on
+            akka.actor.debug.lifecycle = on
+            akka.actor.debug.event-stream = on
             akka.event-handlers = ["akka.testkit.TestEventListener"]
     """)))
   
@@ -44,7 +41,7 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
     }
     
     override def afterAll {
-        system.shutdown()
+        system.shutdown() // clean up after we're done
     }
     
     //#####################################################################################################
@@ -54,7 +51,7 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
 
         bankActor ! Start // Start the simulation
 
-        within(1.seconds) {
+        within(500.millis) {
             bankActor ! Balance
             expectMsg(500)
         }
