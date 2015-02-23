@@ -1,0 +1,24 @@
+C:\Users\jeroen\Downloads\Bita-master-fresh\test-results\barber\barber_2_3\0\PMHR-REORDER_TAIL\schedules\barber-random1-trace.txt
+C:\Users\jeroen\Downloads\Bita-master-fresh\test-results\barber\barber_2_3\0\PMHR-REORDER_TAIL\schedules\barber-1-schedule-trace.txt
+C:\Users\jeroen\Downloads\Bita-master-fresh\test-results\barber\barber_2_3\0\PMHR-REORDER_TAIL\schedules\barber-2-schedule-trace.txt
+C:\Users\jeroen\Downloads\Bita-master-fresh\test-results\barber\barber_2_3\0\PMHR-REORDER_TAIL\schedules\barber-3-schedule-trace.txt
+*** Covered pairs for actor LogicalActor(EventID(-1,1),test.sample.Monitor) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,4),test.sample.Customer) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,-1),akka.actor.LocalActorRefProvider$SystemGuardian) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,6),test.sample.Customer) = 2
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,3),test.sample.WaitingRoom) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(0,1),akka.event.Logging$DefaultLogger) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,2),test.sample.Barber) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,5),test.sample.Customer) = 0
+=============================================================
+Total covered pairs (for all actors) = 2
+*************************************************************
+Coverage measurement time for 4 traces: 0 sec 
+

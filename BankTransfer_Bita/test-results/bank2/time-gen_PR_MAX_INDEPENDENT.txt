@@ -1,0 +1,39 @@
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 5 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 5 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 8 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 8 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+

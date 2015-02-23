@@ -1,0 +1,8 @@
+[0m[[0mdebug[0m] [0mRunning TaskDef(bank.MySpec, sbt.SubclassFingerprintWrapper@29cbf348, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(bank.MySpec2, sbt.SubclassFingerprintWrapper@29cbf348, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mSummary for ScalaTest not available.[0m
+[0m[[31merror[0m] [0mFailed: Total 6, Failed 3, Errors 0, Passed 3[0m
+[0m[[31merror[0m] [0mFailed tests:[0m
+[0m[[31merror[0m] [0m	bank.MySpec2[0m
+[0m[[31merror[0m] [0m	bank.MySpec[0m
+[0m[[31merror[0m] [0m(test:[31mtest[0m) sbt.TestsFailedException: Tests unsuccessful[0m

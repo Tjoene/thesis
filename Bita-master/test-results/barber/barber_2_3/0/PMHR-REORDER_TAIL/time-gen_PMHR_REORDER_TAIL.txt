@@ -1,0 +1,6 @@
+Schedule generation time PMHR-REORDER_TAIL for 3 schedules: 0 sec 
+Schedule generation time PMHR-REORDER_TAIL for 3 schedules: 0 sec 
+
+Schedule generation time PMHR-REORDER_TAIL for 3 schedules: 0 sec 
+Schedule generation time PMHR-REORDER_TAIL for 3 schedules: 0 sec 
+

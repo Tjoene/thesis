@@ -1,0 +1,4 @@
+[0m[[0minfo[0m] [0m[32mMySpec2:[0m[0m
+[0m[[0minfo[0m] [0m[31m- wrongBalance1 *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  org.scalatest.junit.JUnitTestFailedError: The returned value for Johnny is not 500, but 0 (MySpec2.scala:40)[0m[0m
+[0m[[0minfo[0m] [0m[32m- correctBalance1[0m[0m

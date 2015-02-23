@@ -1,0 +1,16 @@
+[0m[[0minfo[0m] [0m[32mBankSpec:[0m[0m
+[0m[[0minfo[0m] [0m[32mBank Test[0m[0m
+[0m[[0minfo[0m] [0m[32m-  should generate a random trace[0m[0m
+[0m[[0minfo[0m] [0m[31m-  should generate and test schedules  *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  java.util.concurrent.TimeoutException: Futures timed out after [15000] milliseconds[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.dispatch.DefaultPromise.ready(Future.scala:870)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.dispatch.DefaultPromise.result(Future.scala:874)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.dispatch.Await$.result(Future.scala:74)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bank2.BankSpec.run(BankSpec.scala:113)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bita.util.TestHelper$class.testSchedule(TestHelper.scala:90)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bank2.BankSpec.testSchedule(BankSpec.scala:23)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bita.util.TestHelper$$anonfun$testGeneratedSchedules$1.apply(TestHelper.scala:135)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bita.util.TestHelper$$anonfun$testGeneratedSchedules$1.apply(TestHelper.scala:133)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at scala.collection.IndexedSeqOptimized$class.foreach(IndexedSeqOptimized.scala:34)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at scala.collection.mutable.ArrayOps.foreach(ArrayOps.scala:38)[0m[0m
+[0m[[0minfo[0m] [0m[31m  ...[0m[0m

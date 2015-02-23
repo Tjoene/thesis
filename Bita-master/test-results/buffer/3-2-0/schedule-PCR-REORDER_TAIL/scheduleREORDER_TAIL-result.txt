@@ -1,0 +1,18 @@
+C:\Users\jeroen\Downloads\Bita-master-fresh\test-results\buffer\3-2-0\schedule-PCR-REORDER_TAIL\buffer-1-schedule-trace.txt
+C:\Users\jeroen\Downloads\Bita-master-fresh\test-results\buffer\3-2-0\schedule-PCR-REORDER_TAIL\buffer-random1-trace.txt
+*** Covered pairs for actor LogicalActor(EventID(2,1),test.sample.ProducerChild) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,1),test.sample.BoundedBuffer) = 1
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,-1),akka.actor.LocalActorRefProvider$SystemGuardian) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(3,1),test.sample.ProducerChild) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,2),test.sample.Producer) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(0,1),akka.event.Logging$DefaultLogger) = 0
+=============================================================
+Total covered pairs (for all actors) = 1
+*************************************************************
+Coverage measurement time for 2 traces: 0 sec 
+

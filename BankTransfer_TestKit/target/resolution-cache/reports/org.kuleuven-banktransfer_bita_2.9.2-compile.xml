@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="org.kuleuven"
+		module="banktransfer_bita_2.9.2"
+		revision="1.0"
+		conf="compile"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20150216190728"/>
+	<dependencies>
+		<module organisation="com.typesafe.akka" name="akka-testkit">
+			<revision name="2.0.5" status="release" pubdate="20150205083607" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://akka.io" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="3">
+				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="no" details="" size="2917" time="0" location="C:\Users\jeroen\.ivy2\cache\com.typesafe.akka\akka-testkit\ivy-2.0.5.xml" searched="false" origin-is-local="false" origin-location="http://repo.typesafe.com/typesafe/releases/com/typesafe/akka/akka-testkit/2.0.5/akka-testkit-2.0.5.pom"/>
+				<caller organisation="org.kuleuven" name="banktransfer_bita_2.9.2" conf="compile" rev="2.0.5" rev-constraint-default="2.0.5" rev-constraint-dynamic="2.0.5" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="akka-testkit" type="jar" ext="jar" status="no" details="" size="201097" time="0" location="C:\Users\jeroen\.ivy2\cache\com.typesafe.akka\akka-testkit\jars\akka-testkit-2.0.5.jar">
+						<origin-location is-local="false" location="http://repo.typesafe.com/typesafe/releases/com/typesafe/akka/akka-testkit/2.0.5/akka-testkit-2.0.5.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="junit" name="junit">
+			<revision name="4.5" status="release" pubdate="20080904152928" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://junit.org" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="4">
+				<license name="Common Public License Version 1.0" url="http://www.opensource.org/licenses/cpl1.0.txt"/>
+				<metadata-artifact status="no" details="" size="2484" time="0" location="C:\Users\jeroen\.ivy2\cache\junit\junit\ivy-4.5.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/junit/junit/4.5/junit-4.5.pom"/>
+				<caller organisation="org.kuleuven" name="banktransfer_bita_2.9.2" conf="compile" rev="4.5" rev-constraint-default="4.5" rev-constraint-dynamic="4.5" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="junit" type="jar" ext="jar" status="no" details="" size="198945" time="0" location="C:\Users\jeroen\.ivy2\cache\junit\junit\jars\junit-4.5.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/junit/junit/4.5/junit-4.5.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.typesafe.akka" name="akka-actor">
+			<revision name="2.0.5" status="release" pubdate="20150205083608" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://akka.io" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, compile(*), runtime, runtime(*), master(compile), master" position="1">
+				<license name="Apache 2" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="no" details="" size="2672" time="0" location="C:\Users\jeroen\.ivy2\cache\com.typesafe.akka\akka-actor\ivy-2.0.5.xml" searched="false" origin-is-local="false" origin-location="http://repo.typesafe.com/typesafe/releases/com/typesafe/akka/akka-actor/2.0.5/akka-actor-2.0.5.pom"/>
+				<caller organisation="org.kuleuven" name="banktransfer_bita_2.9.2" conf="compile" rev="2.0.5" rev-constraint-default="2.0.5" rev-constraint-dynamic="2.0.5" callerrev="1.0"/>
+				<caller organisation="com.typesafe.akka" name="akka-testkit" conf="default, compile, runtime, master" rev="2.0.5" rev-constraint-default="2.0.5" rev-constraint-dynamic="2.0.5" callerrev="2.0.5"/>
+				<artifacts>
+					<artifact name="akka-actor" type="jar" ext="jar" status="no" details="" size="1718751" time="0" location="C:\Users\jeroen\.ivy2\cache\com.typesafe.akka\akka-actor\jars\akka-actor-2.0.5.jar">
+						<origin-location is-local="false" location="http://repo.typesafe.com/typesafe/releases/com/typesafe/akka/akka-actor/2.0.5/akka-actor-2.0.5.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.typesafe" name="config">
+			<revision name="0.3.1" status="release" pubdate="20120807010837" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/typesafehub/config" downloaded="false" searched="false" default="false" conf="compile, runtime, compile(*), runtime(*), master(compile), master" position="2">
+				<license name="Apache License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="2898" time="0" location="C:\Users\jeroen\.ivy2\cache\com.typesafe\config\ivy-0.3.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/typesafe/config/0.3.1/config-0.3.1.pom"/>
+				<caller organisation="com.typesafe.akka" name="akka-actor" conf="default, compile, runtime, master" rev="0.3.1" rev-constraint-default="0.3.1" rev-constraint-dynamic="0.3.1" callerrev="2.0.5"/>
+				<artifacts>
+					<artifact name="config" type="bundle" ext="jar" status="no" details="" size="155044" time="0" location="C:\Users\jeroen\.ivy2\cache\com.typesafe\config\bundles\config-0.3.1.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/typesafe/config/0.3.1/config-0.3.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-library">
+			<revision name="2.9.2" status="release" pubdate="20120413142921" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, compile(*), runtime, runtime(*), master(compile), master" position="0">
+				<license name="BSD-like" url="http://www.scala-lang.org/downloads/license.html          "/>
+				<metadata-artifact status="no" details="" size="2420" time="0" location="C:\Users\jeroen\.ivy2\cache\org.scala-lang\scala-library\ivy-2.9.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.9.2/scala-library-2.9.2.pom"/>
+				<caller organisation="org.kuleuven" name="banktransfer_bita_2.9.2" conf="compile" rev="2.9.2" rev-constraint-default="2.9.2" rev-constraint-dynamic="2.9.2" callerrev="1.0"/>
+				<caller organisation="com.typesafe.akka" name="akka-actor" conf="default, compile, runtime, master" rev="2.9.2" rev-constraint-default="2.9.2" rev-constraint-dynamic="2.9.2" callerrev="2.0.5"/>
+				<caller organisation="com.typesafe.akka" name="akka-testkit" conf="default, compile, runtime, master" rev="2.9.2" rev-constraint-default="2.9.2" rev-constraint-dynamic="2.9.2" callerrev="2.0.5"/>
+				<artifacts>
+					<artifact name="scala-library" type="jar" ext="jar" status="no" details="" size="8857794" time="0" location="C:\Users\jeroen\.ivy2\cache\org.scala-lang\scala-library\jars\scala-library-2.9.2.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.9.2/scala-library-2.9.2.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>

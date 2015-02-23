@@ -1,0 +1,6 @@
+[0m[[0mdebug[0m] [0mRunning TaskDef(bank2.BankSpec, sbt.SubclassFingerprintWrapper@2ee8f4c7, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mSummary for ScalaTest not available.[0m
+[0m[[31merror[0m] [0mFailed: Total 2, Failed 1, Errors 0, Passed 1[0m
+[0m[[31merror[0m] [0mFailed tests:[0m
+[0m[[31merror[0m] [0m	bank2.BankSpec[0m
+[0m[[31merror[0m] [0m(test:[31mtest[0m) sbt.TestsFailedException: Tests unsuccessful[0m

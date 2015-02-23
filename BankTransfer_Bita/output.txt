@@ -1,0 +1,168 @@
+[info] Loading project definition from C:\Users\jeroen\Downloads\BankTransfer_Bita\project
+[info] Set current project to BankTransfer_Bita (in build file:/C:/Users/jeroen/Downloads/BankTransfer_Bita/)
+
+
+
+
+Johnny: someone requested the amount of this account, which is 0
+Freddy: sends an amount of 500
+Johnny: received an amount of 500 from Freddy
+BANK:   registered an amount of 0
+**FAILURE** Freddy has 0 on his account
+The output is written in test-results/bank/random/bank-random1-trace.txt
+======================================================
+***********BUG DETECTED**************
+
+
+
+
+
+
+
+
+
+
+
+The output is written in test-results/bank/PR-REORDER_TAIL/bank-1-schedule.txt
+The output is written in test-results/bank/PR-REORDER_TAIL/bank-2-schedule.txt
+Schedule generation time PR-REORDER_TAIL for 2 schedules: 0 sec 
+
+
+========= testing generated schedules in test-results/bank/PR-REORDER_TAIL/ ===============
+test schedule: C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-REORDER_TAIL\bank-1-schedule.txt
+Freddy: sends an amount of 500
+Johnny: received an amount of 500 from Freddy
+Johnny: someone requested the amount of this account, which is 500
+BANK:   registered an amount of 500
+**SUCCESS** Freddy has 500 on his account
+The output is written in C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-REORDER_TAIL\bank-1-schedule-trace.txt
+======================================================
+
+test schedule: C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-REORDER_TAIL\bank-2-schedule.txt
+Freddy: sends an amount of 500
+Johnny: someone requested the amount of this account, which is 0
+Johnny: received an amount of 500 from Freddy
+**FAILURE** Freddy has -1 on his account
+BANK:   registered an amount of 0
+The output is written in C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-REORDER_TAIL\bank-2-schedule-trace.txt
+======================================================
+***********BUG DETECTED**************
+
+
+
+
+
+
+
+
+
+
+
+
+
+The output is written in test-results/bank/PR-MAX_INDEPENDENT/bank-1-schedule.txt
+The output is written in test-results/bank/PR-MAX_INDEPENDENT/bank-2-schedule.txt
+Schedule generation time PR-MAX_INDEPENDENT for 2 schedules: 0 sec 
+
+
+========= testing generated schedules in test-results/bank/PR-MAX_INDEPENDENT/ ===============
+test schedule: C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-MAX_INDEPENDENT\bank-1-schedule.txt
+Freddy: sends an amount of 500
+Johnny: received an amount of 500 from Freddy
+Johnny: someone requested the amount of this account, which is 500
+BANK:   registered an amount of 500
+**SUCCESS** Freddy has 500 on his account
+The output is written in C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-MAX_INDEPENDENT\bank-1-schedule-trace.txt
+======================================================
+
+test schedule: C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-MAX_INDEPENDENT\bank-2-schedule.txt
+Freddy: sends an amount of 500
+Johnny: someone requested the amount of this account, which is 0
+Johnny: received an amount of 500 from Freddy
+**FAILURE** Freddy has -1 on his account
+BANK:   registered an amount of 0
+The output is written in C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-MAX_INDEPENDENT\bank-2-schedule-trace.txt
+======================================================
+***********BUG DETECTED**************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+measuring the coverage for PR.... 
+C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-REORDER_TAIL\bank-random1-trace.txt
+C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-REORDER_TAIL\bank-1-schedule-trace.txt
+C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-REORDER_TAIL\bank-2-schedule-trace.txt
+*** Covered pairs for actor LogicalActor(EventID(-1,2),Account) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,1),Bank) = 1
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,-1),akka.actor.LocalActorRefProvider$SystemGuardian) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(0,1),akka.event.Logging$DefaultLogger) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,3),Account) = 1
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,-1),EntryPoint) = 0
+=============================================================
+Total covered pairs (for all actors) = 2
+*************************************************************
+Coverage measurement time for 3 traces: 0 sec 
+
+
+
+
+
+
+
+
+
+
+
+
+
+measuring the coverage for PR.... 
+C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-MAX_INDEPENDENT\bank-random1-trace.txt
+C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-MAX_INDEPENDENT\bank-1-schedule-trace.txt
+C:\Users\jeroen\Downloads\BankTransfer_Bita\test-results\bank\PR-MAX_INDEPENDENT\bank-2-schedule-trace.txt
+*** Covered pairs for actor LogicalActor(EventID(-1,2),Account) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,1),Bank) = 1
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,-1),akka.actor.LocalActorRefProvider$SystemGuardian) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(0,1),akka.event.Logging$DefaultLogger) = 0
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,3),Account) = 1
+=============================================================
+*** Covered pairs for actor LogicalActor(EventID(-1,-1),EntryPoint) = 0
+=============================================================
+Total covered pairs (for all actors) = 2
+*************************************************************
+Coverage measurement time for 3 traces: 0 sec 
+
+
+
+
+
+[info] Bank3Spec:
+[info] Bank Test
+[info] -  should generate a random trace
+[info] -  should generate and test schedules 
+[info] -  should measure the coverage of testing with schedules 
+[info] Passed: Total 3, Failed 0, Errors 0, Passed 3
+[success] Total time: 9 s, completed 16-feb-2015 11:03:08

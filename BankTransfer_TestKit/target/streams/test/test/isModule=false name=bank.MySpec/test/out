@@ -1,0 +1,14 @@
+[0m[[0minfo[0m] [0m[32mMySpec:[0m[0m
+[0m[[0minfo[0m] [0m[31m- Correct balance *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  java.lang.AssertionError: assertion failed: expected 500, found -1[0m[0m
+[0m[[0minfo[0m] [0m[31m  at scala.Predef$.assert(Predef.scala:160)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.testkit.TestKit.expectMsg_internal(TestKit.scala:277)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.testkit.TestKit.expectMsg(TestKit.scala:263)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bank.MySpec$$anonfun$3.apply$mcV$sp(MySpec.scala:59)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bank.MySpec$$anonfun$3.apply(MySpec.scala:51)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bank.MySpec$$anonfun$3.apply(MySpec.scala:51)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.FunSuiteLike$$anon$1.apply(FunSuiteLike.scala:129)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.Suite$class.withFixture(Suite.scala:1974)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at bank.MySpec.withFixture(MySpec.scala:24)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.FunSuiteLike$class.invokeWithFixture$1(FunSuiteLike.scala:126)[0m[0m
+[0m[[0minfo[0m] [0m[31m  ...[0m[0m

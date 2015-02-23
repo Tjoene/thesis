@@ -1,0 +1,32 @@
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mInitial source changes: [0m
+[0m[[0mdebug[0m] [0m	removed:Set()[0m
+[0m[[0mdebug[0m] [0m	added: Set()[0m
+[0m[[0mdebug[0m] [0m	modified: Set(C:\Users\jeroen\Downloads\BankTransfer_Bita\src\test\scala\bank2\BankSpec.scala)[0m
+[0m[[0mdebug[0m] [0mRemoved products: Set()[0m
+[0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
+[0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(C:\Users\jeroen\Downloads\BankTransfer_Bita\src\test\scala\bank2\BankSpec.scala)[0m
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
+[0m[[0mdebug[0m] [0m	product: Set()[0m
+[0m[[0mdebug[0m] [0m	binary dep: Set()[0m
+[0m[[0mdebug[0m] [0m	external source: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(C:\Users\jeroen\Downloads\BankTransfer_Bita\src\test\scala\bank2\BankSpec.scala)[0m
+[0m[[0minfo[0m] [0mCompiling 1 Scala source to C:\Users\jeroen\Downloads\BankTransfer_Bita\target\scala-2.9.2\test-classes...[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.9.2[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.9.2[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 4ff61b27, interfacing (CompilerInterface) with Scala compiler version 2.9.2[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-deprecation[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	C:\Program Files\Java\jre7\lib\resources.jar;C:\Program Files\Java\jre7\lib\rt.jar;C:\Program Files\Java\jre7\lib\sunrsasign.jar;C:\Program Files\Java\jre7\lib\jsse.jar;C:\Program Files\Java\jre7\lib\jce.jar;C:\Program Files\Java\jre7\lib\charsets.jar;C:\Program Files\Java\jre7\lib\jfr.jar;C:\Program Files\Java\jre7\classes;C:\Users\jeroen\.ivy2\cache\org.scala-lang\scala-library\jars\scala-library-2.9.2.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\Downloads\BankTransfer_Bita\target\scala-2.9.2\test-classes;C:\Users\jeroen\Downloads\BankTransfer_Bita\target\scala-2.9.2\classes;C:\Users\jeroen\.ivy2\local\cs.edu.uiuc\bita_2.9.2\0.1\jars\bita_2.9.2.jar;C:\Users\jeroen\.ivy2\cache\org.aspectj\aspectjrt\jars\aspectjrt-1.6.12.jar;C:\Users\jeroen\.ivy2\cache\com.typesafe.akka\akka-actor\jars\akka-actor-2.0.3.jar;C:\Users\jeroen\.ivy2\cache\com.typesafe\config\bundles\config-0.3.1.jar;C:\Users\jeroen\.ivy2\cache\org.scalatest\scalatest_2.9.2\jars\scalatest_2.9.2-2.0.M5b.jar[0m
+[0m[[0mdebug[0m] [0mScala compilation took 10.059056279 s[0m
+[0m[[0mdebug[0m] [0mNew invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set()[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set()[0m
+[0m[[0mdebug[0m] [0mPreviously invalidated, but (transitively) depend on new invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set()[0m
+[0m[[0mdebug[0m] [0mAll newly invalidated sources after taking into account (previously) recompiled sources:Set()[0m

@@ -1,0 +1,19 @@
+[0m[[0minfo[0m] [0mRunning bank2.BankMain [0m
+[0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
+[0m[[0mdebug[0m] [0m  Classpath:[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\Downloads\BankTransfer_Bita\target\scala-2.9.2\classes[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\.ivy2\cache\org.scala-lang\scala-library\jars\scala-library-2.9.2.jar[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\.ivy2\local\cs.edu.uiuc\bita_2.9.2\0.1\jars\bita_2.9.2.jar[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\.ivy2\cache\org.aspectj\aspectjrt\jars\aspectjrt-1.6.12.jar[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\.ivy2\cache\com.typesafe.akka\akka-actor\jars\akka-actor-2.0.3.jar[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\.ivy2\cache\com.typesafe\config\bundles\config-0.3.1.jar[0m
+[0m[[0mdebug[0m] [0m	C:\Users\jeroen\.ivy2\cache\org.scalatest\scalatest_2.9.2\jars\scalatest_2.9.2-2.0.M5b.jar[0m
+[0m[[0mdebug[0m] [0mWaiting for thread run-main-0 to terminate.[0m
+[0m[[0mdebug[0m] [0m	Thread run-main-0 exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread BankMain-akka.actor.default-dispatcher-4 to terminate.[0m
+[0m[[0mdebug[0m] [0m	Thread BankMain-akka.actor.default-dispatcher-4 exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread BankMain-akka.actor.default-dispatcher-3 to terminate.[0m
+[0m[[0mdebug[0m] [0m	Thread BankMain-akka.actor.default-dispatcher-3 exited.[0m
+[0m[[0mdebug[0m] [0mInterrupting remaining threads (should be all daemons).[0m
+[0m[[0mdebug[0m] [0mSandboxed run complete..[0m
+[0m[[0mdebug[0m] [0mExited with code 0[0m

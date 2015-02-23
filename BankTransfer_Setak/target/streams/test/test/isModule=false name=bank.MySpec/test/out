@@ -1,0 +1,7 @@
+[0m[[0minfo[0m] [0m[32mMySpec:[0m[0m
+[0m[[0minfo[0m] [0m[31m- wrongBalance1 *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  org.scalatest.junit.JUnitTestFailedError: The returned value is not 50, but 500 (MySpec.scala:34)[0m[0m
+[0m[[0minfo[0m] [0m[31m- wrongBalance2 *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  org.scalatest.junit.JUnitTestFailedError: The returned value is not 50, but 500 (MySpec.scala:34)[0m[0m
+[0m[[0minfo[0m] [0m[32m- correctBalance1[0m[0m
+[0m[[0minfo[0m] [0m[32m- correctBalance2[0m[0m
