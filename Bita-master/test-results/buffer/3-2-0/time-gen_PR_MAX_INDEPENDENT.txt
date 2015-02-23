@@ -1,3 +1,0 @@
-Schedule generation time PR-MAX_INDEPENDENT for 1 schedules: 0 sec 
-Schedule generation time PR-MAX_INDEPENDENT for 1 schedules: 0 sec 
-
