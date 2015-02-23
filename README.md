@@ -8,7 +8,7 @@
 ## Quick start
 
 - Install [Simple Build Tool](http://www.scala-sbt.org/). At the time of writing, version 0.13.7 was used
-- Clone the repo: `git clone https://github.com/twbs/bootstrap.git`.
+- Clone the repo: `git clone https://github.com/Tjoene/thesis.git`.
 - Copy the depencenies under `/DEPENDENCIES` to `C:\Users\<USER>\.ivy2\local\` for Windows, or `<HOME>/.ivy2/local/` for Linux
 - Download the depencenies into the project: `sbt update`.
 - Compile the source: `sbt compile`
