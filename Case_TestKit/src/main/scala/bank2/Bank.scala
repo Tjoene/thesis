@@ -1,4 +1,4 @@
-package bank
+package bank2
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.dispatch.Future
@@ -12,7 +12,7 @@ object Bank {
     def props(): Props = Props(new Bank(-1))
     def apply(): Props = Props(new Bank(-1))
 
-    def props(amount: Int): Props = Props(new Bank(amount))
+    def props(amount: Int): Props = Props(new Bank(amount))  
     def apply(amount: Int): Props = Props(new Bank(amount))
 }
 
@@ -28,8 +28,6 @@ class Bank(var amount: Int) extends Actor {
 
             // The transfer should lead to an implicit receive:
             //account2! Receive(50, "Freddy")
-
-            Thread.sleep(50);
 
             account2 ! Balance // Return the amount of account Johnny, should be 500
         }

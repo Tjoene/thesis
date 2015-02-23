@@ -60,7 +60,7 @@ object Dependencies {
     val scalatest = "org.scalatest" % "scalatest_2.9.2" % "1.9.2" % "test"
     val junit     = "junit" % "junit" % "4.5"
 
-    val deps = Seq(actor, testkit, junit, scalatest)
+    val myDepencencies = Seq(actor, testkit, junit, scalatest)
 }
 
 // The actual build script, nothing should be changed in here

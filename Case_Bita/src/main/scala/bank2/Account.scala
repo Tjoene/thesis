@@ -40,10 +40,9 @@ class Account(var holder: String, var amount: Int, var bank: ActorRef, var next:
             println(Console.YELLOW + Console.BOLD + "%s: received an amount of %d from %s".format(holder, amount, from) + Console.RESET)
             this.amount += amount
 
-            if (next != null) { // only send the continue message if we have a target account to send our money to.
+            if (next != null) { // only send the message if we have a target account to send our money to.
                 self ! Continue 
             }
-            
         }
 
         case Continue => {
@@ -55,6 +54,7 @@ class Account(var holder: String, var amount: Int, var bank: ActorRef, var next:
                 self ! Continue
             } else {
                 println(Console.YELLOW + Console.BOLD + "*CONTINUE* %s: we are finished here, notifing the bank".format(holder) + Console.RESET)
+
                 val future = ask(next, Balance)
                 val result = Await.result(future, timeout.duration).asInstanceOf[Int]
                 bank ! Finish(result)
