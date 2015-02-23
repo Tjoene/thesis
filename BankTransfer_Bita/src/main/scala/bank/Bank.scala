@@ -32,7 +32,7 @@ class Bank() extends Actor {
         }
 
         case amount:Int => {
-            println("BANK:   registered an amount of %d".format(amount))
+            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(amount) + Console.RESET)
             dest ! amount
         }
         
@@ -40,6 +40,6 @@ class Bank() extends Actor {
             dest = sender
         }
 
-        case _ => println("BANK: 'FATAL ERROR'")
+        case _ => println(Console.YELLOW + Console.BOLD + "BANK: 'FATAL ERROR'" + Console.RESET)
     }
 }

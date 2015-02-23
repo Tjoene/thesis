@@ -1,4 +1,4 @@
-package bank2
+package bank
 
 import akka.bita.Scheduler
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
@@ -19,7 +19,7 @@ import akka.bita.pattern.Patterns.ask
 
 class BankSpec extends TestHelper with FunSpec {
 
-    val name = "bank2"
+    val name = "bank"
 
     // feel free to change these parameters to test the bank with various configurations.
     implicit val timeout = Timeout(5000.millisecond)
@@ -109,12 +109,12 @@ class BankSpec extends TestHelper with FunSpec {
         val future = ask(bankActor, RegisterSender)
         val result = Await.result(future, timeout.duration).asInstanceOf[Int]
 
-        if(result > 0) {
+        if(result == 500) {
             bugDetected = false
-            println(Console.YELLOW + Console.BOLD + "**SUCCESS** Stevie has %d on his account".format(result) + Console.RESET)
+            println(Console.YELLOW + Console.BOLD + "**SUCCESS** Freddy has %d on his account".format(result) + Console.RESET)
         } else {
             bugDetected = true
-            println(Console.YELLOW + Console.BOLD + "**FAILURE** Stevie has %d on his account".format(result) + Console.RESET)
+            println(Console.YELLOW + Console.BOLD + "**FAILURE** Freddy has %d on his account".format(result) + Console.RESET)
         }
     }
 }

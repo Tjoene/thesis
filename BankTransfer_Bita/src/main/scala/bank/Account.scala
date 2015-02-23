@@ -18,7 +18,7 @@ class Account(var holder: String, var amount: Int) extends Actor {
     
     def receive = {
         case Transfer(dest, amount) => { // Transfer an amount to the given destination
-            println("%s: sends an amount of %d".format(holder, amount))
+            println(Console.YELLOW + Console.BOLD + "%s: sends an amount of %d".format(holder, amount) + Console.RESET)
             
             if ((this.amount - amount) >= 0) {
                 this.amount -= amount
@@ -29,15 +29,15 @@ class Account(var holder: String, var amount: Int) extends Actor {
         }
         
         case Receive(amount, from) => { // Receive an incoming transfer
-            println("%s: received an amount of %d from %s".format(holder, amount, from))
+            println(Console.YELLOW + Console.BOLD + "%s: received an amount of %d from %s".format(holder, amount, from) + Console.RESET)
             this.amount += amount
         }
         
         case Balance => { // Give the current balance
-            println("%s: someone requested the amount of this account, which is %d".format(holder, amount))
+            println(Console.YELLOW + Console.BOLD + "%s: someone requested the amount of this account, which is %d".format(holder, amount) + Console.RESET)
             sender ! this.amount
         }
 
-        case _ => println("%s: 'FATAL ERROR'".format(holder))
+        case _ => println(Console.YELLOW + Console.BOLD + "%s: 'FATAL ERROR'".format(holder) + Console.RESET)
     }
 }

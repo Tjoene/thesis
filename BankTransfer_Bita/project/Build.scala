@@ -53,7 +53,7 @@ object Resolvers {
 }
 
 object Dependencies {
-  val bita      = "cs.edu.uiuc" %% "bita" % "0.1"
+  val bita = "cs.edu.uiuc" %% "bita" % "0.1"
 
   val deps = Seq (bita)
 }
