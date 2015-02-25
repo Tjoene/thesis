@@ -1,4 +1,4 @@
-package bank2
+package bank3
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.dispatch.Future
@@ -19,8 +19,8 @@ class Bank() extends Actor {
 
     def receive = {
         case Start => {
-            var account1 = context.actorOf(Account("Freddy", 500))
-            var account2 = context.actorOf(Account("Johnny", 0))
+            var account1 = context.actorOf(Account("Freddy", 500).withDispatcher(CallingThreadDispatcher.Id))
+            var account2 = context.actorOf(Account("Johnny", 0).withDispatcher(CallingThreadDispatcher.Id))
 
             account1 ! Transfer(account2, 500) // Freddy makes a transaction to Johnny for an amount of 500.
 

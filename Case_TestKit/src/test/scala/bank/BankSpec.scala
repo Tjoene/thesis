@@ -24,7 +24,7 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
     // Inject an ActorSystem with custom config
     def this() = this(ActorSystem("MySpec", ConfigFactory.parseString("""
             akka.loglevel = WARNING
-            akka.stdout-loglevel = DEBUG
+            akka.stdout-loglevel = WARNING
             akka.actor.default-dispatcher.throughput = 5    
             akka.actor.debug.receive = on
             akka.actor.debug.lifecycle = on
@@ -51,7 +51,7 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
 
         bankActor ! Start // Start the simulation
 
-        within(500.millis) {
+        within(1000.millis) {
             bankActor ! Balance
             expectMsg(500)
         }

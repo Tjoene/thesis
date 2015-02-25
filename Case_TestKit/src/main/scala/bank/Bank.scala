@@ -21,8 +21,8 @@ class Bank(var amount: Int) extends Actor {
 
     def receive = {
         case Start => {
-            var account1 = context.actorOf(Props(new Account("Freddy", 500)))
-            var account2 = context.actorOf(Props(new Account("Johnny", 0)))
+            var account1 = context.actorOf(Account("Freddy", 500))
+            var account2 = context.actorOf(Account("Johnny", 0))
 
             account1 ! Transfer(account2, 500) // Freddy makes a transaction to Johnny for an amount of 500.
 

@@ -1,4 +1,4 @@
-package bank
+package bank3
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 
@@ -13,7 +13,6 @@ object Account {
     def props(holder: String, amount: Int): Props = Props(new Account(holder, amount))  
     def apply(holder: String, amount: Int): Props = Props(new Account(holder, amount))
 }
-
 
 class Account(var holder: String, var amount: Int) extends Actor {
     

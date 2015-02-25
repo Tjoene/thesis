@@ -1,4 +1,4 @@
-package bank2
+package bank3
 
 import com.typesafe.config.ConfigFactory
 
@@ -54,12 +54,12 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
     
     //#####################################################################################################
     
-    test("Wrong balance") {
+    test("Wrong balance with CallingThreadDispatcher") {
         var bankActor = system.actorOf(Bank())
 
         bankActor ! Start // Start the simulation
 
-        within(1000.millis) {
+        within(500.millis) {
             bankActor ! Balance
             expectMsg(0)
         }

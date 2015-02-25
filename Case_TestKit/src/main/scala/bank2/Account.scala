@@ -6,6 +6,14 @@ case object Balance
 case class Transfer(dest: ActorRef, amount: Int)
 case class Receive(amount: Int, from: String)
 
+object Account {
+    def props(): Props = Props(new Account("Dummy", 0))
+    def apply(): Props = Props(new Account("Dummy", 0))
+
+    def props(holder: String, amount: Int): Props = Props(new Account(holder, amount))  
+    def apply(holder: String, amount: Int): Props = Props(new Account(holder, amount))
+}
+
 class Account(var holder: String, var amount: Int) extends Actor {
     
     def receive = {
