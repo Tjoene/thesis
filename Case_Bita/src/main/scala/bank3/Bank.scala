@@ -50,7 +50,12 @@ class Bank(val delay: Int) extends Actor {
             val result = Await.result(future, timeout.duration).asInstanceOf[Int]
 
             println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(result)+ Console.RESET)
-            dest ! result
+
+            if(dest != null){
+                dest ! result
+            } else {
+                self ! Finish
+            }
         } 
         
         // This will register the test as the destination where we need to send 
