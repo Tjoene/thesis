@@ -1,4 +1,4 @@
-package bank2
+package bank3
 
 import akka.bita.Scheduler
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
@@ -17,9 +17,9 @@ import org.scalatest._
 import akka.bita.RandomScheduleHelper
 import akka.bita.pattern.Patterns.ask
 
-class DelayBankSpec extends BankSpec {
+class MoreDelayBankSpec extends BankSpec {
 
     // feel free to change these parameters to test the bank with various configurations.
-    override val name = "bank2_delay"
-    override val delay = 500
+    override val name = "bank3_more_delay"
+    override val delay = 1000
 }

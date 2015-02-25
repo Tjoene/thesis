@@ -1,4 +1,4 @@
-package bank2
+package bank3
 
 import akka.bita.Scheduler
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
@@ -20,6 +20,6 @@ import akka.bita.pattern.Patterns.ask
 class DelayBankSpec extends BankSpec {
 
     // feel free to change these parameters to test the bank with various configurations.
-    override val name = "bank2_delay"
+    override val name = "bank3_delay"
     override val delay = 500
 }
