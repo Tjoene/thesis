@@ -82,20 +82,24 @@ class BankSpec extends TestHelper with FunSpec {
             }
         }
 
-        // it(" should measure the coverage of testing with schedules ", Tag("coverage")) {
-        //     // The number of traces after which the coverage should be measured.
-        //     var interval = 5
-        //     for (opt <- criterion.optimizations.-(NONE)) {
-        //         var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
-        //         var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-        //         FileHelper.copyFiles(randomTraces, scheduleDir)
+        // This will count how many bugs there were found with a certain schedule.
+        // Giving you an indication of how good a shedule is.
+        it(" should measure the coverage of testing with schedules ", Tag("coverage")) {
+            // The number of traces after which the coverage should be measured.
+            var interval = 5
+            for (criterion <- criteria) {
+                for (opt <- criterion.optimizations.-(NONE)) {
+                    var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
+                    var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
+                    FileHelper.copyFiles(randomTraces, scheduleDir)
 
-        //         var resultFile = scheduleDir + "%s-%s-result.txt".format(criterion.name, opt)
-        //         var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
-        //         traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
-        //         criterion.measureCoverage(traceFiles, resultFile, interval)
-        //     }
-        // }
+                    var resultFile = scheduleDir + "%s-%s-result.txt".format(criterion.name, opt)
+                    var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
+                    traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
+                    criterion.measureCoverage(traceFiles, resultFile, interval)
+                }
+            }
+        }
     }
 
     def run {

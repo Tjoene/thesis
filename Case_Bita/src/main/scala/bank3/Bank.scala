@@ -2,10 +2,14 @@ package bank3
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.dispatch.Future
+import akka.bita.pattern.Patterns.ask
+import akka.util.duration._
+import akka.util.Timeout
+import akka.dispatch.Await
 
 case object Start
 case object RegisterSender
-case class Finish(amount: Int)
+case object Finish
 
 // Use bank.prop in the code or Bank() or Bank(-1)
 // See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices
@@ -19,15 +23,20 @@ object Bank {
 
 class Bank(val delay: Int) extends Actor {
     var dest : ActorRef = _
+    var account1 : ActorRef = _
+    var account2 : ActorRef = _
+    var account3 : ActorRef = _
+    var account4 : ActorRef = _
+    implicit val timeout = Timeout(5000.millisecond)
     
     def receive = {
         case Start => {
             val testAmount = 5
 
-            val account1 = context.actorOf(Account("Freddy", testAmount, self, null)) // Create child actors that will host the accounts
-            val account4 = context.actorOf(Account("Charlie", 0, self, null))
-            val account3 = context.actorOf(Account("Stevie",  0, self, account4))
-            val account2 = context.actorOf(Account("Johnny",  0, self, account3))
+            account1 = context.actorOf(Account("Freddy", testAmount, self, null)) // Create child actors that will host the accounts
+            account4 = context.actorOf(Account("Charlie", 0, null, null))
+            account3 = context.actorOf(Account("Stevie",  0, null, account4))
+            account2 = context.actorOf(Account("Johnny",  0, self, account3))
          
             account1 ! Transfer(account2, testAmount)
 
@@ -36,9 +45,12 @@ class Bank(val delay: Int) extends Actor {
             account2 ! Withdraw(testAmount)
         }
 
-        case Finish(amount) => {
-            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(amount)+ Console.RESET)
-            dest ! amount
+        case Finish => {
+            val future = ask(account4, Balance)
+            val result = Await.result(future, timeout.duration).asInstanceOf[Int]
+
+            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(result)+ Console.RESET)
+            dest ! result
         } 
         
         // This will register the test as the destination where we need to send 

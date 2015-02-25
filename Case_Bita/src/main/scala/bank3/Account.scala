@@ -1,10 +1,6 @@
 package bank3
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
-import akka.bita.pattern.Patterns.ask
-import akka.util.duration._
-import akka.util.Timeout
-import akka.dispatch.Await
 
 case object Balance
 case object Continue
@@ -21,7 +17,6 @@ object Account {
 }
 
 class Account(var holder: String, var amount: Int, var bank: ActorRef, var next: ActorRef) extends Actor {
-    implicit val timeout = Timeout(5000.millisecond)
     
     def receive = {
         case Transfer(dest, amount) => { // Transfer an amount to the given destination
@@ -52,12 +47,10 @@ class Account(var holder: String, var amount: Int, var bank: ActorRef, var next:
                 this.amount -= 1;
 
                 self ! Continue
-            } else {
-                println(Console.YELLOW + Console.BOLD + "*CONTINUE* %s: we are finished here, notifing the bank".format(holder) + Console.RESET)
+            } else if(bank != null) {
+                println(Console.YELLOW + Console.BOLD + "*FINISH* %s: we are finished here, notifing the bank".format(holder) + Console.RESET)
 
-                val future = ask(next, Balance)
-                val result = Await.result(future, timeout.duration).asInstanceOf[Int]
-                bank ! Finish(result)
+                bank ! Finish
             }
         }
         

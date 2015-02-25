@@ -59,7 +59,7 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
 
         bankActor ! Start // Start the simulation
 
-        within(1000.millis) {
+        within(500.millis) {
             bankActor ! Balance
             expectMsg(0)
         }
