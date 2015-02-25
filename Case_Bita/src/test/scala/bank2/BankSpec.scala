@@ -19,10 +19,13 @@ import akka.bita.pattern.Patterns.ask
 
 class BankSpec extends TestHelper with FunSpec {
 
+    // feel free to change these parameters to test the bank with various configurations.
     val name = "bank2"
 
-    // feel free to change these parameters to test the bank with various configurations.
     implicit val timeout = Timeout(5000.millisecond)
+
+    // delay between start and end message
+    val delay = 0
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion)
@@ -102,7 +105,7 @@ class BankSpec extends TestHelper with FunSpec {
         system = ActorSystem()
         RandomScheduleHelper.setSystem(system)
 
-        var bankActor = system.actorOf(Bank())
+        var bankActor = system.actorOf(Bank(delay)) // A bank without delay between messages.
 
         bankActor ! Start // Start the simulation
 

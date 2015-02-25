@@ -10,11 +10,14 @@ case class Finish(amount: Int)
 // Use bank.prop in the code or Bank() or Bank(-1)
 // See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices
 object Bank {
-    def props(): Props = Props(new Bank())
-    def apply(): Props = Props(new Bank())
+    def props(): Props = Props(new Bank(0))
+    def apply(): Props = Props(new Bank(0))
+
+    def props(delay: Int): Props = Props(new Bank(delay))
+    def apply(delay: Int): Props = Props(new Bank(delay))
 }
 
-class Bank() extends Actor {
+class Bank(val delay: Int) extends Actor {
     var dest : ActorRef = _
 
     def receive = {
@@ -27,7 +30,7 @@ class Bank() extends Actor {
          
             account1 ! Transfer(account2, testAmount)
 
-            //Thread.sleep(1000)
+            Thread.sleep(delay)
 
             account2 ! Withdraw(testAmount)
         }
