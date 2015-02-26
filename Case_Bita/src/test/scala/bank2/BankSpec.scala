@@ -14,12 +14,12 @@ import org.scalatest._
 class BankSpec extends TestHelper with FunSpec {
 
     // feel free to change these parameters to test the bank with various configurations.
-    val name = "bank2"
+    def name = "bank2"
 
     implicit val timeout = Timeout(5000.millisecond)
 
     // delay between start and end message
-    val delay = 0
+    def delay = 0
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion)

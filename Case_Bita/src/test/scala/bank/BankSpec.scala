@@ -13,7 +13,7 @@ import org.scalatest._
 
 class BankSpec extends TestHelper with FunSpec {
 
-    val name = "bank1"
+    def name = "bank1"
 
     // feel free to change these parameters to test the bank with various configurations.
     implicit val timeout = Timeout(5000.millisecond)

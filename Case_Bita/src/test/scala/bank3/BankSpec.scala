@@ -14,18 +14,18 @@ import org.scalatest._
 class BankSpec extends TestHelper with FunSpec {
 
     // feel free to change these parameters to test the bank with various configurations.
-    val name = "bank3"
+    def name = "bank3"
 
     implicit val timeout = Timeout(5000.millisecond)
 
     // delay between start and end message
-    val delay = 0
+    def delay = 0
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion)
 
     // folders where we need to store the test results
-    var allTracesDir = "test-results/%s/".format(name)
+    var allTracesDir = "test-results/%s/".format(this.name)
     var randomTracesDir = allTracesDir + "random/"
     var randomTracesTestDir = allTracesDir + "random-test/"
 

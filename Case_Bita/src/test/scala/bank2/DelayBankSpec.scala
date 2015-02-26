@@ -20,6 +20,6 @@ import akka.bita.pattern.Patterns.ask
 class DelayBankSpec extends BankSpec {
 
     // feel free to change these parameters to test the bank with various configurations.
-    override val name = "bank2_delay"
-    override val delay = 500
+    override def name = "bank2_delay"
+    override def delay = 500
 }
