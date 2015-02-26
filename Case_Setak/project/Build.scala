@@ -57,7 +57,7 @@ object Resolvers {
 object Dependencies {
     val setak = "edu.illinois" %% "setak" % "1.0-SNAPSHOT"
 
-    val deps = Seq(setak)
+    val myDepencencies = Seq(setak)
 }
 
 // The actual build script, nothing should be changed in here
@@ -79,8 +79,8 @@ object BuildScript extends Build {
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq("-source", BuildSettings.buildJavaVersion, "-target", BuildSettings.buildJavaVersion),
 
-            // append -deprecation to the options passed to the Scala compiler
-            scalacOptions += "-deprecation"
+            // append -deprecation and others to the options passed to the Scala compiler
+            scalacOptions ++= Seq("-deprecation", "-explaintypes", "-encoding", "UTF8", "–optimise")
         )
     )
 }

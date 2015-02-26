@@ -82,8 +82,8 @@ object BuildScript extends Build {
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq("-source", BuildSettings.buildJavaVersion, "-target", BuildSettings.buildJavaVersion),
 
-            // append -deprecation to the options passed to the Scala compiler
-            scalacOptions += "-deprecation"
+            // append -deprecation and others to the options passed to the Scala compiler
+            scalacOptions ++= Seq("-deprecation", "-explaintypes", "-encoding", "UTF8", "–optimise")
         )
     )
 }
