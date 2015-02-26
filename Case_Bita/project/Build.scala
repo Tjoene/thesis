@@ -55,9 +55,12 @@ object Resolvers {
 
 // The dependencies that are needed for the project
 object Dependencies {
-    val bita = "cs.edu.uiuc" %% "bita" % "0.1"
+    val bita      = "cs.edu.uiuc" %% "bita" % "0.1"
+    val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.5"
+    val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.5"
+    val scalatest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
 
-    val myDepencencies = Seq(bita)
+    val myDepencencies = Seq(bita, actor, testkit, scalatest)
 }
 
 // The actual build script, nothing should be changed in here

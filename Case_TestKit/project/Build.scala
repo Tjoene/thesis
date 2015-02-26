@@ -57,7 +57,7 @@ object Resolvers {
 object Dependencies {
     val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.5"
     val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.5"
-    val scalatest = "org.scalatest" % "scalatest_2.9.2" % "1.9.2" % "test"
+    val scalatest = "org.scalatest" %% "scalatest" % "1.9.2" % "test"
     val junit     = "junit" % "junit" % "4.5"
 
     val myDepencencies = Seq(actor, testkit, junit, scalatest)
