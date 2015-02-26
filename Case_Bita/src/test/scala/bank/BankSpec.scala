@@ -100,7 +100,7 @@ class BankSpec extends TestHelper with FunSpec {
         system = ActorSystem()
         RandomScheduleHelper.setSystem(system)
 
-        var bankActor = system.actorOf(Bank())
+        var bankActor = system.actorOf(Bank(), "Bank")
 
         bankActor ! Start // Start the simulation
 

@@ -24,9 +24,9 @@ class Bank(val delay: Int) extends Actor {
         case Start => {
             val testAmount = 5
 
-            val account1 = context.actorOf(Account("Freddy", testAmount, self, null)) // Create child actors that will host the accounts
-            val account3 = context.actorOf(Account("Stevie", 0, self, null))
-            val account2 = context.actorOf(Account("Johnny", 0, self, account3))
+            val account1 = context.actorOf(Account("Freddy", testAmount, self, null), "Account_Freddy") // Create child actors that will host the accounts
+            val account3 = context.actorOf(Account("Stevie", 0, self, null), "Account_Stevie")
+            val account2 = context.actorOf(Account("Johnny", 0, self, account3), "Account_Johnny")
          
             account1 ! Transfer(account2, testAmount)
 

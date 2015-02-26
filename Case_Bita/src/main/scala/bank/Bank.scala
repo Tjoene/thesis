@@ -20,8 +20,8 @@ class Bank() extends Actor {
 
     def receive = {
         case Start => {
-            var account1 = context.actorOf(Account("Freddy", 500)) // Create child actors that will host the accounts
-            var account2 = context.actorOf(Account("Johnny", 0))
+            var account1 = context.actorOf(Account("Freddy", 500), "Account_Freddy") // Create child actors that will host the accounts
+            var account2 = context.actorOf(Account("Johnny", 0), "Account_Johnny")
          
             account1 ! Transfer(account2, 500) // Freddy makes a transaction to Johnny for an amount of 500.
 

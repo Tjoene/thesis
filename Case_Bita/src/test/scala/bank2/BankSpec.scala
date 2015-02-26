@@ -103,7 +103,7 @@ class BankSpec extends TestHelper with FunSpec {
         system = ActorSystem()
         RandomScheduleHelper.setSystem(system)
 
-        var bankActor = system.actorOf(Bank(delay)) // A bank without delay between messages.
+        var bankActor = system.actorOf(Bank(delay), "Bank") // A bank without delay between messages.
 
         bankActor ! Start // Start the simulation
 
