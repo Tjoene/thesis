@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException
 import com.typesafe.config.ConfigFactory
 
 
-class FunSpec extends FunSuite with TestHelper {
+class FunSpec extends FunSuite with TestHelper2 {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "bank4"
@@ -30,7 +30,7 @@ class FunSpec extends FunSuite with TestHelper {
     def delay = 1000
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
-    val criteria = Array[Criterion](PRCriterion)
+    val criteria = Array[Criterion](PCRCriterion)
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
@@ -82,13 +82,28 @@ class FunSpec extends FunSuite with TestHelper {
     def run {
         //system = ActorSystem("ActorSystem")
         system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
-                akka.loglevel = DEBUG
-                akka.stdout-loglevel = DEBUG
-                akka.actor.default-dispatcher.throughput = 5    
-                akka.actor.debug.receive = on
-                akka.actor.debug.lifecycle = on
-                akka.actor.debug.event-stream = on
-                akka.event-handlers = ["akka.testkit.TestEventListener"]
+            akka {   
+                loglevel = DEBUG
+                stdout-loglevel = DEBUG
+
+                remote {
+                    log-received-messages = on
+                }
+
+                actor {
+                    default-dispatcher {
+                        throughput = 5
+                    }
+
+                    debug {
+                        receive = on
+                        lifecycle = on
+                        event-stream = on
+                    }
+                }
+
+                event-handlers = ["akka.testkit.TestEventListener"]
+            }
         """))
         RandomScheduleHelper.setSystem(system)
 

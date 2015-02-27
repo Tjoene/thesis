@@ -19,7 +19,7 @@ import akka.util.Timeout
 /**
  * A helper for testing with Bita.
  */
-trait TestHelper {
+trait TestHelper2 {
 
   var bugDetected = false
   var reportBug = false

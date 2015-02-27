@@ -13,7 +13,7 @@ import org.scalatest._
 import akka.testkit.CallingThreadDispatcher
 import java.util.concurrent.TimeoutException
 
-class GeneratSpec extends FunSpec with TestHelper {
+class GenerateSpec extends FunSpec with Bita.util.TestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "bank4"
@@ -85,26 +85,18 @@ class GeneratSpec extends FunSpec with TestHelper {
         bankActor ! RegisterSender
         bankActor ! Start // Start the simulation
 
-        try { 
-            val future = ask(bankActor, RegisterSender)
-            val result = Await.result(future, timeout.duration).asInstanceOf[Int]
-            
-            if(result > 0) {
-                bugDetected = false
-                println(Console.YELLOW + Console.BOLD + "**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
-            } else {
-                bugDetected = true
-                println(Console.YELLOW + Console.BOLD + "**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
-            }
-        } catch {
-            case e: TimeoutException => {
-                bugDetected = false
-                println(Console.RED + Console.BOLD + "**FAILURE** Timeout" + Console.RESET)
-            } 
+        val future = ask(bankActor, RegisterSender)
+        val result = Await.result(future, timeout.duration).asInstanceOf[Int]
+        
+        if(result > 0) {
+            bugDetected = false
+            println(Console.YELLOW + Console.BOLD + "**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
+        } else {
+            bugDetected = true
+            println(Console.YELLOW + Console.BOLD + "**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
         }
     }
 }
-
 
 /*class QuickSortSpec2 extends FlatSpec with bita.util.TestHelper {
 
