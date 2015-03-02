@@ -1,4 +1,4 @@
-package bank4
+package voters
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.{ RandomScheduleHelper, Scheduler }
@@ -7,8 +7,7 @@ import akka.util.duration._
 import akka.util.Timeout
 import akka.dispatch.Await
 
-import bita.util.FileHelper
-//import bita.util.{ FileHelper, TestHelper }
+import bita.util.{ FileHelper, TestHelper }
 
 import bita.criteria._
 import bita.ScheduleOptimization._
@@ -18,18 +17,18 @@ import akka.testkit.CallingThreadDispatcher
 import java.util.concurrent.TimeoutException
 import com.typesafe.config.ConfigFactory
 
-class FunSpec extends FunSuite with TestHelper2 {
+class VoterSpec extends FunSuite with TestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
-    def name = "bank4"
+    def name = "voters"
 
     implicit val timeout = Timeout(5000.millisecond)
 
     // delay between start and end message
-    def delay = 1000
+    def delay = 500
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
-    val criteria = Array[Criterion](PCRCriterion)
+    val criteria = Array[Criterion](PRCriterion)
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
@@ -47,7 +46,7 @@ class FunSpec extends FunSuite with TestHelper2 {
         testRandom(name, randomTracesDir, 1)
     }
 
-    test(" Generate and test schedules with criterion") {
+    test("Generate and test schedules with criterion") {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
@@ -82,8 +81,8 @@ class FunSpec extends FunSuite with TestHelper2 {
         //system = ActorSystem("ActorSystem")
         system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
             akka {   
-                loglevel = DEBUG
-                stdout-loglevel = DEBUG
+                loglevel = WARNING
+                stdout-loglevel = WARNING
 
                 remote {
                     log-received-messages = on
@@ -106,23 +105,24 @@ class FunSpec extends FunSuite with TestHelper2 {
         """))
         RandomScheduleHelper.setSystem(system)
 
-        // A bank without delay between messages and using CallingThreadDispatcher.
-        var bankActor = system.actorOf(Bank(delay).withDispatcher(CallingThreadDispatcher.Id), "Bank")
+        val ballot = system.actorOf(Props(new Ballot).withDispatcher(CallingThreadDispatcher.Id), "ballot")
+        val voter1 = system.actorOf(Props(new Voter).withDispatcher(CallingThreadDispatcher.Id), "voter1")
+        val voter2 = system.actorOf(Props(new Voter).withDispatcher(CallingThreadDispatcher.Id), "voter2")
 
-        bankActor ! Start // Start the simulation
+        ballot ! Start(List(voter1, voter2))
+
+        Thread.sleep(delay)
 
         try {
-            println(Console.CYAN + Console.BOLD+"**ASKING**"+Console.RESET)
-            val future = ask(bankActor, RegisterSender)
-            val result = Await.result(future, timeout.duration).asInstanceOf[Int]
-            println(Console.CYAN + Console.BOLD+"**ASKED**"+Console.RESET)
+            val future = ask(ballot, Result)
+            val result = Await.result(future, timeout.duration).asInstanceOf[ActorRef]
 
-            if (result > 0) {
+            if (result == voter2) {
                 bugDetected = false
-                println(Console.CYAN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
+                println(Console.CYAN + Console.BOLD+"**SUCCESS** The voter2 %s has won the election".format(result.toString()) + Console.RESET)
             } else {
                 bugDetected = true
-                println(Console.CYAN + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
+                println(Console.CYAN + Console.BOLD+"**FAILURE** Voter2 didn't win the election, instead %s won".format(result.toString()) + Console.RESET)
             }
         } catch {
             case e: TimeoutException => {

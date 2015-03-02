@@ -10,7 +10,7 @@
 
 ## Quick start
 
-In this folder you will have 
+In this folder you will find the different testcases that were used to test the tool Bita.
 
 - Install [Simple Build Tool](http://www.scala-sbt.org/). At the time of writing, version 0.13.7 was used
 - Clone the repo: `git clone https://github.com/Tjoene/thesis.git`.
