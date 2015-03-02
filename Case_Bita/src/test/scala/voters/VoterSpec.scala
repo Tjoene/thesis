@@ -105,9 +105,9 @@ class VoterSpec extends FunSuite with TestHelper {
         """))
         RandomScheduleHelper.setSystem(system)
 
-        val ballot = system.actorOf(Props(new Ballot).withDispatcher(CallingThreadDispatcher.Id), "ballot")
-        val voter1 = system.actorOf(Props(new Voter).withDispatcher(CallingThreadDispatcher.Id), "voter1")
-        val voter2 = system.actorOf(Props(new Voter).withDispatcher(CallingThreadDispatcher.Id), "voter2")
+        val ballot = system.actorOf(Ballot().withDispatcher(CallingThreadDispatcher.Id), "ballot")
+        val voter1 = system.actorOf(Voter().withDispatcher(CallingThreadDispatcher.Id), "voter1")
+        val voter2 = system.actorOf(Voter().withDispatcher(CallingThreadDispatcher.Id), "voter2")
 
         ballot ! Start(List(voter1, voter2))
 

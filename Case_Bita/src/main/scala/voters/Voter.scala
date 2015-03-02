@@ -1,13 +1,18 @@
 package voters
 
-import akka.actor.Actor
-import akka.actor.ActorRef
+import akka.actor.{ Actor, Props }
 
-import akka.actor.ActorSystem
+case object Vote
+
+// Use bank.prop in the code or Voter()
+// See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices
+object Voter {
+    def props(): Props = Props(new Voter())
+    def apply(): Props = Props(new Voter())
+}
 
 /**
- * Sink Actor messaging test class to count received messages.
- *
+ * Voter actor that sends elects himself in the ballot.
  */
 class Voter() extends Actor {
 
@@ -20,7 +25,6 @@ class Voter() extends Actor {
      * 			default message, throws an IllegalArgumentException
      *
      */
-
     def receive = {
         case Vote => {
             sender ! self
@@ -32,6 +36,3 @@ class Voter() extends Actor {
         }
     }
 }
-
-case object Vote
-

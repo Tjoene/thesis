@@ -1,12 +1,16 @@
 package voters
 
-import akka.actor._
-import akka.event._
-import akka.dispatch._
+import akka.actor.{ Actor, ActorRef, Props }
+
+// Use bank.prop in the code or Ballot()
+// See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices
+object Ballot {
+    def props(): Props = Props(new Ballot())
+    def apply(): Props = Props(new Ballot())
+}
 
 /**
- * Sink Actor messaging test class to count received messages.
- *
+ * Ballot actor, this will hold the election and give the winner.
  */
 class Ballot() extends Actor {
     var won: ActorRef = _
