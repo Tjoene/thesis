@@ -1,11 +1,13 @@
-import sbt._
-import sbt.Keys._
-
 /**
  * Build script for test project.
  * 
  * @author Jeroen Behaegel (jeroen.behaegel@student.kuleuven.be)
  */
+
+import sbt._
+import sbt.Keys._
+import com.typesafe.sbt.SbtScalariform
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
  // Build and Project settings
 object BuildSettings {
@@ -53,7 +55,7 @@ object Resolvers {
     val myResolvers = Seq(typesafe, akka)
 }
 
-// The dependencies that are needed for the project
+// The dependencies that are required for the project
 object Dependencies {
     val bita      = "cs.edu.uiuc" %% "bita" % "0.1"
     val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.5"
@@ -63,26 +65,61 @@ object Dependencies {
     val myDepencencies = Seq(bita, actor, testkit, scalatest)
 }
 
+// The configuration for auto formatting when you compile the files
+object Formatting {
+    val formatSettings = SbtScalariform.scalariformSettings ++ Seq(
+        ScalariformKeys.preferences in Compile := formattingPreferences,
+        ScalariformKeys.preferences in Test    := formattingPreferences
+    )
+
+    def formattingPreferences = {
+    import scalariform.formatter.preferences._
+
+    // Settings can be found here: 
+    // https://github.com/mdr/scalariform/wiki/Command-line-tool#option-summary
+    FormattingPreferences()
+        .setPreference(AlignParameters, true)
+        .setPreference(AlignSingleLineCaseStatements, true)
+        .setPreference(CompactStringConcatenation, true)
+        .setPreference(DoubleIndentClassDeclaration, true)
+        .setPreference(FormatXml, true)
+        .setPreference(IndentLocalDefs, true)
+        .setPreference(IndentPackageBlocks, true)
+        .setPreference(PreserveDanglingCloseParenthesis, true)
+        .setPreference(PreserveSpaceBeforeArguments, true)
+        .setPreference(RewriteArrowSymbols, false)
+        .setPreference(SpaceBeforeColon, false)
+        .setPreference(SpaceInsideBrackets, false)
+        .setPreference(SpaceInsideParentheses, false)
+        .setPreference(IndentSpaces, 4)
+    }
+}
+
 // The actual build script, nothing should be changed in here
 object BuildScript extends Build {
     import Resolvers._
     import Dependencies._
     import BuildSettings._
+    import Formatting._
 
     lazy val proj = Project (
         id = BuildSettings.projectName,
         base = file ("."),
-        settings = buildSettings ++ Seq(
-            resolvers := myResolvers ,
+        settings = buildSettings ++ formatSettings ++ Seq(
+            resolvers := myResolvers,
             libraryDependencies ++= myDepencencies,
 
             // Execute tests in the current project serially
             parallelExecution in Test := false,
 
             // append several options to the list of options passed to the Java compiler
-            javacOptions ++= Seq("-source", BuildSettings.buildJavaVersion, "-target", BuildSettings.buildJavaVersion),
+            javacOptions ++= Seq(
+                "-source", BuildSettings.buildJavaVersion,
+                "-target", BuildSettings.buildJavaVersion,
+                "-encoding", "UTF-8"
+            ),
 
-            // append -deprecation and others to the options passed to the Scala compiler
+            // append several options  to the list of options passed to the Scala compiler
             scalacOptions ++= Seq("-deprecation", "-explaintypes", "-encoding", "UTF8", "–optimise")
         )
     )
