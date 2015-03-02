@@ -1,10 +1,43 @@
 *.class
 *.log
 
-# Ignore all sbt specific folders inside the different test projects
+# Ignore all SBT specific folders inside the different test projects
 
 */project/target/
 */project/project/
 */target/
 */test-results/
 
+# Ignore all Netbeans specific folders inside the different test projects
+
+*/nbproject/private/
+*/build/
+*/nbbuild/
+*/dist/
+*/nbdist/
+*/nbactions.xml
+*/nb-configuration.xml
+*/.nb-gradle/
+
+# Ignore all Eclipse specific folders inside the different test projects
+
+*/*.pydevproject
+*/.metadata
+*/.gradle
+*/bin/
+*/tmp/
+*/*.tmp
+*/*.bak
+*/*.swp
+*/*~.nib
+*/local.properties
+*/.settings/
+*/.loadpath
+*/.project
+*/.externalToolBuilders/
+*/*.launch
+*/.cproject
+*/.classpath
+*/.buildpath
+*/.target
+*/.texlipse
