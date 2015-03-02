@@ -32,7 +32,7 @@
 
 //     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
 //     val criteria = Array[Criterion](PRCriterion)
-    
+
 //     // Test the bank example with all criteria and optimizations.
 //     "Different optimizations" should "be tested for bank" in {
 
@@ -72,7 +72,7 @@
 //             RandomScheduleHelper.setMaxDelay(150)
 //             RandomScheduleHelper.setSystem(system)
 //         }
-        
+
 //         var bankActor = system.actorOf(Bank())
 
 //         bankActor ! Start // Start the simulation

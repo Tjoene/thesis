@@ -14,7 +14,7 @@ object BankMain {
 
     def main(args: Array[String]) {
         val system = ActorSystem("BankMain")
- 
+
         var bankActor = system.actorOf(Bank())
 
         bankActor ! Start // Start the simulation
@@ -22,10 +22,10 @@ object BankMain {
         val future = (bankActor ? RegisterSender)
         var result = Await.result(future, timeout.duration).asInstanceOf[Int]
 
-        if(result > 0 ) {
-            println(Console.YELLOW + Console.BOLD + "**SUCCESS** Freddy has %d on his account".format(result))
+        if (result > 0) {
+            println(Console.YELLOW + Console.BOLD+"**SUCCESS** Freddy has %d on his account".format(result))
         } else {
-            println(Console.YELLOW + Console.BOLD + "**FAILURE** Freddy has %d on his account".format(result))
+            println(Console.YELLOW + Console.BOLD+"**FAILURE** Freddy has %d on his account".format(result))
         }
 
         system.shutdown()

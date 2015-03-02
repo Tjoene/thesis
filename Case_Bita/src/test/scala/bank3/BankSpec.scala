@@ -26,8 +26,8 @@ class BankSpec extends TestHelper with FunSpec {
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
-    var randomTracesDir = allTracesDir + "random/"
-    var randomTracesTestDir = allTracesDir + "random-test/"
+    var randomTracesDir = allTracesDir+"random/"
+    var randomTracesTestDir = allTracesDir+"random-test/"
 
     var generatedSchedulesNum = -1
 
@@ -43,7 +43,7 @@ class BankSpec extends TestHelper with FunSpec {
             FileHelper.emptyDir(randomTracesDir)
             var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
             var traceIndex = traceFiles.length + 1
-            var newTraceName = name + "-random%s-trace.txt".format(traceIndex)
+            var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
             testRandom(name, randomTracesDir, 1)
         }
 
@@ -71,8 +71,8 @@ class BankSpec extends TestHelper with FunSpec {
             var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
             for (criterion <- criteria) {
                 for (opt <- criterion.optimizations.-(NONE)) {
-                    var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
-                    
+                    var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
+
                     FileHelper.emptyDir(scheduleDir)
                     generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
                 }
@@ -86,11 +86,11 @@ class BankSpec extends TestHelper with FunSpec {
             var interval = 5
             for (criterion <- criteria) {
                 for (opt <- criterion.optimizations.-(NONE)) {
-                    var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
+                    var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
                     var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
                     FileHelper.copyFiles(randomTraces, scheduleDir)
 
-                    var resultFile = scheduleDir + "%s-%s-result.txt".format(criterion.name, opt)
+                    var resultFile = scheduleDir+"%s-%s-result.txt".format(criterion.name, opt)
                     var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
                     traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
                     criterion.measureCoverage(traceFiles, resultFile, interval)
@@ -110,12 +110,12 @@ class BankSpec extends TestHelper with FunSpec {
         val future = ask(bankActor, RegisterSender)
         val result = Await.result(future, timeout.duration).asInstanceOf[Int]
 
-        if(result > 0) {
+        if (result > 0) {
             bugDetected = false
-            println(Console.YELLOW + Console.BOLD + "**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
+            println(Console.YELLOW + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
         } else {
             bugDetected = true
-            println(Console.YELLOW + Console.BOLD + "**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
+            println(Console.YELLOW + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
         }
     }
 }

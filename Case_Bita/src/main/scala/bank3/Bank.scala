@@ -22,22 +22,22 @@ object Bank {
 }
 
 class Bank(val delay: Int) extends Actor {
-    var dest : ActorRef = _
-    var account1 : ActorRef = _
-    var account2 : ActorRef = _
-    var account3 : ActorRef = _
-    var account4 : ActorRef = _
+    var dest: ActorRef = _
+    var account1: ActorRef = _
+    var account2: ActorRef = _
+    var account3: ActorRef = _
+    var account4: ActorRef = _
     implicit val timeout = Timeout(5000.millisecond)
-    
+
     def receive = {
         case Start => {
             val testAmount = 5
 
             account1 = context.actorOf(Account("Freddy", testAmount, self, null), "Account_Freddy") // Create child actors that will host the accounts
             account4 = context.actorOf(Account("Charlie", 0, null, null), "Account_Charlie")
-            account3 = context.actorOf(Account("Stevie",  0, null, account4), "Account_Stevie")
-            account2 = context.actorOf(Account("Johnny",  0, self, account3), "Account_Johnny")
-         
+            account3 = context.actorOf(Account("Stevie", 0, null, account4), "Account_Stevie")
+            account2 = context.actorOf(Account("Johnny", 0, self, account3), "Account_Johnny")
+
             account1 ! Transfer(account2, testAmount)
 
             Thread.sleep(delay)
@@ -49,21 +49,21 @@ class Bank(val delay: Int) extends Actor {
             val future = ask(account4, Balance)
             val result = Await.result(future, timeout.duration).asInstanceOf[Int]
 
-            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(result)+ Console.RESET)
+            println(Console.YELLOW + Console.BOLD+"BANK:   registered an amount of %d".format(result) + Console.RESET)
 
-            if(dest != null){
+            if (dest != null) {
                 dest ! result
             } else {
                 self ! Finish
             }
-        } 
-        
+        }
+
         // This will register the test as the destination where we need to send 
         // the balance to when we receive the finish signal
-        case RegisterSender => { 
+        case RegisterSender => {
             dest = sender
         }
 
-        case _ => println(Console.YELLOW + Console.BOLD + "BANK: 'FATAL ERROR'"+ Console.RESET)
+        case _ => println(Console.YELLOW + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
     }
 }

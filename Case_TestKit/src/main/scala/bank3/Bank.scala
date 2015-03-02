@@ -30,15 +30,15 @@ class Bank() extends Actor {
             account2 ! Balance // Return the amount of account Johnny, should be 500
         }
 
-        case amount:Int => {
-            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(amount) + Console.RESET)
+        case amount: Int => {
+            println(Console.YELLOW + Console.BOLD+"BANK:   registered an amount of %d".format(amount) + Console.RESET)
             dest ! amount
-        } 
-        
+        }
+
         case Balance => { // Give the current balance
             dest = sender
         }
 
-        case _ => println(Console.YELLOW + Console.BOLD + "BANK: 'FATAL ERROR'" + Console.RESET)
+        case _ => println(Console.YELLOW + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
     }
 }

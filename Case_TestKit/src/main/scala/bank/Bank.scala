@@ -34,11 +34,11 @@ class Bank(var amount: Int) extends Actor {
             account2 ! Balance // Return the amount of account Johnny, should be 500
         }
 
-        case x:Int => {
-            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(x) + Console.RESET)
+        case x: Int => {
+            println(Console.YELLOW + Console.BOLD+"BANK:   registered an amount of %d".format(x) + Console.RESET)
             this.amount = x
-        } 
-        
+        }
+
         case Balance => { // Give the current balance
             Future {
                 while (this.amount == -1) {} // wait until we have a valid amount
@@ -46,7 +46,7 @@ class Bank(var amount: Int) extends Actor {
             } pipeTo sender
         }
 
-        case _ => println(Console.YELLOW + Console.BOLD + "BANK: 'FATAL ERROR'" + Console.RESET)
+        case _ => println(Console.YELLOW + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
     }
 
     def setAmount(amount: Int) = {

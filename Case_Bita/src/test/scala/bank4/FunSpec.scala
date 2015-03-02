@@ -18,7 +18,6 @@ import akka.testkit.CallingThreadDispatcher
 import java.util.concurrent.TimeoutException
 import com.typesafe.config.ConfigFactory
 
-
 class FunSpec extends FunSuite with TestHelper2 {
 
     // feel free to change these parameters to test the bank with various configurations.
@@ -34,8 +33,8 @@ class FunSpec extends FunSuite with TestHelper2 {
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
-    var randomTracesDir = allTracesDir + "random/"
-    var randomTracesTestDir = allTracesDir + "random-test/"
+    var randomTracesDir = allTracesDir+"random/"
+    var randomTracesTestDir = allTracesDir+"random-test/"
 
     var generatedSchedulesNum = -1
 
@@ -44,7 +43,7 @@ class FunSpec extends FunSuite with TestHelper2 {
         FileHelper.emptyDir(randomTracesDir)
         var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         var traceIndex = traceFiles.length + 1
-        var newTraceName = name + "-random%s-trace.txt".format(traceIndex)
+        var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
         testRandom(name, randomTracesDir, 1)
     }
 
@@ -52,8 +51,8 @@ class FunSpec extends FunSuite with TestHelper2 {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
-                
+                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
+
                 FileHelper.emptyDir(scheduleDir)
                 generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
             }
@@ -67,11 +66,11 @@ class FunSpec extends FunSuite with TestHelper2 {
         var interval = 5
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
+                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
                 var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
                 FileHelper.copyFiles(randomTraces, scheduleDir)
 
-                var resultFile = scheduleDir + "%s-%s-result.txt".format(criterion.name, opt)
+                var resultFile = scheduleDir+"%s-%s-result.txt".format(criterion.name, opt)
                 var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
                 traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
                 criterion.measureCoverage(traceFiles, resultFile, interval)
@@ -108,28 +107,28 @@ class FunSpec extends FunSuite with TestHelper2 {
         RandomScheduleHelper.setSystem(system)
 
         // A bank without delay between messages and using CallingThreadDispatcher.
-        var bankActor = system.actorOf(Bank(delay).withDispatcher(CallingThreadDispatcher.Id), "Bank") 
+        var bankActor = system.actorOf(Bank(delay).withDispatcher(CallingThreadDispatcher.Id), "Bank")
 
         bankActor ! Start // Start the simulation
 
-        try { 
-            println(Console.CYAN + Console.BOLD + "**ASKING**" + Console.RESET)
+        try {
+            println(Console.CYAN + Console.BOLD+"**ASKING**"+Console.RESET)
             val future = ask(bankActor, RegisterSender)
             val result = Await.result(future, timeout.duration).asInstanceOf[Int]
-            println(Console.CYAN + Console.BOLD + "**ASKED**" + Console.RESET)
-            
-            if(result > 0) {
+            println(Console.CYAN + Console.BOLD+"**ASKED**"+Console.RESET)
+
+            if (result > 0) {
                 bugDetected = false
-                println(Console.CYAN + Console.BOLD + "**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
+                println(Console.CYAN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
             } else {
                 bugDetected = true
-                println(Console.CYAN + Console.BOLD + "**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
+                println(Console.CYAN + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
             }
         } catch {
             case e: TimeoutException => {
                 bugDetected = false
-                println(Console.RED + Console.BOLD + "**FAILURE** Timeout" + Console.RESET)
-            } 
+                println(Console.RED + Console.BOLD+"**FAILURE** Timeout"+Console.RESET)
+            }
         }
     }
 }

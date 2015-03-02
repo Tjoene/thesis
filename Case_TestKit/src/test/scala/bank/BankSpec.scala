@@ -12,12 +12,12 @@ import org.scalatest.{ FunSuiteLike, BeforeAndAfter, BeforeAndAfterAll }
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.junit.JUnitRunner
 
-class BankSpec(_system: ActorSystem) extends TestKit(_system) 
-    with ImplicitSender
-    with FunSuiteLike 
-    with ShouldMatchers 
-    with BeforeAndAfter
-    with BeforeAndAfterAll {
+class BankSpec(_system: ActorSystem) extends TestKit(_system)
+        with ImplicitSender
+        with FunSuiteLike
+        with ShouldMatchers
+        with BeforeAndAfter
+        with BeforeAndAfterAll {
 
     //#####################################################################################################
 
@@ -31,21 +31,21 @@ class BankSpec(_system: ActorSystem) extends TestKit(_system)
             akka.actor.debug.event-stream = on
             akka.event-handlers = ["akka.testkit.TestEventListener"]
     """)))
-  
+
     before {
 
     }
-    
+
     after {
-        
+
     }
-    
+
     override def afterAll {
         system.shutdown() // clean up after we're done
     }
-    
+
     //#####################################################################################################
-    
+
     test("Correct balance") {
         var bankActor = system.actorOf(Bank().withDispatcher(CallingThreadDispatcher.Id))
 

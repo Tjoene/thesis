@@ -21,7 +21,7 @@ class BankSpec extends SetakJUnit {
     def setUp() {
         // Freddy creates an account and puts 500 dollar on it.
         account1 = actorOf(new Account("Freddy", 500)).start
-        
+
         // Johnny creates one to, but can't affort to put any money on it.
         account2 = actorOf(new Account("Johnny", 0)).start
     }
@@ -37,8 +37,8 @@ class BankSpec extends SetakJUnit {
     @Test
     def correctBalance1() {
         val transfer1 = testMessageEnvelop(anyActorRef, account1, Transfer(account2, 500))
-        val receive1  = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
-        val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
+        val receive1 = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
+        val balance1 = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(transfer1 -> receive1 -> balance1)
         process(50)
@@ -47,8 +47,8 @@ class BankSpec extends SetakJUnit {
     @Test
     def correctBalance2() {
         val transfer1 = testMessageEnvelop(anyActorRef, account1, Transfer(account2, 500))
-        val receive1  = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
-        val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
+        val receive1 = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
+        val balance1 = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(receive1 -> transfer1 -> balance1)
         process(50)
@@ -57,8 +57,8 @@ class BankSpec extends SetakJUnit {
     @Test
     def wrongBalance1() {
         val transfer1 = testMessageEnvelop(anyActorRef, account1, Transfer(account2, 500))
-        val receive1  = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
-        val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
+        val receive1 = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
+        val balance1 = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(balance1 -> transfer1 -> receive1)
         process(500)
@@ -67,8 +67,8 @@ class BankSpec extends SetakJUnit {
     @Test
     def wrongBalance2() {
         val transfer1 = testMessageEnvelop(anyActorRef, account1, Transfer(account2, 500))
-        val receive1  = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
-        val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
+        val receive1 = testMessageEnvelop(anyActorRef, account1, Receive(50, "The Bank"))
+        val balance1 = testMessageEnvelop(anyActorRef, account1, Balance)
 
         setSchedule(balance1 -> receive1 -> transfer1)
         process(500)

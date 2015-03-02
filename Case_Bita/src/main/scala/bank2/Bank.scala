@@ -18,7 +18,7 @@ object Bank {
 }
 
 class Bank(val delay: Int) extends Actor {
-    var dest : ActorRef = _
+    var dest: ActorRef = _
 
     def receive = {
         case Start => {
@@ -27,7 +27,7 @@ class Bank(val delay: Int) extends Actor {
             val account1 = context.actorOf(Account("Freddy", testAmount, self, null), "Account_Freddy") // Create child actors that will host the accounts
             val account3 = context.actorOf(Account("Stevie", 0, self, null), "Account_Stevie")
             val account2 = context.actorOf(Account("Johnny", 0, self, account3), "Account_Johnny")
-         
+
             account1 ! Transfer(account2, testAmount)
 
             Thread.sleep(delay)
@@ -36,16 +36,16 @@ class Bank(val delay: Int) extends Actor {
         }
 
         case Finish(amount) => {
-            println(Console.YELLOW + Console.BOLD + "BANK:   registered an amount of %d".format(amount)+ Console.RESET)
+            println(Console.YELLOW + Console.BOLD+"BANK:   registered an amount of %d".format(amount) + Console.RESET)
             dest ! amount
-        } 
-        
+        }
+
         // This will register the test as the destination where we need to send 
         // the balance to when we receive the finish signal
-        case RegisterSender => { 
+        case RegisterSender => {
             dest = sender
         }
 
-        case _ => println(Console.YELLOW + Console.BOLD + "BANK: 'FATAL ERROR'"+ Console.RESET)
+        case _ => println(Console.YELLOW + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
     }
 }

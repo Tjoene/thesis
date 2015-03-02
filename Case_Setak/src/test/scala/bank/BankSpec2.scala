@@ -25,7 +25,7 @@ class BankSpec2 extends SetakJUnit {
     def setUp() {
         // Freddy creates an account and puts 500 dollar on it.
         account1 = actorOf(new Account("Freddy", 500)).start
-        
+
         // Johnny creates one to, but can't affort to put any money on it.
         account2 = actorOf(new Account("Johnny", 0)).start
     }
@@ -40,9 +40,9 @@ class BankSpec2 extends SetakJUnit {
     @Test
     def correctBalance1() {
         val transfer1 = testMessageEnvelop(anyActorRef, account1, Transfer(account2, 500))
-        val receive1  = testMessageEnvelop(account1,    account2, Receive(500, "Freddy"))
-        val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
-        val balance2  = testMessageEnvelop(anyActorRef, account2, Balance)
+        val receive1 = testMessageEnvelop(account1, account2, Receive(500, "Freddy"))
+        val balance1 = testMessageEnvelop(anyActorRef, account1, Balance)
+        val balance2 = testMessageEnvelop(anyActorRef, account2, Balance)
 
         setSchedule(transfer1 -> receive1, receive1 -> balance2, balance1 -> balance2)
         process(500)
@@ -51,9 +51,9 @@ class BankSpec2 extends SetakJUnit {
     @Test
     def wrongBalance1() {
         val transfer1 = testMessageEnvelop(anyActorRef, account1, Transfer(account2, 500))
-        val receive1  = testMessageEnvelop(account1,    account2, Receive(500, "Freddy"))
-        val balance1  = testMessageEnvelop(anyActorRef, account1, Balance)
-        val balance2  = testMessageEnvelop(anyActorRef, account2, Balance)
+        val receive1 = testMessageEnvelop(account1, account2, Receive(500, "Freddy"))
+        val balance1 = testMessageEnvelop(anyActorRef, account1, Balance)
+        val balance2 = testMessageEnvelop(anyActorRef, account2, Balance)
 
         setSchedule(transfer1 -> receive1, balance2 -> receive1)
         process(0)
