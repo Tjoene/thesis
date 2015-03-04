@@ -10,8 +10,9 @@ import bita.util.{ FileHelper, TestHelper }
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
+import java.util.concurrent.TimeoutException
 
-class BankSpec extends TestHelper with FunSpec {
+class BankSpec extends FunSuite with TestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "bank3"
@@ -22,7 +23,7 @@ class BankSpec extends TestHelper with FunSpec {
     def delay = 0
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
-    val criteria = Array[Criterion](PRCriterion)
+    val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
@@ -31,62 +32,62 @@ class BankSpec extends TestHelper with FunSpec {
 
     var generatedSchedulesNum = -1
 
-    describe("TestCase Bank #3") {
+    // // This test will keep on generating random schedules for 10 seconds until an bug is trigger. 
+    // test("Test randomly within a timeout") {
+    //     testRandomByTime(name, randomTracesTestDir, 10) // 10 sec timeout
+    // }
 
-        // // This test will keep on generating random schedules for 10 seconds until an bug is trigger. 
-        // it(" should test randomly within a timeout", Tag("random-timeout")) {
-        //     testRandomByTime(name, randomTracesTestDir, 10) // 10 sec timeout
-        // }
+    // Generates a random trace which will be used for schedule generation.
+    test("Generate a random trace") {
+        FileHelper.emptyDir(randomTracesDir)
+        var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
+        var traceIndex = traceFiles.length + 1
+        var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
+        testRandom(name, randomTracesDir, 1)
+    }
 
-        // Generates a random trace which will be used for schedule generation.
-        it(" should generate a random trace", Tag("random")) {
-            FileHelper.emptyDir(randomTracesDir)
-            var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-            var traceIndex = traceFiles.length + 1
-            var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
-            testRandom(name, randomTracesDir, 1)
-        }
+    // test("Generate schedules") {
+    //     var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
+    //     for (opt <- criterion.optimizations.-(NONE)) {
+    //         var scheduleDir = allTracesDir + "%s-%s/schedules/".format(criterion.name, opt)
+    //         FileHelper.emptyDir(scheduleDir)
+    //         generateSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
+    //     }
+    // }
 
-        // it(" should generate schedules ", Tag("generate")) {
-        //     var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-        //     for (opt <- criterion.optimizations.-(NONE)) {
-        //         var scheduleDir = allTracesDir + "%s-%s/schedules/".format(criterion.name, opt)
-        //         FileHelper.emptyDir(scheduleDir)
-        //         generateSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
-        //     }
-        // }
+    // test("Test the generated schedules") {
+    //     for (opt <- criterion.optimizations.-(NONE)) {
+    //         var scheduleDir = allTracesDir + "%s-%s/schedules/".format(criterion.name, opt)
 
-        // it(" should test the generated schedules ", Tag("test")) {
-        //     for (opt <- criterion.optimizations.-(NONE)) {
-        //         var scheduleDir = allTracesDir + "%s-%s/schedules/".format(criterion.name, opt)
+    //         var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
+    //         var scheduleIndex = traceFiles.length + 1
+    //         var newScheduleFileName = name + "-%s-schedule.txt".format(scheduleIndex)
+    //         testGeneratedSchedules(scheduleDir)
+    //     }
+    // }
 
-        //         var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
-        //         var scheduleIndex = traceFiles.length + 1
-        //         var newScheduleFileName = name + "-%s-schedule.txt".format(scheduleIndex)
-        //         testGeneratedSchedules(scheduleDir)
-        //     }
-        // }
+    test("Generate and test schedules") {
+        var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
+        for (criterion <- criteria) {
+            for (opt <- criterion.optimizations.-(NONE)) {
+                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
 
-        it(" should generate and test schedules ", Tag("generate-test")) {
-            var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-            for (criterion <- criteria) {
-                for (opt <- criterion.optimizations.-(NONE)) {
-                    var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
-
-                    FileHelper.emptyDir(scheduleDir)
-                    generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
-                }
+                FileHelper.emptyDir(scheduleDir)
+                generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
             }
         }
+    }
 
-        // This will count how many bugs there were found with a certain schedule.
-        // Giving you an indication of how good a shedule is.
-        it(" should measure the coverage of testing with schedules ", Tag("coverage")) {
-            // The number of traces after which the coverage should be measured.
-            var interval = 5
-            for (criterion <- criteria) {
-                for (opt <- criterion.optimizations.-(NONE)) {
-                    var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
+    // This will count how many bugs there were found with a certain schedule.
+    // Giving you an indication of how good a shedule is.
+    test("Measure the coverage of testing with schedules") {
+        // The number of traces after which the coverage should be measured.
+        var interval = 5
+        for (criterion <- criteria) {
+            for (opt <- criterion.optimizations.-(NONE)) {
+                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
+
+                if (new java.io.File(scheduleDir).exists) {
                     var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
                     FileHelper.copyFiles(randomTraces, scheduleDir)
 
@@ -100,22 +101,30 @@ class BankSpec extends TestHelper with FunSpec {
     }
 
     def run {
-        system = ActorSystem()
+        system = ActorSystem("ActorSystem")
+        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
         var bankActor = system.actorOf(Bank(delay), "Bank") // A bank without delay between messages.
 
         bankActor ! Start // Start the simulation
 
-        val future = ask(bankActor, RegisterSender)
-        val result = Await.result(future, timeout.duration).asInstanceOf[Int]
+        try {
+            val future = ask(bankActor, RegisterSender)
+            val result = Await.result(future, timeout.duration).asInstanceOf[Int]
 
-        if (result > 0) {
-            bugDetected = false
-            println(Console.YELLOW + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
-        } else {
-            bugDetected = true
-            println(Console.YELLOW + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
+            if (result > 0) {
+                bugDetected = false
+                println(Console.GREEN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
+            } else {
+                bugDetected = true
+                println(Console.RED + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
+            }
+        } catch {
+            case e: TimeoutException => {
+                bugDetected = true
+                println(Console.RED + Console.BOLD+"**FAILURE** Timeout"+Console.RESET)
+            }
         }
     }
 }
