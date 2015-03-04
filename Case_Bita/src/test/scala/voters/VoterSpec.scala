@@ -109,9 +109,9 @@ class VoterSpec extends FunSuite with TestHelper {
         RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
-        val ballot = system.actorOf(Ballot().withDispatcher(CallingThreadDispatcher.Id), "ballot")
-        val voter1 = system.actorOf(Voter().withDispatcher(CallingThreadDispatcher.Id), "voter1")
-        val voter2 = system.actorOf(Voter().withDispatcher(CallingThreadDispatcher.Id), "voter2")
+        val ballot = system.actorOf(Ballot() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "ballot")
+        val voter1 = system.actorOf(Voter() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "voter1")
+        val voter2 = system.actorOf(Voter() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "voter2")
 
         ballot ! Start(List(voter1, voter2))
 
@@ -130,7 +130,7 @@ class VoterSpec extends FunSuite with TestHelper {
             }
         } catch {
             case e: TimeoutException => {
-                bugDetected = true
+                bugDetected = false
                 println(Console.RED + Console.BOLD+"**FAILURE** Timeout"+Console.RESET)
             }
 
