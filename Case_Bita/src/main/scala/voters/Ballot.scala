@@ -32,6 +32,7 @@ class Ballot() extends Actor {
         }
 
         case elected: ActorRef => {
+            println(Console.CYAN + Console.BOLD+"%s has elected himself to win".format(sender.toString()) + Console.RESET)
             won = sender
         }
 

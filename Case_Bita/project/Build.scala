@@ -112,6 +112,9 @@ object BuildScript extends Build {
             // Execute tests in the current project serially
             parallelExecution in Test := false,
 
+            // Show full stack traces and durations in ScalaTest
+            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
+
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq(
                 "-source", BuildSettings.buildJavaVersion,
@@ -120,7 +123,12 @@ object BuildScript extends Build {
             ),
 
             // append several options  to the list of options passed to the Scala compiler
-            scalacOptions ++= Seq("-deprecation", "-explaintypes", "-encoding", "UTF8", "–optimise")
+            scalacOptions ++= Seq(
+                "-deprecation", 
+                "-explaintypes", 
+                "-encoding", "UTF8", 
+                "–optimise"
+            )
         )
     )
 }

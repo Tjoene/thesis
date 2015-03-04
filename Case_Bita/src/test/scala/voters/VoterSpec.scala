@@ -28,7 +28,7 @@ class VoterSpec extends FunSuite with TestHelper {
     def delay = 500
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
-    val criteria = Array[Criterion](PRCriterion)
+    val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
@@ -66,13 +66,16 @@ class VoterSpec extends FunSuite with TestHelper {
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
                 var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
-                var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-                FileHelper.copyFiles(randomTraces, scheduleDir)
 
-                var resultFile = scheduleDir+"%s-%s-result.txt".format(criterion.name, opt)
-                var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
-                traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
-                criterion.measureCoverage(traceFiles, resultFile, interval)
+                if (new java.io.File(scheduleDir).exists) {
+                    var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
+                    FileHelper.copyFiles(randomTraces, scheduleDir)
+
+                    var resultFile = scheduleDir+"%s-%s-result.txt".format(criterion.name, opt)
+                    var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
+                    traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
+                    criterion.measureCoverage(traceFiles, resultFile, interval)
+                }
             }
         }
     }
@@ -103,6 +106,7 @@ class VoterSpec extends FunSuite with TestHelper {
                 event-handlers = ["akka.testkit.TestEventListener"]
             }
         """))
+        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
         val ballot = system.actorOf(Ballot().withDispatcher(CallingThreadDispatcher.Id), "ballot")
@@ -119,15 +123,20 @@ class VoterSpec extends FunSuite with TestHelper {
 
             if (result == voter2) {
                 bugDetected = false
-                println(Console.CYAN + Console.BOLD+"**SUCCESS** The voter2 %s has won the election".format(result.toString()) + Console.RESET)
+                println(Console.GREEN + Console.BOLD+"**SUCCESS** The voter2 %s has won the election".format(result.toString()) + Console.RESET)
             } else {
                 bugDetected = true
-                println(Console.CYAN + Console.BOLD+"**FAILURE** Voter2 didn't win the election, instead %s won".format(result.toString()) + Console.RESET)
+                println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win the election, instead %s won".format(result.toString()) + Console.RESET)
             }
         } catch {
             case e: TimeoutException => {
                 bugDetected = true
                 println(Console.RED + Console.BOLD+"**FAILURE** Timeout"+Console.RESET)
+            }
+
+            case e: TimingException => {
+                bugDetected = true
+                println(Console.RED + Console.BOLD+"**FAILURE** The ballot threw an exception: %s".format(e.getMessage()) + Console.RESET)
             }
         }
     }
