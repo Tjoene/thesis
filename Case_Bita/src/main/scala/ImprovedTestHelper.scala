@@ -22,7 +22,7 @@ import akka.util.Timeout
 trait ImprovedTestHelper {
 
     var delay = 0
-    var delaySeq:List[Int] = List(0, 500, 1000)
+    var delaySeq: List[Int] = List(0, 500, 1000)
 
     var bugDetected = false
     var reportBug = false
