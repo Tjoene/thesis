@@ -118,3 +118,6 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 
+
+
+SOURCE TAKEN FROM https://github.com/derekjw/fyrie-redis/tree/akka-1.2
