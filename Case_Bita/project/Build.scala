@@ -52,8 +52,9 @@ object Resolvers {
     val typesafe = "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
     val akka     = "Akka Repo" at "http://repo.akka.io/releases/"
     val sonatype = "OSS Sonatype" at "https://oss.sonatype.org/content/repositories/snapshots/"
+    val maven    = "Maven" at "https://repo1.maven.org/maven2/"
     
-    val myResolvers = Seq(typesafe, akka)
+    val myResolvers = Seq(typesafe, akka, sonatype, maven)
 }
 
 // The dependencies that are required for the project
