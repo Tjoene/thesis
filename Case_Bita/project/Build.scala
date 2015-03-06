@@ -51,7 +51,8 @@ object ShellPrompt {
 object Resolvers {
     val typesafe = "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
     val akka     = "Akka Repo" at "http://repo.akka.io/releases/"
-      
+    val sonatype = "OSS Sonatype" at "https://oss.sonatype.org/content/repositories/snapshots/"
+    
     val myResolvers = Seq(typesafe, akka)
 }
 
@@ -73,25 +74,25 @@ object Formatting {
     )
 
     def formattingPreferences = {
-    import scalariform.formatter.preferences._
+        import scalariform.formatter.preferences._
 
-    // Settings can be found here: 
-    // https://github.com/mdr/scalariform/wiki/Command-line-tool#option-summary
-    FormattingPreferences()
-        .setPreference(AlignParameters, true)
-        .setPreference(AlignSingleLineCaseStatements, true)
-        .setPreference(CompactStringConcatenation, true)
-        .setPreference(DoubleIndentClassDeclaration, true)
-        .setPreference(FormatXml, true)
-        .setPreference(IndentLocalDefs, true)
-        .setPreference(IndentPackageBlocks, true)
-        .setPreference(PreserveDanglingCloseParenthesis, true)
-        .setPreference(PreserveSpaceBeforeArguments, true)
-        .setPreference(RewriteArrowSymbols, false)
-        .setPreference(SpaceBeforeColon, false)
-        .setPreference(SpaceInsideBrackets, false)
-        .setPreference(SpaceInsideParentheses, false)
-        .setPreference(IndentSpaces, 4)
+        // Settings can be found here: 
+        // https://github.com/mdr/scalariform/wiki/Command-line-tool#option-summary
+        FormattingPreferences()
+            .setPreference(AlignParameters, true)
+            .setPreference(AlignSingleLineCaseStatements, true)
+            .setPreference(CompactStringConcatenation, true)
+            .setPreference(DoubleIndentClassDeclaration, true)
+            .setPreference(FormatXml, true)
+            .setPreference(IndentLocalDefs, true)
+            .setPreference(IndentPackageBlocks, true)
+            .setPreference(PreserveDanglingCloseParenthesis, true)
+            .setPreference(PreserveSpaceBeforeArguments, true)
+            .setPreference(RewriteArrowSymbols, false)
+            .setPreference(SpaceBeforeColon, false)
+            .setPreference(SpaceInsideBrackets, false)
+            .setPreference(SpaceInsideParentheses, false)
+            .setPreference(IndentSpaces, 4)
     }
 }
 
