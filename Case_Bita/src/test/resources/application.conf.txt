@@ -1,0 +1,21 @@
+akka {
+    loggers = ["akka.event.slf4j.Slf4jLogger"]
+    logLevel = "DEBUG"
+    stdout-loglevel = DEBUG
+    event-handlers = ["akka.event.slf4j.Slf4jEventHandler"]
+    log-dead-letters = 0
+    log-dead-letters-during-shutdown = off
+    log-config-on-start = off
+
+    actor {
+        default-dispatcher {
+            throughput = 5
+        }
+
+        debug {
+            autoreceive = on
+            lifecycle = on
+            event-stream = on
+        }
+    }
+}
