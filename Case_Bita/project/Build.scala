@@ -114,6 +114,9 @@ object BuildScript extends Build {
             // Execute tests in the current project serially
             parallelExecution in Test := false,
 
+            // Run the tests in a seperated JVM then the one SBT is using
+            fork in Test := true,
+            
             // Show full stack traces and durations in ScalaTest
             testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
 
