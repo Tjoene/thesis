@@ -11,7 +11,6 @@ import akka.actor.ActorCell
 import akka.actor.ActorRef
 import akka.dispatch.Envelope
 import akka.pattern.PromiseActorRef
-import akka.dispatch.DefaultPromise
 import scala.collection.immutable.StringLike
 import akka.actor.ActorSystem
 import akka.actor.Actor
@@ -482,7 +481,7 @@ object Scheduler {
       } else {
         senderActor = getActorPath(envelope.sender, envelope.message)
         logicalMessage = createLogicalMessageForSend(envelope.message, senderActor, receiverActor)
-        newEnvelope = Envelope(logicalMessage, envelope.sender)(system)
+        newEnvelope = Envelope(logicalMessage, envelope.sender, system)
       }
 
       // Check the order of messages if the schedule is not null or empty
@@ -541,9 +540,9 @@ object Scheduler {
     }
   }
 
-  def aroundPromiseResult(promise: DefaultPromise[Any], result: Any) = synchronized {
-    //checkForDispatch()
-  }
+  //def aroundPromiseResult(promise: DefaultPromise[Any], result: Any) = synchronized {
+  //  //checkForDispatch()
+  //}
 
   /**
    *  This method is called from aspectj file when receiving/processing a message.
@@ -560,7 +559,7 @@ object Scheduler {
       var senderActor = getActorPath(envelope.sender, logicalMessage.message)
 
       updateVCAndScheduleAndTraceForReceive(logicalMessage, senderActor, actorCell.self.path.toString(), false)
-      realEnvelope = Envelope(envelope.message.asInstanceOf[LogicalMessage].message, envelope.sender)(actorCell.system)
+      realEnvelope = Envelope(envelope.message.asInstanceOf[LogicalMessage].message, envelope.sender, actorCell.system)
     } //else //println("the message is not logical envelope: " + envelope.message)
     else {
       logger.logLine("m=%s,  sender=%s, rec=%s".format(envelope.message, envelope.sender, actorCell.self),
@@ -739,7 +738,7 @@ object Scheduler {
    *    </li>
    *    <li><b>The reference is a <code>Promise</code> reference</b> -
    *      returns parent path.
-   * 	</li>
+   *  </li>
    *    <li><b>Otherwise</b> -
    *      returns the actor path.
    *    </li>

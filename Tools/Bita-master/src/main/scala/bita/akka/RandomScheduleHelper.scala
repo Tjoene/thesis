@@ -12,8 +12,7 @@ import scala.collection.JavaConversions._
 import akka.actor.ActorRef
 import akka.actor.ScalaActorRef
 import java.util.Random
-//import scala.concurrent.duration.Duration
-import akka.util.Duration
+import scala.concurrent.duration.Duration
 import java.util.concurrent.TimeUnit
 import java.util.LinkedList
 import bita.util.ActorPathHelper._
@@ -66,7 +65,7 @@ object RandomScheduleHelper {
       val receiverPath = receiver.path.toString()
       val now = System.nanoTime
       val delay = computeDelay((realSenderPath, receiverPath), now)
-      Duration.create(delay, TimeUnit.NANOSECONDS)
+      Duration(delay, TimeUnit.NANOSECONDS)
     } else null
   }
 

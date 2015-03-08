@@ -6,13 +6,13 @@ package pattern
  */
 
 import akka.actor.ActorRef
-import akka.dispatch.Future
-import akka.util.Duration
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration
 import akka.util.Timeout
 import akka.dispatch.Envelope
 import akka.actor.ActorSystem
 import akka.actor.InternalActorRef
-import akka.dispatch.Promise
+import scala.concurrent.Promise
 import akka.pattern.AskTimeoutException
 import akka.pattern.PromiseActorRef
 import Scheduler._
@@ -29,15 +29,17 @@ object Patterns {
   def ask(actorRef: ActorRef, message: Any)(implicit sender: ActorRef = null, timeout: Timeout): Future[Any] = {
     actorRef match {
       case ref: InternalActorRef if ref.isTerminated =>
-        actorRef.tell(message)
-        Promise.failed(new AskTimeoutException("sending to terminated ref breaks promises"))(ref.provider.dispatcher)
+        actorRef.tell(message, null)
+        val p = Promise[Any]
+        (p failure(new AskTimeoutException("sending to terminated ref breaks promises"))).future//(ref.provider.dispatcher)
       case ref: InternalActorRef =>
         val provider = ref.provider
         if (timeout.duration.length <= 0) {
-          actorRef.tell(message)
-          Promise.failed(new AskTimeoutException("not asking with negative timeout"))(provider.dispatcher)
+          actorRef.tell(message, null)
+          val p = Promise[Any]
+          (p failure(new AskTimeoutException("not asking with negative timeout"))).future//(provider.dispatcher)
         } else {
-          val a = PromiseActorRef(provider, timeout)
+          val a = PromiseActorRef(provider, timeout, actorRef.toString())
           if (sender == null) {
             Scheduler.addPromiseToParentMap(a, ActorPathHelper.DeadLetterActorPath)
           } else {
@@ -46,7 +48,7 @@ object Patterns {
           if (!actorRef.isTerminated)
           actorRef.tell(message, a)
           var res = a.result
-          return res
+          return res.future
         }
       case _ => throw new IllegalArgumentException("incompatible ActorRef " + actorRef)
     }

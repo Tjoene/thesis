@@ -16,10 +16,10 @@ object SetakBuild extends Build {
     settings = Defaults.defaultSettings ++ AspectjPlugin.settings ++ Seq(
       organization := "cs.edu.uiuc",
       version := "0.1",
-      scalaVersion := "2.9.2",
+      scalaVersion := "2.10.4",
       resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
-      libraryDependencies += "com.typesafe.akka" % "akka-actor" % "2.0.3",
-      libraryDependencies += "org.scalatest" %% "scalatest" % "2.0.M5b",
+      libraryDependencies += "com.typesafe.akka" % "akka-actor" % "2.3.9",
+      libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4",
 
  
       parallelExecution in Test := false,
@@ -38,5 +38,9 @@ object SetakBuild extends Build {
       },
       
       fullClasspath in Test <<= AspectjPlugin.useInstrumentedJars(Test),
-      fullClasspath in Runtime <<= AspectjPlugin.useInstrumentedJars(Runtime)))
+      fullClasspath in Runtime <<= AspectjPlugin.useInstrumentedJars(Runtime),
+    
+      scalacOptions ++= Seq("-deprecation")
+    )
+  )
 }
