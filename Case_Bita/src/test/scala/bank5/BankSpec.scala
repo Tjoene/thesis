@@ -90,16 +90,19 @@ class BankSpec extends FunSuite with TestHelper {
             var bank = system.actorOf(Bank(delay, probe.ref), "Bank") // A bank without delay between messages.
 
             probe.send(bank, Start) // Start the simulation
-            val result = probe.expectMsgPF(timeout.duration, "The amount on charlie's account") {
-                case amount => amount.asInstanceOf[Int]
-            }
 
-            if (result > 0) { //@Todo: move this inside the partial function
-                bugDetected = false
-                println(Console.GREEN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
-            } else {
-                bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
+            bugDetected = probe.expectMsgPF(timeout.duration, "The amount on charlie's account") {
+                case amount: Int if (amount > 0) => {
+                    println(Console.GREEN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(amount) + Console.RESET)
+                    true
+                }
+
+                case amount: Int if (amount < 0) => {
+                    println(Console.RED + Console.BOLD+"**FAILURE** Charlie has on his account".format(amount) + Console.RESET)
+                    false
+                }
+
+                case _ => false
             }
         } catch {
             case e: AssertionError => {
