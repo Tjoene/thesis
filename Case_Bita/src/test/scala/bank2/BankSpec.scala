@@ -117,8 +117,8 @@ class BankSpec extends FunSuite with TestHelper {
                     false
                 }
 
-                case amount: Int if (amount < 0) => {
-                    println(Console.RED + Console.BOLD+"**FAILURE** Charlie has on his account".format(amount) + Console.RESET)
+                case amount: Int if (amount <= 0) => {
+                    println(Console.RED + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(amount) + Console.RESET)
                     true
                 }
 
