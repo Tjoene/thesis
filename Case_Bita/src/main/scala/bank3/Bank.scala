@@ -8,7 +8,6 @@ import akka.util.Timeout
 import akka.dispatch.Await
 
 case object Start
-case object RegisterSender
 case object Finish
 
 // Use bank.prop in the code or Bank() or Bank(-1)

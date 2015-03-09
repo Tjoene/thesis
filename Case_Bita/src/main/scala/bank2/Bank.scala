@@ -4,21 +4,22 @@ import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.dispatch.Future
 
 case object Start
-case object RegisterSender
 case class Finish(amount: Int)
 
 // Use bank.prop in the code or Bank() or Bank(-1)
 // See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices
 object Bank {
-    def props(): Props = Props(new Bank(0))
-    def apply(): Props = Props(new Bank(0))
+    def props(): Props = Props(new Bank(0, null))
+    def apply(): Props = Props(new Bank(0, null))
 
-    def props(delay: Int): Props = Props(new Bank(delay))
-    def apply(delay: Int): Props = Props(new Bank(delay))
+    def props(delay: Int): Props = Props(new Bank(delay, null))
+    def apply(delay: Int): Props = Props(new Bank(delay, null))
+
+    def props(delay: Int, dest: ActorRef): Props = Props(new Bank(delay, dest))
+    def apply(delay: Int, dest: ActorRef): Props = Props(new Bank(delay, dest))
 }
 
-class Bank(val delay: Int) extends Actor {
-    var dest: ActorRef = _
+class Bank(val delay: Int, val dest: ActorRef) extends Actor {
 
     def receive = {
         case Start => {
@@ -38,12 +39,6 @@ class Bank(val delay: Int) extends Actor {
         case Finish(amount) => {
             println(Console.YELLOW + Console.BOLD+"BANK:   registered an amount of %d".format(amount) + Console.RESET)
             dest ! amount
-        }
-
-        // This will register the test as the destination where we need to send 
-        // the balance to when we receive the finish signal
-        case RegisterSender => {
-            dest = sender
         }
 
         case _ => println(Console.YELLOW + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
