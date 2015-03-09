@@ -13,6 +13,8 @@ import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 
+import java.util.concurrent.TimeUnit
+
 import akka.testkit.CallingThreadDispatcher
 import java.util.concurrent.TimeoutException
 import com.typesafe.config.ConfigFactory
@@ -26,7 +28,7 @@ class QuickSortSpec extends FunSuite with TestHelper {
     var input1: Array[Int] = Array[Int](12, 30, 11, 40, 78, 20, 10, 13)
     var input2: Array[Int] = Array[Int](43, 16, 78, 3, 47, 74, 88, 65)
 
-    implicit val timeout = Timeout(5000.millisecond)
+    implicit val timeout = Timeout(5000, TimeUnit.MILLISECONDS)
 
     // delay between start and end message
     def delay = 0

@@ -11,13 +11,14 @@ import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 import akka.testkit.TestProbe
+import java.util.concurrent.TimeUnit
 
 class BankSpec extends FunSuite with TestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "bank2"
 
-    implicit val timeout = Timeout(5000.millisecond)
+    implicit val timeout = Timeout(5000, TimeUnit.MILLISECONDS)
 
     // delay between start and end message
     def delay = 0

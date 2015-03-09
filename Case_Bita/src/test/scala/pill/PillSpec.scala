@@ -1,4 +1,4 @@
-package voters
+package pill
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.{ RandomScheduleHelper, Scheduler }
@@ -6,30 +6,24 @@ import akka.bita.pattern.Patterns._
 import akka.util.duration._
 import akka.util.Timeout
 import akka.dispatch.Await
-
 import bita.util.{ FileHelper, TestHelper }
-
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
-
-import java.util.concurrent.TimeUnit
-
 import akka.testkit.TestProbe
-import com.typesafe.config.ConfigFactory
 
-class VoterSpec extends FunSuite with TestHelper {
+class PillSpec extends FunSuite with TestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
-    def name = "voters"
+    def name = "pill"
 
-    implicit val timeout = Timeout(2000, TimeUnit.MILLISECONDS)
+    implicit val timeout = Timeout(1000.millisecond)
 
     // delay between start and end message
-    def delay = 1000
+    def delay = 0
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
-    val criteria = Array[Criterion](PCRCriterion, PMHRCriterion)
+    val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
@@ -37,6 +31,11 @@ class VoterSpec extends FunSuite with TestHelper {
     var randomTracesTestDir = allTracesDir+"random-test/"
 
     var generatedSchedulesNum = -1
+
+    // This test will keep on generating random schedules for 5 min until an bug is trigger. 
+    test("Test randomly within a timeout") {
+        testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
+    }
 
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace") {
@@ -47,7 +46,7 @@ class VoterSpec extends FunSuite with TestHelper {
         testRandom(name, randomTracesDir, 1)
     }
 
-    test("Generate and test schedules with criterion") {
+    test("Generate and test schedules") {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
@@ -82,57 +81,22 @@ class VoterSpec extends FunSuite with TestHelper {
     }
 
     def run {
-        //system = ActorSystem("ActorSystem")
-        system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
-            akka {   
-                loglevel = DEBUG
-                stdout-loglevel = DEBUG
-
-                remote {
-                    log-received-messages = on
-                }
-
-                actor {
-                    default-dispatcher {
-                        throughput = 5
-                    }
-
-                    debug {
-                        receive = on
-                        lifecycle = on
-                        event-stream = on
-                    }
-                }
-
-                event-handlers = ["akka.testkit.TestEventListener"]
-            }
-        """))
+        system = ActorSystem("System")
         RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
         try {
             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
-            val ballot = system.actorOf(Ballot(), "ballot")
-            val voter1 = system.actorOf(Voter(), "voter1")
-            val voter2 = system.actorOf(Voter(), "voter2")
+            val echo = system.actorOf(Echo())
 
-            probe.send(ballot, Start(List(voter1, voter2))) // Start the simulation
+            probe.send(echo, akka.actor.PoisonPill) // Start the simulation
+            probe.send(echo, "hello world")
 
-            Thread.sleep(delay)
-
-            probe.send(ballot, Result) // Start the simulation
-            //ask(ballot, Result)
-
-            bugDetected = probe.expectMsgPF(timeout.duration, "The winner of the election") {
-                case winner: ActorRef if (winner == voter2) => {
-                    println(Console.GREEN + Console.BOLD+"**SUCCESS** Voter2 has won the election"+Console.RESET)
+            bugDetected = probe.expectMsgPF(timeout.duration, "echo actor") {
+                case msg: String if (msg == "hello world") => {
+                    println(Console.GREEN + Console.BOLD+"**SUCCESS**"+Console.RESET)
                     false
-                }
-
-                case winner: ActorRef if (winner != voter2) => {
-                    println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win, %s won instead".format(winner.toString()) + Console.RESET)
-                    true
                 }
 
                 case msg => {
@@ -145,11 +109,20 @@ class VoterSpec extends FunSuite with TestHelper {
                 bugDetected = true
                 println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
             }
+        }
+    }
+}
 
-            case e: TimingException => {
-                bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** The ballot threw an exception: %s".format(e.getMessage()) + Console.RESET)
-            }
+object Echo {
+    def props(): Props = Props(new Echo())
+    def apply(): Props = Props(new Echo())
+}
+
+class Echo() extends Actor {
+
+    def receive = {
+        case msg: String => {
+            sender ! msg
         }
     }
 }

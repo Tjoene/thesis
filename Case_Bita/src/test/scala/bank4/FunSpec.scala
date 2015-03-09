@@ -14,6 +14,8 @@ import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 
+import java.util.concurrent.TimeUnit
+
 import akka.testkit.CallingThreadDispatcher
 import java.util.concurrent.TimeoutException
 import com.typesafe.config.ConfigFactory
@@ -23,7 +25,7 @@ class FunSpec extends FunSuite with TestHelper2 {
     // feel free to change these parameters to test the bank with various configurations.
     def name = "bank4"
 
-    implicit val timeout = Timeout(5000.millisecond)
+    implicit val timeout = Timeout(5000, TimeUnit.MILLISECONDS)
 
     // delay between start and end message
     def delay = 1000
