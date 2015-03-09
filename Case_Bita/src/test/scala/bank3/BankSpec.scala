@@ -10,7 +10,7 @@ import bita.util.{ FileHelper, TestHelper }
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
-import java.util.concurrent.TimeoutException
+import akka.testkit.TestProbe
 
 class BankSpec extends FunSuite with TestHelper {
 
@@ -32,10 +32,10 @@ class BankSpec extends FunSuite with TestHelper {
 
     var generatedSchedulesNum = -1
 
-    // // This test will keep on generating random schedules for 10 seconds until an bug is trigger. 
-    // test("Test randomly within a timeout") {
-    //     testRandomByTime(name, randomTracesTestDir, 10) // 10 sec timeout
-    // }
+    // This test will keep on generating random schedules for 5 min until an bug is trigger. 
+    test("Test randomly within a timeout") {
+        testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
+    }
 
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace") {
@@ -45,26 +45,6 @@ class BankSpec extends FunSuite with TestHelper {
         var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
         testRandom(name, randomTracesDir, 1)
     }
-
-    // test("Generate schedules") {
-    //     var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-    //     for (opt <- criterion.optimizations.-(NONE)) {
-    //         var scheduleDir = allTracesDir + "%s-%s/schedules/".format(criterion.name, opt)
-    //         FileHelper.emptyDir(scheduleDir)
-    //         generateSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
-    //     }
-    // }
-
-    // test("Test the generated schedules") {
-    //     for (opt <- criterion.optimizations.-(NONE)) {
-    //         var scheduleDir = allTracesDir + "%s-%s/schedules/".format(criterion.name, opt)
-
-    //         var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
-    //         var scheduleIndex = traceFiles.length + 1
-    //         var newScheduleFileName = name + "-%s-schedule.txt".format(scheduleIndex)
-    //         testGeneratedSchedules(scheduleDir)
-    //     }
-    // }
 
     test("Generate and test schedules") {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
@@ -101,29 +81,36 @@ class BankSpec extends FunSuite with TestHelper {
     }
 
     def run {
-        system = ActorSystem("ActorSystem")
+        system = ActorSystem("System")
         RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
-        var bankActor = system.actorOf(Bank(delay), "Bank") // A bank without delay between messages.
-
-        bankActor ! Start // Start the simulation
-
         try {
-            val future = ask(bankActor, RegisterSender)
-            val result = Await.result(future, timeout.duration).asInstanceOf[Int]
+            val probe = new TestProbe(system) // Use a testprobe to represent the tests.
+            var bank = system.actorOf(Bank(delay, probe.ref), "Bank") // A bank without delay between messages.
 
-            if (result > 0) {
-                bugDetected = false
-                println(Console.GREEN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(result) + Console.RESET)
-            } else {
-                bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** Charlie has %d on his account".format(result) + Console.RESET)
+            probe.send(bank, Start) // Start the simulation
+
+            bugDetected = probe.expectMsgPF(timeout.duration, "The amount on charlie's account") {
+                case amount: Int if (amount > 0) => {
+                    println(Console.GREEN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(amount) + Console.RESET)
+                    false
+                }
+
+                case amount: Int if (amount < 0) => {
+                    println(Console.RED + Console.BOLD+"**FAILURE** Charlie has on his account".format(amount) + Console.RESET)
+                    true
+                }
+
+                case msg => {
+                    println(Console.RED + Console.BOLD+"**FAILURE** unkown message received: %s".format(msg) + Console.RESET)
+                    true
+                }
             }
         } catch {
-            case e: TimeoutException => {
+            case e: AssertionError => {
                 bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** Timeout"+Console.RESET)
+                println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
             }
         }
     }
