@@ -13,8 +13,7 @@ import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 
-import akka.testkit.CallingThreadDispatcher
-import java.util.concurrent.TimeoutException
+import akka.testkit.TestProbe
 import com.typesafe.config.ConfigFactory
 
 class VoterSpec extends FunSuite with TestHelper {
@@ -22,13 +21,13 @@ class VoterSpec extends FunSuite with TestHelper {
     // feel free to change these parameters to test the bank with various configurations.
     def name = "voters"
 
-    implicit val timeout = Timeout(5000.millisecond)
+    implicit val timeout = Timeout(2000.millisecond)
 
     // delay between start and end message
-    def delay = 500
+    def delay = 1000
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
-    val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
+    val criteria = Array[Criterion](PCRCriterion, PMHRCriterion)
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
@@ -84,8 +83,8 @@ class VoterSpec extends FunSuite with TestHelper {
         //system = ActorSystem("ActorSystem")
         system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
             akka {   
-                loglevel = WARNING
-                stdout-loglevel = WARNING
+                loglevel = DEBUG
+                stdout-loglevel = DEBUG
 
                 remote {
                     log-received-messages = on
@@ -109,29 +108,40 @@ class VoterSpec extends FunSuite with TestHelper {
         RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
-        val ballot = system.actorOf(Ballot() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "ballot")
-        val voter1 = system.actorOf(Voter() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "voter1")
-        val voter2 = system.actorOf(Voter() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "voter2")
-
-        ballot ! Start(List(voter1, voter2))
-
-        Thread.sleep(delay)
-
         try {
-            val future = ask(ballot, Result)
-            val result = Await.result(future, timeout.duration).asInstanceOf[ActorRef]
+            val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
-            if (result == voter2) {
-                bugDetected = false
-                println(Console.GREEN + Console.BOLD+"**SUCCESS** The voter2 %s has won the election".format(result.toString()) + Console.RESET)
-            } else {
-                bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win the election, instead %s won".format(result.toString()) + Console.RESET)
+            val ballot = system.actorOf(Ballot(), "ballot")
+            val voter1 = system.actorOf(Voter(), "voter1")
+            val voter2 = system.actorOf(Voter(), "voter2")
+
+            probe.send(ballot, Start(List(voter1, voter2))) // Start the simulation
+
+            Thread.sleep(delay)
+
+            probe.send(ballot, Result) // Start the simulation
+            //ask(ballot, Result)
+
+            bugDetected = probe.expectMsgPF(timeout.duration, "The winner of the election") {
+                case winner: ActorRef if (winner == voter2) => {
+                    println(Console.GREEN + Console.BOLD+"**SUCCESS** Voter2 has won the election"+Console.RESET)
+                    false
+                }
+
+                case winner: ActorRef if (winner != voter2) => {
+                    println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win, %s won instead".format(winner.toString()) + Console.RESET)
+                    true
+                }
+
+                case msg => {
+                    println(Console.RED + Console.BOLD+"**FAILURE** unkown message received: %s".format(msg) + Console.RESET)
+                    true
+                }
             }
         } catch {
-            case e: TimeoutException => {
-                bugDetected = false
-                println(Console.RED + Console.BOLD+"**FAILURE** Timeout"+Console.RESET)
+            case e: AssertionError => {
+                bugDetected = true
+                println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
             }
 
             case e: TimingException => {
