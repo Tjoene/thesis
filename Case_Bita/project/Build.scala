@@ -60,8 +60,8 @@ object Resolvers {
 // The dependencies that are required for the project
 object Dependencies {
     val bita      = "cs.edu.uiuc" %% "bita" % "0.1"
-    val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.5"
-    val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.5"
+    val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.3"
+    val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.3"
     val scalatest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
 
     val myDepencencies = Seq(bita, actor, testkit, scalatest)
