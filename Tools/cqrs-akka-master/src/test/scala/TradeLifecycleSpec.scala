@@ -2,7 +2,7 @@ package net.debasishg.domain.trade
 package service
 
 import event.{InMemoryEventLog, RedisEventLog}
-import org.scalatest.{Spec, BeforeAndAfterAll}
+import org.scalatest.{FunSpec, BeforeAndAfterAll}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
@@ -13,7 +13,7 @@ import akka.util.duration._
 //import com.redis._
 
 @RunWith(classOf[JUnitRunner])
-class TradeLifecycleSpec extends Spec with ShouldMatchers with BeforeAndAfterAll {
+class TradeLifecycleSpec extends FunSpec with ShouldMatchers with BeforeAndAfterAll {
   import java.util.Calendar
   import akka.actor.{Actor, ActorRef, Props, ActorSystem, FSM}
   import akka.dispatch.Await

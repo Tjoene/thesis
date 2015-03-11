@@ -15,6 +15,7 @@ libraryDependencies <++= scalaVersion { scalaVersion =>
   val scalatestVersion: String => String = Map(("2.8.0" -> "1.3.1.RC2"), ("2.8.1" -> "1.5.1")) getOrElse (_, "1.6.1")
   // The dependencies with proper scope
   Seq(
+    "cs.edu.uiuc"                    % "bita_2.9.2"      % "0.1",
     "org.scala-lang.plugins"         % "continuations"   % scalaVersion,
     "net.debasishg"                 %% "redisclient"     % "2.4.2",
     "net.debasishg"                 %% "sjson"           % "0.15",
@@ -24,8 +25,8 @@ libraryDependencies <++= scalaVersion { scalaVersion =>
     "junit"                          % "junit"           % "4.8.1"            % "test",
     "org.scalatest"                 %% "scalatest"       % "1.6.1"            % "test",
     "org.scalaz"                    %% "scalaz-core"     % "6.0.3",
-    "com.typesafe.akka"              % "akka-actor"      % "2.0",
-    "com.typesafe.akka"              % "akka-testkit"    % "2.0",
+    "com.typesafe.akka"              % "akka-actor"      % "2.0.3",
+    "com.typesafe.akka"              % "akka-testkit"    % "2.0.3",
     "ch.qos.logback"                 % "logback-classic" % "0.9.28"           % "runtime"
   )
 }
@@ -34,7 +35,7 @@ autoCompilerPlugins := true
 
 addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.9.1")
 
-scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-Xcheckinit", "-P:continuations:enable")
+scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-Xcheckinit", "-P:continuations:enable", "-unchecked")
 
 // TODO: Enable this with SBT 0.10.2 (See: https://github.com/harrah/xsbt/issues/147)
 // scaladocOptions <++= (name, version) map { (name, ver) =>
