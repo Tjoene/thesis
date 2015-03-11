@@ -29,7 +29,7 @@ class VoterSpec extends FunSuite with TestHelper {
     def delay = 1000
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
-    val criteria = Array[Criterion](PCRCriterion, PMHRCriterion)
+    val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
 
     // folders where we need to store the test results
     var allTracesDir = "test-results/%s/".format(this.name)
@@ -82,8 +82,8 @@ class VoterSpec extends FunSuite with TestHelper {
     }
 
     def run {
-        //system = ActorSystem("ActorSystem")
-        system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
+        system = ActorSystem("ActorSystem")
+        /*system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
             akka {   
                 loglevel = DEBUG
                 stdout-loglevel = DEBUG
@@ -106,7 +106,7 @@ class VoterSpec extends FunSuite with TestHelper {
 
                 event-handlers = ["akka.testkit.TestEventListener"]
             }
-        """))
+        """))*/
         RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
