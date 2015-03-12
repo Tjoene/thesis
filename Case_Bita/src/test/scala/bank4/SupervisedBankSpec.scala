@@ -1,4 +1,4 @@
-package bank5
+package bank4
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.{ RandomScheduleHelper, Scheduler }
@@ -16,7 +16,7 @@ import akka.testkit._
 
 import util._
 
-class BankSpec extends FunSuite with ImprovedTestHelper {
+class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with FunSuite with BeforeAndAfter with BeforeAndAfterAll with SupervisedTestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "bank3"
@@ -25,7 +25,7 @@ class BankSpec extends FunSuite with ImprovedTestHelper {
     implicit val timeout = Timeout(2, TimeUnit.SECONDS)
 
     // delay between start and end message
-    def delay = 1000
+    def delay = 500
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
@@ -35,6 +35,8 @@ class BankSpec extends FunSuite with ImprovedTestHelper {
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
     var bank: ActorRef = _
+
+    def this() = this(ActorSystem("TestSystem"))
 
     // This test will keep on generating random schedules for 5 min until an bug is trigger. 
     // test("Test randomly within a timeout") {
@@ -85,13 +87,15 @@ class BankSpec extends FunSuite with ImprovedTestHelper {
     }
 
     def run {
-        system = ActorSystem("System")
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+        //system = ActorSystem("System")
+        //RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
         try {
             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
-            var bank = system.actorOf(Bank(delay).withDispatcher(CallingThreadDispatcher.Id), "Bank") // A bank without delay between messages.
+            //var bank = system.actorOf(Bank(delay).withDispatcher(CallingThreadDispatcher.Id), "Bank") // A bank without delay between messages.
+            val getBank = ask(supervisor, CreateProp(Bank(delay), "Bank"))
+            bank = Await.result(getBank, timeout.duration).asInstanceOf[ActorRef]
 
             probe.send(bank, Start) // Start the simulation
 

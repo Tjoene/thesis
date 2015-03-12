@@ -7,9 +7,9 @@ import akka.util.duration._
 import akka.util.Timeout
 import akka.dispatch.Await
 import akka.testkit.CallingThreadDispatcher
+import java.util.concurrent.TimeUnit
 
 case object Start
-case object RegisterSender
 case object Finish
 
 // Use bank.prop in the code or Bank() or Bank(-1)
@@ -23,22 +23,23 @@ object Bank {
 }
 
 class Bank(val delay: Int) extends Actor {
+    var lastAccount: ActorRef = _
+    implicit val timeout = Timeout(1, TimeUnit.SECONDS)
     var dest: ActorRef = _
-    var account1: ActorRef = _
-    var account2: ActorRef = _
-    var account3: ActorRef = _
-    var account4: ActorRef = _
-    implicit val timeout = Timeout(5000.millisecond)
 
     def receive = {
         case Start => {
-            println(Console.GREEN + Console.BOLD+"BANK:   We have started"+Console.RESET)
+            println(Console.CYAN + Console.BOLD+"BANK:   we have started"+Console.RESET)
+
+            dest = sender // register the test as destination
+
             val testAmount = 5
 
-            account1 = context.actorOf(Account("Freddy", testAmount, self, null).withDispatcher(CallingThreadDispatcher.Id), "Account_Freddy") // Create child actors that will host the accounts
-            account4 = context.actorOf(Account("Charlie", 0, null, null).withDispatcher(CallingThreadDispatcher.Id), "Account_Charlie")
-            account3 = context.actorOf(Account("Stevie", 0, null, account4).withDispatcher(CallingThreadDispatcher.Id), "Account_Stevie")
-            account2 = context.actorOf(Account("Johnny", 0, self, account3).withDispatcher(CallingThreadDispatcher.Id), "Account_Johnny")
+            // Create child actors that will host the accounts
+            lastAccount = context.actorOf(Account("Charlie", 0, null, null).withDispatcher(CallingThreadDispatcher.Id), "Account_Charlie")
+            val account3 = context.actorOf(Account("Stevie", 0, null, lastAccount).withDispatcher(CallingThreadDispatcher.Id), "Account_Stevie")
+            val account2 = context.actorOf(Account("Johnny", 0, self, account3).withDispatcher(CallingThreadDispatcher.Id), "Account_Johnny")
+            val account1 = context.actorOf(Account("Freddy", testAmount, null, null).withDispatcher(CallingThreadDispatcher.Id), "Account_Freddy")
 
             account1 ! Transfer(account2, testAmount)
 
@@ -48,26 +49,14 @@ class Bank(val delay: Int) extends Actor {
         }
 
         case Finish => {
-            val future = ask(account4, Balance)
+            val future = ask(lastAccount, Balance)
             val result = Await.result(future, timeout.duration).asInstanceOf[Int]
 
-            println(Console.GREEN + Console.BOLD+"BANK:   registered an amount of %d".format(result) + Console.RESET)
+            println(Console.CYAN + Console.BOLD+"BANK:   registered an amount of %d".format(result) + Console.RESET)
 
-            dest ! result
-            /*if(dest != null){
-                dest ! result
-            } else {
-                self ! Finish
-            }*/
+            dest ! result // send the result to the test
         }
 
-        // This will register the test as the destination where we need to send 
-        // the balance to when we receive the finish signal
-        case RegisterSender => {
-            println(Console.GREEN + Console.BOLD+"BANK:   the testcase has been registered"+Console.RESET)
-            dest = sender
-        }
-
-        case _ => println(Console.RED + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
+        case _ => println(Console.CYAN + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
     }
 }
