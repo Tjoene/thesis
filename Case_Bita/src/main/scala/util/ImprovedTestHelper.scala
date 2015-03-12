@@ -228,7 +228,7 @@ trait ImprovedTestHelper {
         if (system != null) {
             system.shutdown()
             try {
-                system.awaitTermination(Duration(10, "millis"))
+                system.awaitTermination(Duration(100, "millis"))
             } catch {
                 case e: java.util.concurrent.TimeoutException => {
                     println(Console.RED + Console.BOLD+"Timeout when waiting for the actorsystem to close."+Console.RESET)
@@ -238,6 +238,6 @@ trait ImprovedTestHelper {
         bugDetected = false
         Scheduler.reset()
 
-        println("\n")
+        println("\n\n")
     }
 }
