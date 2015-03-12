@@ -7,6 +7,9 @@
 - [Testcase Bank2](#testcase-bank2)
 - [Testcase Bank3](#testcase-bank3)
 - [Testcase Bank4](#testcase-bank4)
+- [Testcase Voters](#voters)
+- [Testcase Hot Swap](#hot-swap)
+- [Testcase QuickSort](#quicksort)
 
 ## Quick start
 
@@ -44,7 +47,7 @@ The movent is triggered by a deposit of $5 from Freddy to Johnny. Once Johnny re
 the transfer of $1 at the time to the next account (Stevie). Johnny will keep sending the message Continue to himself as long as the balance is positive.
 
 In order to introduce a race condition in the system, we add a withdrawal from Johnny to the bank for an ammount of $5. 
-To check if the race condition has occured, we check the balance of Stevie if this is greater then 0. If this is so, we know that the deposit arrived before the withdraw 
+To check if the race condition has occured, we check the balance of Stevie if this is greater then 0. If this is so, we know that the deposit arrived before the withdraw.
 and that Johnny had the time to send a Continue to himself. 
 
 This testcase has the advantage what the behaviour is of Bita when the execution if dependable on the time between two messages.
@@ -66,5 +69,32 @@ a random shedule that is generated before the real test. When this change, the o
 
 This testcase is the same as [testcase bank3](#testcase-bank3), but using the CallingThreadDispatcher to see if we are able to fix the random outcome
 of the previous testcase.
-We also adapted the TestHelper of Bita in order to solve a bug that could case the test to hang when a certain shedules occured that caused a timeout in the 
-test.
+This testcase and the [voters testcase](#voters) brought a sporadic bug up, that caused the actor system to hang while shutting it down.
+
+To solve this bug, we have adapted the TestHelper of Bita to add a timeout in the shutdown code. This will throw an exception, but will prevent the test to hang indefinitely.  
+An other approache was suggested by the thesis promotor @PCordemans to use a supervising actor that will hold the actors under test as childeren.
+This allowed us to rewrite the TestHelper of Bita to use a single actor system instance, which eliminated the need of shutting it and re-creating it every new test.
+Although this approache isn't viable yet, due to an runtime error.
+
+
+## Voters
+
+The voters testcase is an alternative to [testcase bank](#testcase-bank). In this testcase, we have 2 voters and 1 ballot.
+Upon testing, the ballot will receive a list of voters that he needs to traverse. Each element in that will list will be asked to cast a vote to determine the winner. Each votee will elect himself of course. The ballot will register the last vote as the winner.
+  
+This testcase and [testcase bank4](#testcase-bank4) was prone to bug that also present in previous testcases, for instance [testcase bank3](#testcase-bank3) and [testcase bank2](#testcase-bank2). But in those cases, the bug only occured sporadic and was hard to reproduce.
+With the voter testcase, this always occured on the same shedule. 
+
+
+## Hot Swap
+
+The hot swap testcase is intended to see if Bita is able to detect race condition due to changing receive handling. 
+Bita is a special criterion for this, called PMHR.
+
+The testcase is very simple (only 2 messages), perhaps to simple since Bita is unable to generate any schedules for it.
+
+
+## QuickSort
+
+This testcase is borrowed from Bita and is an implementation of the Quick Sort algoritme with Akka actors.
+The testcase was used to see what Bita would do with a fully deterministic example.
