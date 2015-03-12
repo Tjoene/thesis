@@ -18,7 +18,9 @@ import java.util.concurrent.TimeUnit
 import akka.testkit.TestProbe
 import com.typesafe.config.ConfigFactory
 
-class VoterSpec extends FunSuite with TestHelper {
+import util._
+
+class VoterSpec extends FunSuite with ImprovedTestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "voters"
