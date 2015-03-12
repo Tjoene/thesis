@@ -34,9 +34,9 @@ class BankSpec extends FunSuite with TestHelper {
     var generatedSchedulesNum = -1
 
     // This test will keep on generating random schedules for 5 min until an bug is trigger. 
-    test("Test randomly within a timeout") {
-        testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
-    }
+    // test("Test randomly within a timeout") {
+    //     testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
+    // }
 
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace") {
@@ -88,7 +88,7 @@ class BankSpec extends FunSuite with TestHelper {
 
         try {
             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
-            var bank = system.actorOf(Bank(delay, probe.ref), "Bank") // A bank without delay between messages.
+            var bank = system.actorOf(Bank(delay), "Bank") // A bank without delay between messages.
 
             probe.send(bank, Start) // Start the simulation
 

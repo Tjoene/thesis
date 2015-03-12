@@ -13,22 +13,22 @@ case object Finish
 // Use bank.prop in the code or Bank() or Bank(-1)
 // See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices
 object Bank {
-    def props(): Props = Props(new Bank(0, null))
-    def apply(): Props = Props(new Bank(0, null))
+    def props(): Props = Props(new Bank(0))
+    def apply(): Props = Props(new Bank(0))
 
-    def props(delay: Int): Props = Props(new Bank(delay, null))
-    def apply(delay: Int): Props = Props(new Bank(delay, null))
-
-    def props(delay: Int, test: ActorRef): Props = Props(new Bank(delay, test))
-    def apply(delay: Int, test: ActorRef): Props = Props(new Bank(delay, test))
+    def props(delay: Int): Props = Props(new Bank(delay))
+    def apply(delay: Int): Props = Props(new Bank(delay))
 }
 
-class Bank(val delay: Int, val test: ActorRef) extends Actor {
+class Bank(val delay: Int) extends Actor {
     var lastAccount: ActorRef = _
     implicit val timeout = Timeout(5000.millisecond)
+    var dest: ActorRef = _
 
     def receive = {
         case Start => {
+            dest = sender // register the test as destination
+
             val testAmount = 5
 
             // Create child actors that will host the accounts
@@ -50,7 +50,7 @@ class Bank(val delay: Int, val test: ActorRef) extends Actor {
 
             println(Console.YELLOW + Console.BOLD+"BANK:   registered an amount of %d".format(result) + Console.RESET)
 
-            test ! result
+            dest ! result // send the result to the test
         }
 
         case _ => println(Console.YELLOW + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)
