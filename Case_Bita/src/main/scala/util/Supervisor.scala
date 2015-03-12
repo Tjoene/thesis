@@ -1,6 +1,6 @@
 package util
 
-import akka.actor.{ Actor, Props }
+import akka.actor.{ Actor, Props, PoisonPill }
 
 /**
  * Factory object for the Supervisor Actor
@@ -32,6 +32,7 @@ class Supervisor() extends Actor {
 
         case Stop => {
             context.children foreach { child =>
+                child ! PoisonPill
                 context.unwatch(child)
                 context.stop(child)
             }

@@ -1,6 +1,6 @@
 package util
 
-import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
+import akka.actor.{ ActorSystem, Actor, Props, ActorRef, PoisonPill }
 import java.util.concurrent.TimeUnit
 import akka.util.duration._
 import akka.util.Timeout
@@ -13,7 +13,6 @@ class EchoActor() extends Actor {
 
     def receive = {
         case msg: String => {
-            println("SENDING BACK MESSAGE '%s' TO SENDER '%s'".format(msg, sender.toString()))
             sender ! msg
         }
     }
@@ -29,18 +28,22 @@ class SupervisorSpec(_system: ActorSystem) extends TestKit(_system) with FunSuit
     def this() = this(ActorSystem("TestSystem"))
 
     before {
-        supervisor = system.actorOf(Supervisor(), "supervisor")
+        supervisor = system.actorOf(Supervisor())
     }
 
     after {
         supervisor ! Stop
+        supervisor ! PoisonPill
+    }
+
+    test("create") {
+        supervisor ! CreateClass(classOf[EchoActor], "EchoActor")
+        expectMsgType[ActorRef]
     }
 
     test("echo") {
         val getEcho = supervisor ? CreateClass(classOf[EchoActor], "EchoActor")
         val echo = Await.result(getEcho, timeout.duration).asInstanceOf[ActorRef]
-
-        println("%s".format(echo.toString()))
 
         echo ! "hello world"
         expectMsg("hello world")
