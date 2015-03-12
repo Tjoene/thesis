@@ -13,8 +13,8 @@ import bita.criteria._
 import bita.schedulegeneration._
 import akka.bita.{ Scheduler, RandomScheduleHelper }
 import bita.util.FileHelper
+import akka.util.Duration
 import akka.util.duration._
-import akka.util.Timeout
 
 /**
  * A helper for testing with Bita.
@@ -135,7 +135,7 @@ trait TestHelper2 {
         for (scheduleFileAbsolutePath <- scheduleFiles) {
             var traceFile = scheduleFileAbsolutePath.replace(".txt", "-trace.txt")
             testSchedule(scheduleFileAbsolutePath)
-            afterEach()
+            //afterEach()
         }
 
         var end = System.currentTimeMillis()
@@ -229,7 +229,13 @@ trait TestHelper2 {
             println("He-e-e-e-re's Johnny!")
             system.shutdown() // <---------------------------- Why don't you murder those actors???
             println("Show me the money!")
-            system.awaitTermination()
+            try {
+                system.awaitTermination(Duration(100, "millis"))
+            } catch {
+                case e: java.util.concurrent.TimeoutException => {
+                    println(Console.RED + Console.BOLD+"Timeout when waiting for the actorsystem to close. Dummkopf!"+Console.RESET)
+                }
+            }
         }
         println("Yippie kay yay!")
 

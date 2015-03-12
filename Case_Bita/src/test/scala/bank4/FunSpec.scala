@@ -81,8 +81,8 @@ class FunSpec extends FunSuite with TestHelper2 {
     }
 
     def run {
-        //system = ActorSystem("ActorSystem")
-        system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
+        system = ActorSystem("ActorSystem")
+        /*system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
             akka {   
                 loglevel = DEBUG
                 stdout-loglevel = DEBUG
@@ -105,7 +105,7 @@ class FunSpec extends FunSuite with TestHelper2 {
 
                 event-handlers = ["akka.testkit.TestEventListener"]
             }
-        """))
+        """))*/
         RandomScheduleHelper.setSystem(system)
 
         // A bank without delay between messages and using CallingThreadDispatcher.
