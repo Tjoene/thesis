@@ -111,6 +111,7 @@ class BitaSpec extends FunSuite with TestHelper {
                 tlc ! SubscribeTransitionCallBack(qry)
                 tlc ! AddValueDate
                 tlc ! EnrichTrade
+
                 val future = ask(tlc, SendOutContractNote)
                 finalTrades += Await.result(future, timeout.duration).asInstanceOf[Trade]
             }
@@ -128,35 +129,20 @@ class BitaSpec extends FunSuite with TestHelper {
 
             probe.send(qry, QueryAllTrades)
 
-
-
-            bugDetected = probe.expectMsgPF(timeout.duration, "The reaction of the HotSwap actor") {
-                case qtrades: List[Trade] if (qtrades == finalTrades) => {
-                    println(Console.GREEN + Console.BOLD+"**SUCCESS** Angry, He is."+Console.RESET)
-                    false
-                }
-
-                case qtrades: List[Trade] if (qtrades != finalTrades) => {
-                    println(Console.RED + Console.BOLD+"**FAILURE** Angy, He is not."+Console.RESET)
-                    true
-                }
-
-                case msg => {
-                    println(Console.RED + Console.BOLD+"**FAILURE** unkown message received: %s".format(msg) + Console.RESET)
-                    true
-                }
+            val qtrades = probe.expectMsgType[List[Trade]](timeout.duration);
+            if (qtrades == finalTrades) {
+                println(Console.GREEN + Console.BOLD+"**SUCCESS**"+Console.RESET)
+                bugDetected = false    
+            } else {
+                println(Console.RED + Console.BOLD+"**FAILURE**"+Console.RESET)
+                bugDetected = true    
             }
+
         } catch {
             case e: AssertionError => {
-                bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
+                bugDetected = false
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
-
-            case e: TimeoutException => {
-                bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
-            }
-            
         }
     }
 }
