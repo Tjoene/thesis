@@ -5,7 +5,7 @@ package util
  */
 
 import java.io.File
-import akka.actor.ActorSystem
+import akka.actor.{ ActorSystem, Actor, ActorRef }
 import java.io.FileWriter
 import scala.collection.mutable.ArrayBuffer
 import bita.ScheduleOptimization._
@@ -19,7 +19,7 @@ import akka.util.duration._
 /**
  * A helper for testing with Bita.
  */
-trait ImprovedTestHelper {
+trait SupervisedTestHelper {
 
     var bugDetected = false
     var reportBug = false
@@ -30,15 +30,17 @@ trait ImprovedTestHelper {
 
     var timeReport = ""
 
-    var system: ActorSystem = _
+    implicit val system: ActorSystem
+    var supervisor: ActorRef = null
 
     def generateRandomTrace(traceFile: String) {
+        setupBeforeEach()
         curTraceFile = traceFile
         Scheduler.setTraceName(traceFile)
         run()
         Scheduler.finish(traceFile)
         println("======================================================")
-        afterEach()
+        finishAfterEach()
     }
 
     /**
@@ -87,6 +89,7 @@ trait ImprovedTestHelper {
      * Tests with a schedule.
      */
     def testSchedule(scheduleFilePath: String) {
+        setupBeforeEach()
         println("test schedule: "+scheduleFilePath)
         Scheduler.setSchedule(scheduleFilePath)
         run()
@@ -95,7 +98,7 @@ trait ImprovedTestHelper {
         println("======================================================")
 
         curTraceFile = traceFile
-        afterEach()
+        finishAfterEach()
     }
 
     /**
@@ -135,7 +138,6 @@ trait ImprovedTestHelper {
         for (scheduleFileAbsolutePath <- scheduleFiles) {
             var traceFile = scheduleFileAbsolutePath.replace(".txt", "-trace.txt")
             testSchedule(scheduleFileAbsolutePath)
-            //afterEach()
         }
 
         var end = System.currentTimeMillis()
@@ -214,10 +216,18 @@ trait ImprovedTestHelper {
     }
 
     /**
-     * It is called after each invocation to <code>run</code> method to clear
-     * the state and shutdown the actor system.
+     * It is called before each invocation to <code>run</code> method to setup
+     * the supervisor actor.
      */
-    def afterEach() {
+    def setupBeforeEach() {
+        supervisor = system.actorOf(Supervisor())
+    }
+
+    /**
+     * It is called after each invocation to <code>run</code> method to clear
+     * the supervisor actor.
+     */
+    def finishAfterEach() {
         RandomScheduleHelper.reset()
         if (bugDetected) {
             println("***********BUG DETECTED**************")
@@ -225,19 +235,15 @@ trait ImprovedTestHelper {
             tracesWithBug.+=((curTraceFile, (end - startTime) / 1000))
         }
 
-        if (system != null) {
-            system.shutdown()
-            try {
-                system.awaitTermination(Duration(10, "millis"))
-            } catch {
-                case e: java.util.concurrent.TimeoutException => {
-                    println(Console.RED + Console.BOLD+"Timeout when waiting for the actorsystem to close."+Console.RESET)
-                }
-            }
+        if (supervisor != null) {
+            println(Console.GREEN + Console.BOLD+"**CLEANING UP**"+Console.RESET)
+
+            supervisor ! Stop
         }
+
         bugDetected = false
         Scheduler.reset()
 
-        println("\n")
+        println("\n\n")
     }
 }
