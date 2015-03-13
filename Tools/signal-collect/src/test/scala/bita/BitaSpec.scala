@@ -1,18 +1,9 @@
-package com.signalcollect.features
+package bita
 
-import org.specs2.mutable._
-import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
-import org.specs2.matcher.Matcher
-import org.specs2.mock.Mockito
-import com.signalcollect.interfaces._
-import java.util.Map.Entry
 import com.signalcollect._
-import com.signalcollect.examples.PageRankVertex
-import com.signalcollect.examples.PageRankEdge
-import com.signalcollect.examples.SudokuCell
-import com.signalcollect.configuration.ExecutionMode
-import com.signalcollect.configuration.TerminationReason
+import com.signalcollect.interfaces._
+import com.signalcollect.examples.{ PageRankVertex, PageRankEdge, SudokuCell }
+import com.signalcollect.configuration.{ ExecutionMode, TerminationReason }
 
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
@@ -29,15 +20,12 @@ import bita.ScheduleOptimization._
 import org.scalatest._
 
 
-class BitaSpec extends FunSuite with TestHelper with Mockito {
+class BitaSpec extends FunSuite with TestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "SignalCollect"
 
     implicit val timeout = Timeout(5000.millisecond)
-
-    // delay between start and end message
-    def delay = 1000
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
@@ -47,9 +35,7 @@ class BitaSpec extends FunSuite with TestHelper with Mockito {
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
 
-    var generatedSchedulesNum = -1
-
-    // This test will keep on generating random schedules for 150 seconds until an bug is trigger. 
+    // This test will keep on generating random schedules for 2,5 minutes until an bug is trigger. 
     test("Test randomly within a timeout") {
         testRandomByTime(name, randomTracesTestDir, 150) // 150 sec timeout
     }
