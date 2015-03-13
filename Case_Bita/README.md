@@ -1,17 +1,22 @@
-# Tool Bita
+Tool Bita
+======
 
 ## Table of contents
 
 - [Quick start](#quick-start)
-- [Testcase Bank](#testcase-bank)
-- [Testcase Bank2](#testcase-bank2)
-- [Testcase Bank3](#testcase-bank3)
-- [Testcase Bank4](#testcase-bank4)
-- [Testcase Voters](#voters)
-- [Testcase Hot Swap](#hot-swap)
-- [Testcase QuickSort](#quicksort)
+- [Testcases](#testcases)
+  - [Testcase Bank](#testcase-bank)
+  - [Testcase Bank2](#testcase-bank2)
+  - [Testcase Bank3](#testcase-bank3)
+  - [Testcase Bank4](#testcase-bank4)
+  - [Testcase Voters](#voters)
+  - [Testcase Hot Swap](#hot-swap)
+  - [Testcase QuickSort](#quicksort)
+- [Programs](#programs)
+  - [Tool SignalCollect](#signalcollect)
 
-## Quick start
+Quick start
+------
 
 In this folder you will find the different testcases that were used to test the tool Bita.
 
@@ -25,7 +30,10 @@ In this folder you will find the different testcases that were used to test the 
 **WARNING:** sometimes running all the testcases at once can result in false failures. 
 It is recommended to run them one by one using the `testOnly` command, followed by the desired test.
 
-## Testcase Bank
+Testcases
+------
+
+### Testcase Bank
 
 This testcase is a simple 3-actor system that mimics a bank system.
 You will have one actor for the that respresents the bank, and actors for the accounts.
@@ -40,7 +48,7 @@ This will result in the returned balance of Johnny to be $0, instead of the desi
 The testcase should be a baseline to see if Bita is capable of detecting the different execution paths in this actor model.
 
 
-## Testcase Bank2
+### Testcase Bank2
 
 This is an extention of [the previous testcase](#testcase-bank) with an addition that money will be moved from one account (Johnny) to an other (Stevie).
 The movent is triggered by a deposit of $5 from Freddy to Johnny. Once Johnny receives the deposit, he will send a Continue message to himself. This will trigger 
@@ -54,7 +62,7 @@ This testcase has the advantage what the behaviour is of Bita when the execution
 We can clearly see that Bita is not able to detect this, so have to find a way to intoduce the delay between messages manually. 
 
 
-## Testcase Bank3
+### Testcase Bank3
 
 This is an other extention of the previous testcase, where we add an other account after Stevie, named Charlie.
 Once Johnny receives an deposit from Freddy, he starts to send an ammount of 1 to Stevie, and Stevie will send to Charlie.
@@ -65,7 +73,7 @@ Also, the testcases are not the same every time we run, this is due to the fact 
 a random shedule that is generated before the real test. When this change, the other shedules differ too.  
 
 
-## Testcase Bank4
+### Testcase Bank4
 
 This testcase is the same as [testcase bank3](#testcase-bank3), but using the CallingThreadDispatcher to see if we are able to fix the random outcome
 of the previous testcase.
@@ -77,7 +85,7 @@ This allowed us to rewrite the TestHelper of Bita to use a single actor system i
 Although this approache isn't viable yet, due to an runtime error.
 
 
-## Voters
+### Voters
 
 The voters testcase is an alternative to [testcase bank](#testcase-bank). In this testcase, we have 2 voters and 1 ballot.
 Upon testing, the ballot will receive a list of voters that he needs to traverse. Each element in that will list will be asked to cast a vote to determine the winner. Each votee will elect himself of course. The ballot will register the last vote as the winner.
@@ -86,7 +94,7 @@ This testcase and [testcase bank4](#testcase-bank4) was prone to bug that also p
 With the voter testcase, this always occured on the same shedule. 
 
 
-## Hot Swap
+### Hot Swap
 
 The hot swap testcase is intended to see if Bita is able to detect race condition due to changing receive handling. 
 Bita is a special criterion for this, called PMHR.
@@ -94,7 +102,18 @@ Bita is a special criterion for this, called PMHR.
 The testcase is very simple (only 2 messages), perhaps to simple since Bita is unable to generate any schedules for it.
 
 
-## QuickSort
+### QuickSort
 
 This testcase is borrowed from Bita and is an implementation of the Quick Sort algoritme with Akka actors.
 The testcase was used to see what Bita would do with a fully deterministic example.
+
+
+Programs
+------
+
+## SignalCollect
+
+According to the paper ´Bita: Coverage-guidedn Automatic Testing of Actor Programs´, Bita is able to detect [a known bug in SignalCollect](https://github.com/uzh/signal-collect/issues/58), where the developers aren't able to reproduce it.
+In the paper, Bita claims to detect the bug in every experiment, withing an average time of 176 seconds.
+
+How ever, attempts to reproduce this result wasn't succesfull. The failing test in question always succeeds with the random shedules, and using Bita's criterions yielded 0 generated shedules, meaning there weren't any actor messages detected in this particular test. 

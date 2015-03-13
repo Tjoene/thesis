@@ -29,7 +29,7 @@ import bita.ScheduleOptimization._
 import org.scalatest._
 
 
-class FunSpec extends FunSuite with TestHelper with Mockito {
+class BitaSpec extends FunSuite with TestHelper with Mockito {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "SignalCollect"
@@ -49,9 +49,9 @@ class FunSpec extends FunSuite with TestHelper with Mockito {
 
     var generatedSchedulesNum = -1
 
-    // This test will keep on generating random schedules for 300 seconds until an bug is trigger. 
+    // This test will keep on generating random schedules for 150 seconds until an bug is trigger. 
     test("Test randomly within a timeout") {
-        testRandomByTime(name, randomTracesTestDir, 300) // 300 sec timeout
+        testRandomByTime(name, randomTracesTestDir, 150) // 150 sec timeout
     }
 
     // Generates a random trace which will be used for schedule generation.
@@ -108,6 +108,7 @@ class FunSpec extends FunSuite with TestHelper with Mockito {
 
     def run {
         system = ActorSystem("ActorSystem")
+        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
         val graph = createCircleGraph(30)
