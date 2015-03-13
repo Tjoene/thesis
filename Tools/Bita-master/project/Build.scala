@@ -117,15 +117,12 @@ object BuildScript extends Build {
 
             // add akka-actor as an aspectj input (find it in the update report)
             inputs in Aspectj <++= update map { report =>
-                report.matching(moduleFilter(organization = "com.typesafe.akka", name = "akka-actor"))
+                report.matching(moduleFilter(organization = "com.typesafe.akka", name = "akka-actor*"))
             },
 
             // replace the original akka-actor jar with the instrumented classes in runtime
             fullClasspath in Test <<= useInstrumentedClasses(Test),
             fullClasspath in Runtime <<= useInstrumentedClasses(Runtime),
-
-            // add the compiled aspects as products
-            products in Compile <++= products in Aspectj,
 
             // Execute tests in the current project serially
             parallelExecution in Test := false,
@@ -152,6 +149,4 @@ object BuildScript extends Build {
             )
         )
     )
-
-
 }
