@@ -59,10 +59,10 @@ class ComputationTerminationSpec extends Tests {
         
         if (aggregate > 20.0 && aggregate < 29.0 && info.executionStatistics.terminationReason == TerminationReason.GlobalConstraintMet) {
             bugDetected = false
-            println(Console.GREEN + Console.BOLD+"Wow. You didn't fail." + Console.RESET)
+            println(Console.GREEN + Console.BOLD+"***SUCCESS***" + Console.RESET)
         } else {
             bugDetected = true
-            println(Console.RED + Console.BOLD+"You failed, not big surprise" + Console.RESET)
+            println(Console.RED + Console.BOLD+"***FAILURE***" + Console.RESET)
         }
     }
 }
