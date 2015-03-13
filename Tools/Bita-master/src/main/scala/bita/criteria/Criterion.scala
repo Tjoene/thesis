@@ -13,31 +13,30 @@ import bita.ScheduleOptimization._
  */
 trait Criterion {
 
-  import Constants._
+    import Constants._
 
-  var name: String = _
+    var name: String = _
 
-  var logger: Logger = _
-  
-  /**
-   * Optimizations for schedule generation. Overriding this method
-   * adds/removes some optimizations.
-   */
-  def optimizations =  ScheduleOptimization.values
+    var logger: Logger = _
 
+    /**
+     * Optimizations for schedule generation. Overriding this method
+     * adds/removes some optimizations.
+     */
+    def optimizations = ScheduleOptimization.values
 
-  def satisfy(t: Trace, i: Int, j: Int, k: Int = 0): Boolean
+    def satisfy(t: Trace, i: Int, j: Int, k: Int = 0): Boolean
 
-  /**
-   * Measures the coverage of a list of execution traces.
-   */
-  def measureCoverage(traceFiles: Array[String], resultFile: String = null, detailInterval: Int = -1): Int
+    /**
+     * Measures the coverage of a list of execution traces.
+     */
+    def measureCoverage(traceFiles: Array[String], resultFile: String = null, detailInterval: Int = -1): Int
 
-  /**
-   * Generates schedules with the default optmization of REORDER_TAIL.
-   */
-  def generateSchedules(name: String, randomTracesPath: Array[String], generatedSchedulesPath: String,
-    optimization: ScheduleOptimization = REORDER_TAIL): Array[String]
+    /**
+     * Generates schedules with the default optmization of REORDER_TAIL.
+     */
+    def generateSchedules(name: String, randomTracesPath: Array[String], generatedSchedulesPath: String,
+                          optimization: ScheduleOptimization = REORDER_TAIL): Array[String]
 
 }
 

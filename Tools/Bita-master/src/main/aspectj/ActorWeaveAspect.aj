@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.HashMap;
 import scala.Tuple2;
 import akka.bita.RandomScheduleHelper;
-import akka.util.FiniteDuration;
+import scala.concurrent.duration.FiniteDuration;
   
   
 privileged public aspect ActorWeaveAspect {
@@ -51,7 +51,7 @@ privileged public aspect ActorWeaveAspect {
 						public void run() {
 							proceed(finalReceiver, finalMsg, finalSender);
 						}
-					});
+					}, system.dispatcher());
 				} else {
 					proceed(receiver, msg, sender);
 				}
