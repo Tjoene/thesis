@@ -19,8 +19,7 @@ import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 
-
-class BitaSpec extends FunSuite with TestHelper {
+abstract class Tests extends FunSuite with TestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "SignalCollect"
@@ -77,46 +76,6 @@ class BitaSpec extends FunSuite with TestHelper {
                 traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
                 criterion.measureCoverage(traceFiles, resultFile, interval)
             }
-        }
-    }
-
-    def createCircleGraph(vertices: Int): Graph = {
-        val graph = GraphBuilder.build
-        val idSet = (1 to vertices).toSet
-        for (id <- idSet) {
-            graph.addVertex(new PageRankVertex(id))
-        }
-        for (id <- idSet) {
-            graph.addEdge(id, new PageRankEdge((id % vertices) + 1))
-        }
-        graph
-    }
-
-    def run {
-        system = ActorSystem("ActorSystem")
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
-        val graph = createCircleGraph(30)
-        val terminationCondition = new GlobalTerminationCondition(new SumOfStates[Double], 1) {
-            def shouldTerminate(sum: Option[Double]): Boolean = {
-                sum.isDefined && sum.get > 20.0 && sum.get < 29.0
-            }
-        }
-        val execConfig = ExecutionConfiguration
-            .withSignalThreshold(0)
-            .withGlobalTerminationCondition(terminationCondition)
-            .withExecutionMode(ExecutionMode.Synchronous)
-        val info = graph.execute(execConfig)
-        val state = graph.forVertexWithId(1, (v: PageRankVertex) => v.state)
-        val aggregate = graph.aggregate(new SumOfStates[Double]).get
-        
-        if (aggregate > 20.0 && aggregate < 29.0 && info.executionStatistics.terminationReason == TerminationReason.GlobalConstraintMet) {
-            bugDetected = false
-            println(Console.GREEN + Console.BOLD+"Wow. You didn't fail." + Console.RESET)
-        } else {
-            bugDetected = true
-            println(Console.RED + Console.BOLD+"You failed, not big surprise" + Console.RESET)
         }
     }
 }
