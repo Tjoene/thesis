@@ -106,7 +106,7 @@ class BankSpec extends FunSuite with ImprovedTestHelper {
         } catch {
             case e: AssertionError => {
                 bugDetected = false
-                println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
         }
     }
