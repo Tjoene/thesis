@@ -18,35 +18,35 @@ Tool Bita
 Quick start
 ------
 
-In this folder you will find the different testcases that were used to test the tool Bita.
+In this folder, you will find the different testcases that were used with the tool Bita.
+We also have tested serveral real life applications, but these are located under `thesis/Tools/`.
 
 - Install [Simple Build Tool](http://www.scala-sbt.org/). At the time of writing, version 0.13.7 was used
 - Clone the repo: `git clone https://github.com/Tjoene/thesis.git`.
-- Copy the depencenies under `/Dependencies` to `C:\Users\<USER>\.ivy2\local\` for Windows, or `<HOME>/.ivy2/local/` for Linux
-- Download the depencenies into the project: `sbt update`.
+- Copy the pre-compiled depencenies under `/Dependencies` to `C:\Users\<USER>\.ivy2\local\` for Windows, or `<HOME>/.ivy2/local/` for Linux
+- Download the project depencenies: `sbt update`.
 - Compile the source: `sbt compile`
-- Run the desired tests `sbt "testOnly ..."`
+- Compile the tests: `sbt test:compile`
+- Run the desired tests `sbt "testOnly"`, followed by the name of the test as followed: `package_name.test_name` (e.g. `bank.BankSpec`).
 
-**WARNING:** sometimes running all the testcases at once can result in false failures. 
-It is recommended to run them one by one using the `testOnly` command, followed by the desired test.
+**WARNING:** Avoid using `sbt test`. Running all the tests at once can result in false failures. 
 
 Testcases
 ------
 
 ### Testcase Bank
 
-This testcase is a simple 3-actor system that mimics a bank system.
-You will have one actor for the that respresents the bank, and actors for the accounts.
-The first account (Freddy) will be initialized with an amount of $500 as start balance, the other account (Johnny) will have 0 as start balance.
+This testcase is a simple actor system that mimics a bank transfer.
+There will one actor instance that respresents the bank, and two actors to respresents accounts.
+The first account (Freddy) will be initialized with an amount of `500`, and the second account (Johnny) with `0` as the start balance.
 
-The bank will issue a transfer of 500 from Freddy to Johnny. This will trigger a deposit of $500 to Johnny from Freddy.
-After the transfer, the bank will ask the balance of Johnny, which should be $500.
+The bank will issue a transfer of `500` from Freddy to Johnny and this will trigger a deposit of `500` between the two accounts.
+After the transfer command, the bank will request the balance of the account Johnny, which should be `500` under normal circumstances.
 
-The race condition in this testcase should be on Johnny where the message of Deposit and Balance can be switched.
-This will result in the returned balance of Johnny to be $0, instead of the desired $500.
+The race condition in this testcase is located on the actor(/account) Johnny. When the messages Balance is received first, before Deposit, then an amount of `0` will be returned to the bank, while we were expecting an amount of `500`.
 
 The testcase should be a baseline to see if Bita is capable of detecting the different execution paths in this actor model.
-
+Which it does, based on the test results.
 
 ### Testcase Bank2
 
