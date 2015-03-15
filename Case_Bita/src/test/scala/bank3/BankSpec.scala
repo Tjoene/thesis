@@ -31,8 +31,6 @@ class BankSpec extends FunSuite with TestHelper {
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
 
-    var generatedSchedulesNum = -1
-
     // This test will keep on generating random schedules for 5 min until an bug is trigger. 
     // test("Test randomly within a timeout") {
     //     testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout

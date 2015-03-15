@@ -27,8 +27,6 @@ class BankSpec extends TestHelper with FunSpec {
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
 
-    var generatedSchedulesNum = -1
-
     describe("TestCase Bank #1") {
 
         // // This test will keep on generating random schedules for 10 seconds until an bug is trigger. 

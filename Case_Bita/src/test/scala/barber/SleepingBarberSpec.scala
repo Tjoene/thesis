@@ -40,8 +40,6 @@ class BarberSpec extends TestHelper with FunSpec {
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
 
-    var generatedSchedulesNum = -1
-
     describe("Barber Test") {
 
         it(" should test randomly within a timeout", Tag("random-timeout")) {

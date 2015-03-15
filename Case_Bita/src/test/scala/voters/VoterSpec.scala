@@ -38,8 +38,6 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
 
-    var generatedSchedulesNum = -1
-
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace") {
         FileHelper.emptyDir(randomTracesDir)
