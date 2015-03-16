@@ -63,8 +63,9 @@ object Dependencies {
     val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.3"
     val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.3"
     val scalatest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
+    val pegdown   = "org.pegdown" % "pegdown" % "1.5.0"
 
-    val myDepencencies = Seq(bita, actor, testkit, scalatest)
+    val myDepencencies = Seq(bita, actor, testkit, scalatest, pegdown)
 }
 
 // The configuration for auto formatting when you compile the files
@@ -117,11 +118,8 @@ object BuildScript extends Build {
             // Run the tests in a seperated JVM then the one SBT is using
             fork in Test := true,
             
-            // Pass compiler options to ScalaTest. The must start with -o
-            //   D - show durations
-            //   F - show full stack traces
-            //   W - without color
-            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
+            // Pass compiler options to ScalaTest
+            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF", "-h", "test-reports"),
 
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq(
