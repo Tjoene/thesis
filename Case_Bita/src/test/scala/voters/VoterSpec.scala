@@ -53,44 +53,18 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
         testRandom(name, randomTracesDir, 1)
     }
 
-    // Generate the schedules using the criterions of Bita
-    test("Generate schedules ", Tag("generate")) {
+    // Generate and test schedules at once.
+    test("Generate and test schedules with criterion", Tag("test")) {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = resultDir+"%s-%s/schedules/".format(criterion.name, opt)
+                var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
+
                 FileHelper.emptyDir(scheduleDir)
-                generateSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
+                generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
             }
         }
     }
-
-    // Test the generated shedules
-    test("Test generated schedules ", Tag("test")) {
-        for (criterion <- criteria) {
-            for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = resultDir+"%s-%s/schedules/".format(criterion.name, opt)
-
-                var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
-                var scheduleIndex = traceFiles.length + 1
-                var newScheduleFileName = name+"-%s-schedule.txt".format(scheduleIndex)
-                testGeneratedSchedules(scheduleDir)
-            }
-        }
-    }
-
-    // Generate and test schedules at once.
-    // test("Generate and test schedules with criterion", Tag("generate and test")) {
-    //     var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-    //     for (criterion <- criteria) {
-    //         for (opt <- criterion.optimizations.-(NONE)) {
-    //             var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
-
-    //             FileHelper.emptyDir(scheduleDir)
-    //             generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
-    //         }
-    //     }
-    // }
 
     // This will count how many bugs there were found with a certain schedule.
     // Giving you an indication of how good a shedule is.
