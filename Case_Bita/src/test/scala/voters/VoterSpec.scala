@@ -6,43 +6,43 @@ import akka.bita.pattern.Patterns._
 import akka.util.duration._
 import akka.util.Timeout
 import akka.dispatch.Await
-
-import bita.util.{ FileHelper, TestHelper }
-
+import bita.util.FileHelper
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
-
 import java.util.concurrent.TimeUnit
-
 import akka.testkit.TestProbe
 import com.typesafe.config.ConfigFactory
-
 import util._
-
 import java.io.File
 import scala.io.Source
 
 class VoterSpec extends FunSuite with ImprovedTestHelper {
 
-    // feel free to change these parameters to test the bank with various configurations.
-    def name = "voters"
+    // The name of this test battery
+    val name = "voters"
 
     // Are we expecting certain shedules to fail?
-    val expectFailures = false
+    val expectFailures = true
 
+    // The delay to wait Futures/Awaits/...
     implicit val timeout = Timeout(2000, TimeUnit.MILLISECONDS)
 
     // delay between start and end message
-    def delay = 1000
+    val delay = 1000
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
 
-    // folders where we need to store the test results
-    val allTracesDir = "test-results/%s/".format(this.name)
-    val randomTracesDir = allTracesDir+"random/"
-    val randomTracesTestDir = allTracesDir+"random-test/"
+    // Folders where we need to store the test results
+    val resultDir = "test-results/%s/".format(this.name)
+    val randomTracesDir = resultDir+"random/"
+    val randomTracesTestDir = resultDir+"random-test/"
+
+    // This test will keep on generating random schedules for 5 minutes or until an bug is found. 
+    // test("Test with random sheduler within a timeout", Tag("random-schedule")) {
+    //     testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
+    // }
 
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace", Tag("random")) {
@@ -53,17 +53,44 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
         testRandom(name, randomTracesDir, 1)
     }
 
-    test("Generate and test schedules with criterion", Tag("execute")) {
+    // Generate the schedules using the criterions of Bita
+    test("Generate schedules ", Tag("generate")) {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
-
+                var scheduleDir = resultDir+"%s-%s/schedules/".format(criterion.name, opt)
                 FileHelper.emptyDir(scheduleDir)
-                generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
+                generateSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
             }
         }
     }
+
+    // Test the generated shedules
+    test("Test generated schedules ", Tag("test")) {
+        for (criterion <- criteria) {
+            for (opt <- criterion.optimizations.-(NONE)) {
+                var scheduleDir = resultDir+"%s-%s/schedules/".format(criterion.name, opt)
+
+                var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
+                var scheduleIndex = traceFiles.length + 1
+                var newScheduleFileName = name+"-%s-schedule.txt".format(scheduleIndex)
+                testGeneratedSchedules(scheduleDir)
+            }
+        }
+    }
+
+    // Generate and test schedules at once.
+    // test("Generate and test schedules with criterion", Tag("generate and test")) {
+    //     var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
+    //     for (criterion <- criteria) {
+    //         for (opt <- criterion.optimizations.-(NONE)) {
+    //             var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
+
+    //             FileHelper.emptyDir(scheduleDir)
+    //             generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
+    //         }
+    //     }
+    // }
 
     // This will count how many bugs there were found with a certain schedule.
     // Giving you an indication of how good a shedule is.
@@ -72,7 +99,7 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
         var interval = 5
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
+                var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
 
                 if (new java.io.File(scheduleDir).exists) {
                     var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
@@ -87,13 +114,9 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
         }
     }
 
+    // Give a summary of where the bugs 
     test("summarize results", Tag("summary")) {
-        println(Console.BOLD)
-        println("*************************************************************")
-        println("**                    SUMMARY REPORT                       **")
-        println("*************************************************************")
-        println(Console.RESET)
-        for (path <- new File(allTracesDir).listFiles if path.isDirectory()) { // Iterate over all directories
+        for (path <- new File(resultDir).listFiles if path.isDirectory()) { // Iterate over all directories
             val file: File = new File(path+"\\time-bug-report.txt")
             val faulty = Source.fromFile(file).getLines().size
 
@@ -106,12 +129,9 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
                 Source.fromFile(file).getLines().foreach { // Iterate over the content and print it
                     println
                 }
-                print(Console.RESET)
-
-                println() // append an empty line to make it more readable
+                println(Console.RESET)
             }
         }
-        println(Console.BOLD+"********************END SUMMARY REPORT***********************\n"+Console.RESET)
     }
 
     // This will validate if we have found a valid race condition.
@@ -119,64 +139,32 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
         assert((numFaulty != 0) == expectFailures, "Generated %d shedules and %d of them failed.".format(numShedules, numFaulty))
     }
 
+    // This will hold the actor/testcase/application under test
     def run {
         system = ActorSystem("ActorSystem")
-        /*system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
-            akka {   
-                loglevel = DEBUG
-                stdout-loglevel = DEBUG
-
-                remote {
-                    log-received-messages = on
-                }
-
-                actor {
-                    default-dispatcher {
-                        throughput = 5
-                    }
-
-                    debug {
-                        receive = on
-                        lifecycle = on
-                        event-stream = on
-                    }
-                }
-
-                event-handlers = ["akka.testkit.TestEventListener"]
-            }
-        """))*/
         RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
         try {
             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
-            val ballot = system.actorOf(Ballot(), "ballot")
+            val ballot = system.actorOf(Ballot(), "ballot") // create the actors
             val voter1 = system.actorOf(Voter(), "voter1")
             val voter2 = system.actorOf(Voter(), "voter2")
 
-            probe.send(ballot, Start(List(voter1, voter2))) // Start the simulation
+            probe.send(ballot, Start(List(voter1, voter2))) // Start the election
 
             Thread.sleep(delay)
 
-            probe.send(ballot, Result) // Start the simulation
-            //ask(ballot, Result)
+            probe.send(ballot, Result) // Ask the result of the election
 
-            bugDetected = probe.expectMsgPF(timeout.duration, "The winner of the election") {
-                case winner: ActorRef if (winner == voter2) => {
-                    println(Console.GREEN + Console.BOLD+"**SUCCESS** Voter2 has won the election"+Console.RESET)
-                    false
-                }
-
-                case winner: ActorRef if (winner != voter2) => {
-                    println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win, %s won instead".format(winner.toString()) + Console.RESET)
-                    true
-                }
-
-                case msg => {
-                    println(Console.RED + Console.BOLD+"**FAILURE** unkown message received: %s".format(msg) + Console.RESET)
-                    true
-                }
+            val result = probe.expectMsgType[ActorRef](timeout.duration)
+            if (result == voter2) {
+                println(Console.GREEN + Console.BOLD+"**SUCCESS** Voter2 has won the election"+Console.RESET)
+                bugDetected = false
+            } else {
+                println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win, %s won instead".format(result) + Console.RESET)
+                bugDetected = true
             }
         } catch {
             case e: AssertionError => {

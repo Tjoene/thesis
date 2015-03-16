@@ -161,7 +161,8 @@ trait ImprovedTestHelper {
             report = "******* TRACES WITH BUG *******"
             writer.write(report+"\n")
             for ((trace, time) <- tracesWithBug) {
-                writer.write("Time= "+time+", "+trace+"\n");
+                //writer.write("Time= "+time+", "+trace+"\n");
+                writer.write(trace+"\n");
             }
             writer.close()
             tracesWithBug.clear()
