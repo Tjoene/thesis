@@ -117,7 +117,10 @@ object BuildScript extends Build {
             // Run the tests in a seperated JVM then the one SBT is using
             fork in Test := true,
             
-            // Show full stack traces and durations in ScalaTest
+            // Pass compiler options to ScalaTest. The must start with -o
+            //   D - show durations
+            //   F - show full stack traces
+            //   W - without color
             testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
 
             // append several options to the list of options passed to the Java compiler

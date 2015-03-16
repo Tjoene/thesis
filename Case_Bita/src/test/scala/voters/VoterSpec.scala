@@ -20,10 +20,16 @@ import com.typesafe.config.ConfigFactory
 
 import util._
 
+import java.io.File
+import scala.io.Source
+
 class VoterSpec extends FunSuite with ImprovedTestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "voters"
+
+    // Are we expecting certain shedules to fail?
+    val expectFailures = false
 
     implicit val timeout = Timeout(2000, TimeUnit.MILLISECONDS)
 
@@ -34,9 +40,9 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
     val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
 
     // folders where we need to store the test results
-    var allTracesDir = "test-results/%s/".format(this.name)
-    var randomTracesDir = allTracesDir+"random/"
-    var randomTracesTestDir = allTracesDir+"random-test/"
+    val allTracesDir = "test-results/%s/".format(this.name)
+    val randomTracesDir = allTracesDir+"random/"
+    val randomTracesTestDir = allTracesDir+"random-test/"
 
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace") {
@@ -79,6 +85,32 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
                 }
             }
         }
+    }
+
+    // This will validate if we have found a valid race condition.
+    test("validate results") {
+        println(Console.BOLD+"\n**SUMMARY REPORT**"+Console.RESET)
+        for (path <- new File(allTracesDir).listFiles if path.isDirectory()) { // Iterate over all directories
+            val file: File = new File(path+"\\time-bug-report.txt")
+            val faulty = Source.fromFile(file).getLines().size
+
+            if (file.isFile()) { // Check if they contain a bug report file from Bita
+                if (faulty <= 4) { // Check if the shedule was faulty shedules (should be more then 4 lines then)
+                    print(Console.GREEN)
+                } else {
+                    print(Console.RED)
+                }
+                Source.fromFile(file).getLines().foreach { // Iterate over the content and print it
+                    println
+                }
+                print(Console.RESET)
+
+                println() // append an empty line to make it more readable
+            }
+        }
+        println(Console.BOLD+"**END SUMMARY REPORT**\n"+Console.RESET)
+
+        assert((numFaulty != 0) == expectFailures, "Generated %d shedules and %d of them failed.".format(numShedules, numFaulty))
     }
 
     def run {

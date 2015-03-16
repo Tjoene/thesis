@@ -21,8 +21,11 @@ import akka.util.duration._
  */
 trait ImprovedTestHelper {
 
+    var numShedules = 0
+    var numFaulty = 0
+
     var bugDetected = false
-    var reportBug = false
+    var reportBug = true
     var tracesWithBug = ArrayBuffer[(String, Long)]()
     var curTraceFile = ""
     var startTime = 0L
@@ -218,11 +221,15 @@ trait ImprovedTestHelper {
      * the state and shutdown the actor system.
      */
     def afterEach() {
+        numShedules += 1 // count the number of shedules
+
         RandomScheduleHelper.reset()
         if (bugDetected) {
             println("***********BUG DETECTED**************")
             var end = System.currentTimeMillis()
             tracesWithBug.+=((curTraceFile, (end - startTime) / 1000))
+
+            numFaulty += 1
         }
 
         if (system != null) {
@@ -238,6 +245,6 @@ trait ImprovedTestHelper {
         bugDetected = false
         Scheduler.reset()
 
-        println("\n\n")
+        println("\n")
     }
 }
