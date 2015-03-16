@@ -45,7 +45,7 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
     val randomTracesTestDir = allTracesDir+"random-test/"
 
     // Generates a random trace which will be used for schedule generation.
-    test("Generate a random trace") {
+    test("Generate a random trace", Tag("random")) {
         FileHelper.emptyDir(randomTracesDir)
         var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         var traceIndex = traceFiles.length + 1
@@ -53,7 +53,7 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
         testRandom(name, randomTracesDir, 1)
     }
 
-    test("Generate and test schedules with criterion") {
+    test("Generate and test schedules with criterion", Tag("execute")) {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
@@ -67,7 +67,7 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
 
     // This will count how many bugs there were found with a certain schedule.
     // Giving you an indication of how good a shedule is.
-    test("Measure the coverage of testing with schedules") {
+    test("Measure the coverage of testing with schedules", Tag("measure")) {
         // The number of traces after which the coverage should be measured.
         var interval = 5
         for (criterion <- criteria) {
@@ -87,9 +87,12 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
         }
     }
 
-    // This will validate if we have found a valid race condition.
-    test("validate results") {
-        println(Console.BOLD+"\n**SUMMARY REPORT**"+Console.RESET)
+    test("summarize results", Tag("summary")) {
+        println(Console.BOLD)
+        println("*************************************************************")
+        println("**                    SUMMARY REPORT                       **")
+        println("*************************************************************")
+        println(Console.RESET)
         for (path <- new File(allTracesDir).listFiles if path.isDirectory()) { // Iterate over all directories
             val file: File = new File(path+"\\time-bug-report.txt")
             val faulty = Source.fromFile(file).getLines().size
@@ -108,8 +111,11 @@ class VoterSpec extends FunSuite with ImprovedTestHelper {
                 println() // append an empty line to make it more readable
             }
         }
-        println(Console.BOLD+"**END SUMMARY REPORT**\n"+Console.RESET)
+        println(Console.BOLD+"********************END SUMMARY REPORT***********************\n"+Console.RESET)
+    }
 
+    // This will validate if we have found a valid race condition.
+    test("validate results", Tag("validate")) {
         assert((numFaulty != 0) == expectFailures, "Generated %d shedules and %d of them failed.".format(numShedules, numFaulty))
     }
 

@@ -121,7 +121,7 @@ object BuildScript extends Build {
             //   D - show durations
             //   F - show full stack traces
             //   W - without color
-            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
+            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oD"),
 
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq(
