@@ -36,6 +36,7 @@ The `Dependencies` folder contains the pre-compiled jars of the tools that are n
 These jars should be placed in the local Ivy-repository on your computer.
 
 The `Tools` folder contains a copy of the source code for the tools that were used during testing.  
+The tools used in the benchmark will contain a dedicated package, named bita, containing all the tests converted so they are runnable with Bita .
 
 ## Versions
 
