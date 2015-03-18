@@ -10,13 +10,14 @@ import bita.util.{ FileHelper, TestHelper }
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
+import java.util.concurrent.TimeUnit
 
 class BankSpec extends TestHelper with FunSpec {
 
     def name = "bank1"
 
     // feel free to change these parameters to test the bank with various configurations.
-    implicit val timeout = Timeout(5000.millisecond)
+    implicit val timeout = Timeout(5000, TimeUnit.MILLISECONDS)
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion)
@@ -25,8 +26,6 @@ class BankSpec extends TestHelper with FunSpec {
     var allTracesDir = "test-results/%s/".format(name)
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
-
-    var generatedSchedulesNum = -1
 
     describe("TestCase Bank #1") {
 

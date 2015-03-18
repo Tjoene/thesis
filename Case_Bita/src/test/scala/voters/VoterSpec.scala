@@ -6,39 +6,46 @@ import akka.bita.pattern.Patterns._
 import akka.util.duration._
 import akka.util.Timeout
 import akka.dispatch.Await
-
-import bita.util.{ FileHelper, TestHelper }
-
+import bita.util.FileHelper
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
-
-import akka.testkit.CallingThreadDispatcher
-import java.util.concurrent.TimeoutException
+import java.util.concurrent.TimeUnit
+import akka.testkit.TestProbe
 import com.typesafe.config.ConfigFactory
+import util._
+import java.io.File
+import scala.io.Source
 
-class VoterSpec extends FunSuite with TestHelper {
+class VoterSpec extends FunSuite with ImprovedTestHelper {
 
-    // feel free to change these parameters to test the bank with various configurations.
-    def name = "voters"
+    // The name of this test battery
+    val name = "voters"
 
-    implicit val timeout = Timeout(5000.millisecond)
+    // Are we expecting certain shedules to fail?
+    val expectFailures = true
+
+    // The delay to wait Futures/Awaits/...
+    implicit val timeout = Timeout(2000, TimeUnit.MILLISECONDS)
 
     // delay between start and end message
-    def delay = 500
+    val delay = 1000
 
     // Available criterions in Bita: PRCriterion, PCRCriterion, PMHRCriterion 
     val criteria = Array[Criterion](PRCriterion, PCRCriterion, PMHRCriterion)
 
-    // folders where we need to store the test results
-    var allTracesDir = "test-results/%s/".format(this.name)
-    var randomTracesDir = allTracesDir+"random/"
-    var randomTracesTestDir = allTracesDir+"random-test/"
+    // Folders where we need to store the test results
+    val resultDir = "test-results/%s/".format(this.name)
+    val randomTracesDir = resultDir+"random/"
+    val randomTracesTestDir = resultDir+"random-test/"
 
-    var generatedSchedulesNum = -1
+    // This test will keep on generating random schedules for 5 minutes or until an bug is found. 
+    // test("Test with random sheduler within a timeout", Tag("random-schedule")) {
+    //     testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
+    // }
 
     // Generates a random trace which will be used for schedule generation.
-    test("Generate a random trace") {
+    test("Generate a random trace", Tag("random")) {
         FileHelper.emptyDir(randomTracesDir)
         var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         var traceIndex = traceFiles.length + 1
@@ -46,11 +53,12 @@ class VoterSpec extends FunSuite with TestHelper {
         testRandom(name, randomTracesDir, 1)
     }
 
-    test("Generate and test schedules with criterion") {
+    // Generate and test schedules at once.
+    test("Generate and test schedules with criterion", Tag("test")) {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
+                var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
 
                 FileHelper.emptyDir(scheduleDir)
                 generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
@@ -60,12 +68,12 @@ class VoterSpec extends FunSuite with TestHelper {
 
     // This will count how many bugs there were found with a certain schedule.
     // Giving you an indication of how good a shedule is.
-    test("Measure the coverage of testing with schedules") {
+    test("Measure the coverage of testing with schedules", Tag("measure")) {
         // The number of traces after which the coverage should be measured.
         var interval = 5
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
-                var scheduleDir = allTracesDir+"%s-%s/".format(criterion.name, opt)
+                var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
 
                 if (new java.io.File(scheduleDir).exists) {
                     var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
@@ -80,58 +88,62 @@ class VoterSpec extends FunSuite with TestHelper {
         }
     }
 
-    def run {
-        //system = ActorSystem("ActorSystem")
-        system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
-            akka {   
-                loglevel = WARNING
-                stdout-loglevel = WARNING
+    // Give a summary of where the bugs 
+    test("summarize results", Tag("summary")) {
+        for (path <- new File(resultDir).listFiles if path.isDirectory()) { // Iterate over all directories
+            val file: File = new File(path+"\\time-bug-report.txt")
+            val faulty = Source.fromFile(file).getLines().size
 
-                remote {
-                    log-received-messages = on
+            if (file.isFile()) { // Check if they contain a bug report file from Bita
+                if (faulty <= 4) { // Check if the shedule was faulty shedules (should be more then 4 lines then)
+                    print(Console.GREEN)
+                } else {
+                    print(Console.RED)
                 }
-
-                actor {
-                    default-dispatcher {
-                        throughput = 5
-                    }
-
-                    debug {
-                        receive = on
-                        lifecycle = on
-                        event-stream = on
-                    }
+                Source.fromFile(file).getLines().foreach { // Iterate over the content and print it
+                    println
                 }
-
-                event-handlers = ["akka.testkit.TestEventListener"]
+                println(Console.RESET)
             }
-        """))
+        }
+    }
+
+    // This will validate if we have found a valid race condition.
+    test("validate results", Tag("validate")) {
+        assert((numFaulty != 0) == expectFailures, "Generated %d shedules and %d of them failed.".format(numShedules, numFaulty))
+    }
+
+    // This will hold the actor/testcase/application under test
+    def run {
+        system = ActorSystem("ActorSystem")
         RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
         RandomScheduleHelper.setSystem(system)
 
-        val ballot = system.actorOf(Ballot() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "ballot")
-        val voter1 = system.actorOf(Voter() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "voter1")
-        val voter2 = system.actorOf(Voter() /*.withDispatcher(CallingThreadDispatcher.Id)*/ , "voter2")
-
-        ballot ! Start(List(voter1, voter2))
-
-        Thread.sleep(delay)
-
         try {
-            val future = ask(ballot, Result)
-            val result = Await.result(future, timeout.duration).asInstanceOf[ActorRef]
+            val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
+            val ballot = system.actorOf(Ballot(), "ballot") // create the actors
+            val voter1 = system.actorOf(Voter(), "voter1")
+            val voter2 = system.actorOf(Voter(), "voter2")
+
+            probe.send(ballot, Start(List(voter1, voter2))) // Start the election
+
+            Thread.sleep(delay)
+
+            probe.send(ballot, Result) // Ask the result of the election
+
+            val result = probe.expectMsgType[ActorRef](timeout.duration)
             if (result == voter2) {
+                println(Console.GREEN + Console.BOLD+"**SUCCESS** Voter2 has won the election"+Console.RESET)
                 bugDetected = false
-                println(Console.GREEN + Console.BOLD+"**SUCCESS** The voter2 %s has won the election".format(result.toString()) + Console.RESET)
             } else {
+                println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win, %s won instead".format(result) + Console.RESET)
                 bugDetected = true
-                println(Console.RED + Console.BOLD+"**FAILURE** Voter2 didn't win the election, instead %s won".format(result.toString()) + Console.RESET)
             }
         } catch {
-            case e: TimeoutException => {
+            case e: AssertionError => {
                 bugDetected = false
-                println(Console.RED + Console.BOLD+"**FAILURE** Timeout"+Console.RESET)
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
 
             case e: TimingException => {

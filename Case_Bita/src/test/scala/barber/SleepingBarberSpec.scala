@@ -16,6 +16,7 @@ import bita.ScheduleOptimization
 import bita.util.TestHelper
 import org.scalatest._
 import akka.bita.RandomScheduleHelper
+import java.util.concurrent.TimeUnit
 
 /**
  * @author Samira Tasharofi
@@ -30,7 +31,7 @@ class BarberSpec extends TestHelper with FunSpec {
     // feel free to change these parameters to test the barber with various configurations.
     var capacity = 2
     var customerNum = 3
-    implicit val timeout = Timeout(100000)
+    implicit val timeout = Timeout(5000, TimeUnit.MILLISECONDS)
 
     // test with PMHR criterion
     val criterion = PMHRCriterion
@@ -38,8 +39,6 @@ class BarberSpec extends TestHelper with FunSpec {
     var allTracesDir = "test-results/barber/%s_%s_%s/%s/".format(name, capacity, customerNum, round)
     var randomTracesDir = allTracesDir+"random/"
     var randomTracesTestDir = allTracesDir+"random-test/"
-
-    var generatedSchedulesNum = -1
 
     describe("Barber Test") {
 

@@ -1,0 +1,13 @@
+{
+ "catalog": "Catalog of Test Data",
+ "stores": [
+  {
+   "store": "test:fs",
+   "params": {
+     "type": "fs",
+     "path": "src/test/resources/data",
+     "cacheAll": "yes"
+   }
+  }
+ ]
+}

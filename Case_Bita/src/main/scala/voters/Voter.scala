@@ -28,7 +28,7 @@ class Voter() extends Actor {
     def receive = {
         case Vote => {
             sender ! self
-            println(Console.YELLOW + Console.BOLD+"**SUCCESS** The voter %s was asked to vote".format(self.toString) + Console.RESET)
+            println(Console.CYAN + Console.BOLD+"The voter %s was asked to vote".format(self.toString) + Console.RESET)
         }
 
         case msg => {

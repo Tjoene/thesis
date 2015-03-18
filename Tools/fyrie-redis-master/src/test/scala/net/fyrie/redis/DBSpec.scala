@@ -137,7 +137,7 @@ class KeysSpec extends mutable.Specification with TestClient {
         }
       } map (_.flatten === values.map(2*))
     }
-    "should throw an error" ! client { r ⇒
+    /*"should throw an error" ! client { r ⇒
       filterEvents(EventFilter[RedisErrorException]("ERR Operation against a key holding the wrong kind of value")) {
         val result = r.multi { rq ⇒
           for {
@@ -171,7 +171,7 @@ class KeysSpec extends mutable.Specification with TestClient {
           b === List(Some("testvalue1"), Some("testvalue2"))
         }
       }
-    }
+    }*/
   }
 
   "watch" >> {

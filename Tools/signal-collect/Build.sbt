@@ -17,6 +17,7 @@ resolvers += "OSS Sonatype" at "https://oss.sonatype.org/content/repositories/re
 
 /** Dependencies */
 libraryDependencies ++= Seq(
+  "cs.edu.uiuc" %% "bita" % "0.1" % "test",
   "com.typesafe.akka" % "akka-actor" % "2.0.3",
   "com.typesafe.akka" % "akka-remote" % "2.0.3" ,
   "org.scala-lang" % "scala-library" % "2.9.2" % "compile",
@@ -26,6 +27,5 @@ libraryDependencies ++= Seq(
   "junit" % "junit" % "4.8.2"  % "test",
   "org.specs2" %% "specs2" % "1.12.1"  % "test",
   "org.mockito" % "mockito-all" % "1.9.0"  % "test",
-  "org.scalatest" %% "scalatest" % "2.0.M5b" % "test",
-  "cs.edu.uiuc" %% "bita" % "0.1" % "test"
+  "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
 )

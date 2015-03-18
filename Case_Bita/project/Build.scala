@@ -60,8 +60,8 @@ object Resolvers {
 // The dependencies that are required for the project
 object Dependencies {
     val bita      = "cs.edu.uiuc" %% "bita" % "0.1"
-    val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.5"
-    val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.5"
+    val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.3"
+    val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.3"
     val scalatest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
 
     val myDepencencies = Seq(bita, actor, testkit, scalatest)
@@ -117,8 +117,11 @@ object BuildScript extends Build {
             // Run the tests in a seperated JVM then the one SBT is using
             fork in Test := true,
             
-            // Show full stack traces and durations in ScalaTest
-            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF"),
+            // Pass compiler options to ScalaTest. The must start with -o
+            //   D - show durations
+            //   F - show full stack traces
+            //   W - without color
+            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oD"),
 
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq(
