@@ -10,7 +10,7 @@ object FyrieRedisBuild extends Build {
                    settings(coreSettings: _*))
 
   val coreSettings = Defaults.defaultSettings ++ inConfig(Benchmark)(Defaults.configSettings) ++ ScalariformPlugin.scalariformSettings ++ Seq(
-    scalaVersion := "2.9.1",
+    scalaVersion := "2.9.2",
     crossScalaVersions := Seq("2.9.0-1", "2.9.1", "2.10.0-M1"),
     name := "fyrie-redis",
     organization := "net.fyrie",
@@ -18,8 +18,9 @@ object FyrieRedisBuild extends Build {
     resolvers ++= Seq(//"Sonatype OSS Repo" at "http://oss.sonatype.org/content/repositories/releases/",
                       //"Akka Snapshot Repo" at "http://akka.io/releases/",
                       "Maven" at "https://repo1.maven.org/maven2/"),
-    libraryDependencies ++= Seq("com.typesafe.akka" % "akka-actor" % "2.0.5",
-                                "com.typesafe.akka" % "akka-testkit" % "2.0.5" % "test",
+    libraryDependencies ++= Seq("cs.edu.uiuc" %% "bita" % "0.1",
+                                "com.typesafe.akka" % "akka-actor" % "2.0.3",
+                                "com.typesafe.akka" % "akka-testkit" % "2.0.3" % "test",
                                 "org.specs2" % "specs2_2.9.1" % "1.6.1",
                                 "org.specs2" % "specs2-scalaz-core_2.9.1" % "6.0.1" % "test",
                                 "com.google.caliper" % "caliper" % "1.0-beta-1" % "benchmark",
