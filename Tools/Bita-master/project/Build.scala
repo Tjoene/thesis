@@ -22,8 +22,8 @@ object BuildSettings {
     val buildOrgURL       = "http://ep.khbo.be/"
     val buildDesc         = "Testing the case(s) with Bita."
     val buildVersion      = "0.2"
-    val buildScalaVersion = "2.10.4"
-    val buildJavaVersion  = "1.7"
+    val buildScalaVersion = "2.11.5"
+    val buildJavaVersion  = "1.8"
 
     val buildSettings = Seq(
         organization         := buildOrg,
