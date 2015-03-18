@@ -14,7 +14,7 @@ class ScriptsSpec extends mutable.Specification with UnstableClient {
   }
 
   "lua dsl" >> {
-    "should produce valid lua" ! client { r ⇒
+    /*"should produce valid lua" ! client { r ⇒
       import lua._
 
       val v1 = Var("v1")
@@ -60,7 +60,7 @@ class ScriptsSpec extends mutable.Specification with UnstableClient {
       r.sync.eval(script("c")) === RedisInteger(3)
       r.sync.eval(script("d")) === RedisInteger(8)
       r.sync.eval(script("e")) === RedisBulk(Some(Store("I don't know!")))
-    }
+    }*/
     "should produce valid arithmetic expressions" ! client { r ⇒
       import lua._
 
