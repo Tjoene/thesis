@@ -20,10 +20,11 @@ import com.typesafe.config.ConfigFactory
 
 /**
  * Ported from net.fyrie.redis.KeysSpec
+ * Test: keys should fetch keys
  */
-class KeysSpec extends Tests {
+class InsertSpec extends Tests {
 
-  override def name = "Fyrie-Keys"
+  override def name = "Fyrie-insert"
 
   def run {
     system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
@@ -44,11 +45,14 @@ class KeysSpec extends Tests {
 
     val probe = new TestProbe(system) // Use a testprobe to represent the tests.
     val r = new RedisClient("localhost", 6379, RedisClientConfig(connections = 1))(system)
+
     r.set("anshin-1", "debasish")
     r.set("anshin-2", "maulindu")
-    var result = r.sync.keys("anshin*").size
 
-    if (result == 2) {
+    val result1 = r.sync.renamenx("anshin-2", "anshin-2-new")
+    val result2 = r.sync.renamenx("anshin-1", "anshin-2-new")
+
+    if (result1 == true && result2 == false) {
       bugDetected = false
       println(Console.GREEN + Console.BOLD + "***SUCCESS***" + Console.RESET)
     } else {
