@@ -6,12 +6,12 @@ import akka.bita.pattern.Patterns._
 import scala.concurrent.duration._
 import akka.util.Timeout
 import scala.concurrent.Await
-import bita.util.{ FileHelper, TestHelper }
+import bita.util.{ FileHelper, ImprovedTestHelper }
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 
-class BankSpec extends FunSpec with TestHelper {
+class BankSpec extends FunSpec with ImprovedTestHelper {
 
     def name = "bank1"
 

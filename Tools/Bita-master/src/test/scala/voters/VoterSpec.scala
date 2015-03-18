@@ -8,7 +8,7 @@ import akka.util.Timeout
 import scala.concurrent.duration._
 import scala.concurrent.Await
 
-import bita.util.{ FileHelper, TestHelper }
+import bita.util.{ FileHelper, ImprovedTestHelper }
 
 import bita.criteria._
 import bita.ScheduleOptimization._
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException
 import com.typesafe.config.ConfigFactory
 import java.util.concurrent.TimeUnit
 
-class VoterSpec extends FunSuite with TestHelper {
+class VoterSpec extends FunSuite with ImprovedTestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "voters"
