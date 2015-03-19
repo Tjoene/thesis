@@ -2,11 +2,11 @@ name := """simple-file-reader-akka-actors"""
 
 version := "1.0.0"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.9.2"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.3.4",
-  "com.typesafe.akka" %% "akka-slf4j" % "2.3.4",
-  "com.typesafe.akka" %% "akka-testkit" % "2.3.4" % "test"
+  "cs.edu.uiuc" %% "bita" % "0.1",
+  "com.typesafe.akka" % "akka-actor" % "2.0.3",
+  "com.typesafe.akka" % "akka-testkit" % "2.0.3" % "test"
 )
 

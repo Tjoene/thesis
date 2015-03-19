@@ -5,13 +5,11 @@ import akka.actor.{ ActorSystem, Props }
 import akka.dispatch.ExecutionContexts._
 import akka.pattern.ask
 import akka.util.Timeout
-import scala.concurrent._
-import scala.concurrent.duration._
-import scala.util.{ Success, Failure }
+import akka.util._
+import akka.util.duration._
 
 object ReaderApp extends App {
 
-  implicit val ec = global
   implicit val timeout = Timeout(25 seconds)
 
   val system = ActorSystem("FileReaderSystem")
