@@ -44,8 +44,8 @@ abstract class Tests extends FunSuite with ImprovedTestHelper {
 
     test(" Generate and test schedules with criterion") {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-        for (criterion ← criteria) {
-            for (opt ← criterion.optimizations.-(NONE)) {
+        for (criterion <- criteria) {
+            for (opt <- criterion.optimizations.-(NONE)) {
                 var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
 
                 FileHelper.emptyDir(scheduleDir)
@@ -59,8 +59,8 @@ abstract class Tests extends FunSuite with ImprovedTestHelper {
     test("Measure the coverage of testing with schedules") {
     // The number of traces after which the coverage should be measured.
     var interval = 5
-        for (criterion ← criteria) {
-            for (opt ← criterion.optimizations.-(NONE)) {
+        for (criterion <- criteria) {
+            for (opt <- criterion.optimizations.-(NONE)) {
                 var scheduleDir = allTracesDir + "%s-%s/".format(criterion.name, opt)
                 var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
                 FileHelper.copyFiles(randomTraces, scheduleDir)
