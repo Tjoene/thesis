@@ -1,11 +1,9 @@
 package bank
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
-import akka.dispatch.Await
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.DefaultPromise
-import akka.dispatch.{ Promise, Future }
+import scala.concurrent.Await
 import akka.pattern.ask
 
 object BankMain {

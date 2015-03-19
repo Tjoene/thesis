@@ -35,15 +35,15 @@ class QuickSort extends Actor {
             receivedResultsCount = 0
 
             val pivot = xs(0)
-            val left = (xs filter (pivot >))
-            val right = (xs filter (pivot <))
+            val left = (xs filter (pivot > _))
+            val right = (xs filter (pivot < _))
 
             var sortLeft = context.actorOf(Props(new QuickSort()))
             var sortRight = context.actorOf(Props(new QuickSort()))
             sortLeft ! Sort(left)
             sortRight ! Sort(right)
 
-            middle = (xs filter (pivot ==))
+            middle = (xs filter (pivot == _))
         }
     }
 

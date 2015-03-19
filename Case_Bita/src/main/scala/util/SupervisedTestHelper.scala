@@ -13,8 +13,7 @@ import bita.criteria._
 import bita.schedulegeneration._
 import akka.bita.{ Scheduler, RandomScheduleHelper }
 import bita.util.FileHelper
-import akka.util.Duration
-import akka.util.duration._
+import scala.concurrent.duration._
 
 /**
  * A helper for testing with Bita.

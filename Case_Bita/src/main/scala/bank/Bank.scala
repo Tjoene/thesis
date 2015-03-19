@@ -1,7 +1,7 @@
 package bank
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
-import akka.dispatch.Future
+import scala.concurrent.Future
 
 case object Start
 case object RegisterSender

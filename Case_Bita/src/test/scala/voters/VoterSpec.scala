@@ -3,9 +3,9 @@ package voters
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.{ RandomScheduleHelper, Scheduler }
 import akka.bita.pattern.Patterns._
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.Await
+import scala.concurrent.Await
 import bita.util.FileHelper
 import bita.criteria._
 import bita.ScheduleOptimization._

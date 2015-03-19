@@ -2,9 +2,9 @@ package util
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef, PoisonPill }
 import java.util.concurrent.TimeUnit
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.Await
+import scala.concurrent.Await
 import org.scalatest._
 import akka.testkit._
 import akka.pattern._
@@ -18,7 +18,7 @@ class EchoActor() extends Actor {
     }
 }
 
-class SupervisorSpec(_system: ActorSystem) extends TestKit(_system) with FunSuite with BeforeAndAfter with BeforeAndAfterAll with ImplicitSender {
+class SupervisorSpec(_system: ActorSystem) extends TestKit(_system) with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with ImplicitSender {
 
     // the time to wait for a message
     implicit val timeout = Timeout(2, TimeUnit.SECONDS)

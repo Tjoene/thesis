@@ -3,16 +3,16 @@ package bank
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.{ RandomScheduleHelper, Scheduler }
 import akka.bita.pattern.Patterns._
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.Await
+import scala.concurrent.Await
 import bita.util.{ FileHelper, TestHelper }
 import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 import java.util.concurrent.TimeUnit
 
-class BankSpec extends TestHelper with FunSpec {
+class BankSpec extends FunSpec with TestHelper {
 
     def name = "bank1"
 

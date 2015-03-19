@@ -3,7 +3,7 @@ package barber
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import java.util.Random
 import scala.collection.mutable.HashMap
-import akka.dispatch.Promise
+import scala.concurrent.Promise
 import java.util.concurrent.CountDownLatch
 import scala.collection.mutable.HashSet
 

@@ -2,9 +2,9 @@ package bank2
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.pattern.Patterns.ask
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.Await
+import scala.concurrent.Await
 
 case object Balance
 case object Continue

@@ -3,11 +3,10 @@ package bank2
 import akka.bita.Scheduler
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.pattern.Patterns._
-import akka.dispatch.Await
-import akka.util.duration._
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.DefaultPromise
-import akka.dispatch.{ Promise, Future }
+import scala.concurrent.{ Promise, Future }
 import bita.{ ScheduleEnvelope, LogicalMessage, EventID }
 import bita.util.FileHelper
 import bita.criteria._

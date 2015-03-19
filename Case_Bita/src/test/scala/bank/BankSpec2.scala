@@ -6,12 +6,11 @@
 
 // import org.scalatest._
 
-// import akka.util.duration._
+// import scala.concurrent.duration._
 // import akka.util.Timeout
 
-// import akka.dispatch.Await
-// import akka.dispatch.DefaultPromise
-// import akka.dispatch.Future
+// import scala.concurrent.Await
+// import scala.concurrent.Future
 
 // import akka.bita.Scheduler
 // import akka.bita.pattern.Patterns._
@@ -21,7 +20,7 @@
 // import bita.ScheduleOptimization
 // import bita.util._
 
-// class BankSpec2 extends TestHelper with FlatSpec with BeforeAndAfterEach {
+// class BankSpec2 extends FlatSpec with TestHelper with BeforeAndAfterEach {
 //     implicit val timeout = Timeout(5000.millisecond)
 //     var random = false
 

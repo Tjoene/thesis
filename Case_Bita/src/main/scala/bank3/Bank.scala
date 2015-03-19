@@ -1,11 +1,10 @@
 package bank3
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
-import akka.dispatch.Future
+import scala.concurrent.{ Future, Await }
 import akka.bita.pattern.Patterns.ask
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.Await
 
 case object Start
 case object Finish

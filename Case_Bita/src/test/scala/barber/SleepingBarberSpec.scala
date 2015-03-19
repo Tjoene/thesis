@@ -4,10 +4,9 @@ import scala.collection.mutable.{ HashMap, ArrayBuffer, Queue }
 import akka.bita.Scheduler
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.pattern.Patterns._
-import akka.dispatch.Await
+import scala.concurrent.Await
 import akka.util.Timeout
-import akka.dispatch.DefaultPromise
-import akka.dispatch.{ Promise, Future }
+import scala.concurrent.{ Promise, Future }
 import bita.{ ScheduleEnvelope, LogicalMessage, EventID }
 import bita.util.FileHelper
 import bita.criteria._
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit
  *
  */
 
-class BarberSpec extends TestHelper with FunSpec {
+class BarberSpec extends FunSpec with TestHelper {
 
     val name = "barber"
     val round = 0
@@ -110,7 +109,7 @@ class BarberSpec extends TestHelper with FunSpec {
         system = ActorSystem()
         RandomScheduleHelper.setSystem(system)
 
-        var promise = Promise[HashMap[CustomerState.Value, Int]]()(system.dispatcher)
+        var promise = Promise[HashMap[CustomerState.Value, Int]]()
 
         var monitor = system.actorOf(Props(new Monitor(customerNum, promise)))
         var barber = system.actorOf(Props(new Barber))
@@ -126,7 +125,7 @@ class BarberSpec extends TestHelper with FunSpec {
             customers(i) ! Go
         }
 
-        var result = Await.result(promise.mapTo[HashMap[CustomerState.Value, Int]], timeout.duration)
+        var result = Await.result(promise.future.mapTo[HashMap[CustomerState.Value, Int]], timeout.duration)
 
         if (result.asInstanceOf[HashMap[CustomerState.Value, Int]].contains(CustomerState.Exception))
             bugDetected = true

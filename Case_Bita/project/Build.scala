@@ -17,8 +17,8 @@ object BuildSettings {
     val buildOrgURL       = "http://ep.khbo.be/"
     val buildDesc         = "Testing the case(s) with Bita."
     val buildVersion      = "1.0"
-    val buildScalaVersion = "2.9.2"
-    val buildJavaVersion  = "1.7"
+    val buildScalaVersion = "2.11.5"
+    val buildJavaVersion  = "1.8"
 
     val buildSettings = Seq(
         organization         := buildOrg,
@@ -59,10 +59,10 @@ object Resolvers {
 
 // The dependencies that are required for the project
 object Dependencies {
-    val bita      = "cs.edu.uiuc" %% "bita" % "0.1"
-    val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.3"
-    val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.3"
-    val scalatest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
+    val bita      = "cs.edu.uiuc" %% "bita" % "0.2"
+    val actor     = "com.typesafe.akka" %% "akka-actor" % "2.3.9"
+    val testkit   = "com.typesafe.akka" %% "akka-testkit" % "2.3.9"
+    val scalatest = "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
     val myDepencencies = Seq(bita, actor, testkit, scalatest)
 }
@@ -135,6 +135,7 @@ object BuildScript extends Build {
                 "-deprecation", 
                 "-explaintypes", 
                 "-encoding", "UTF8", 
+                "-feature",
                 "–optimise"
             )
         )

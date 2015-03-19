@@ -3,9 +3,9 @@ package bank4
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.{ RandomScheduleHelper, Scheduler }
 import akka.bita.pattern.Patterns._
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.util.Timeout
-import akka.dispatch.Await
+import scala.concurrent.Await
 //import bita.util.{ FileHelper, TestHelper }
 import bita.util.FileHelper
 import bita.criteria._
@@ -16,7 +16,7 @@ import akka.testkit._
 
 import util._
 
-class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with FunSuite with BeforeAndAfter with BeforeAndAfterAll with SupervisedTestHelper {
+class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with SupervisedTestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
     def name = "bank3"
