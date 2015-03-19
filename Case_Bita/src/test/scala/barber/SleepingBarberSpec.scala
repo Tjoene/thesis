@@ -12,7 +12,7 @@ import bita.util.FileHelper
 import bita.criteria._
 import bita.ScheduleOptimization._
 import bita.ScheduleOptimization
-import bita.util.TestHelper
+import bita.util.ImprovedTestHelper
 import org.scalatest._
 import akka.bita.RandomScheduleHelper
 import java.util.concurrent.TimeUnit
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
  *
  */
 
-class BarberSpec extends FunSpec with TestHelper {
+class BarberSpec extends FunSpec with ImprovedTestHelper {
 
     val name = "barber"
     val round = 0
