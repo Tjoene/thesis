@@ -61,7 +61,7 @@ object FileHelper {
             val name = src.getName()
             val dest = new File(destDir + name)
             new FileOutputStream(dest) getChannel () transferFrom (
-                new FileInputStream(src) getChannel, 0, Long.MaxValue)
+                new FileInputStream(src).getChannel, 0, Long.MaxValue)
         }
     }
 

@@ -22,7 +22,8 @@ object BuildSettings {
     val buildOrgURL       = "http://ep.khbo.be/"
     val buildDesc         = "Testing the case(s) with Bita."
     val buildVersion      = "0.2"
-    val buildScalaVersion = "2.11.5"
+    val buildCrossVersion = Seq("2.11.5", "2.10.4")
+    val buildScalaVersion = buildCrossVersion.head
     val buildJavaVersion  = "1.8"
 
     val buildSettings = Seq(
@@ -32,6 +33,7 @@ object BuildSettings {
         description          := buildDesc,
         version              := buildVersion,
         scalaVersion         := buildScalaVersion,
+        crossScalaVersions   := buildCrossVersion,
         shellPrompt          := ShellPrompt.buildShellPrompt
     )
 }
@@ -124,6 +126,9 @@ object BuildScript extends Build {
             fullClasspath in Test <<= useInstrumentedClasses(Test),
             fullClasspath in Runtime <<= useInstrumentedClasses(Runtime),
 
+            // Add the the compiled aspects to the regular compile products
+            products in Compile <++= products in Aspectj,
+
             // Execute tests in the current project serially
             parallelExecution in Test := false,
 
@@ -135,6 +140,7 @@ object BuildScript extends Build {
 
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq(
+                "-Xmx4G",
                 "-source", BuildSettings.buildJavaVersion,
                 "-target", BuildSettings.buildJavaVersion,
                 "-encoding", "UTF-8"
@@ -143,9 +149,10 @@ object BuildScript extends Build {
             // append several options  to the list of options passed to the Scala compiler
             scalacOptions ++= Seq(
                 "-deprecation", 
-                "-explaintypes", 
+                //"-explaintypes", 
                 "-encoding", "UTF8", 
-                "–optimise"
+                "-feature"
+                //"–optimise" // Caused an error the publishing: "source file 'ûoptimise' could not be found"
             )
         )
     )
