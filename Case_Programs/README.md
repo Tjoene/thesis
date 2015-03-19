@@ -11,6 +11,7 @@ Programs for the Benchmark
   - [Geotrellis](#geotrellis)
   - [Gatling](#gatling)
   - [Marshal](#marshal)
+  - [Simple File Reader](#simple-file-reader)
 
 Quick start
 ------
@@ -52,6 +53,8 @@ There is also a port [available for windows](https://github.com/MSOpenTech/redis
 ## CQRS
 **Source version:** clone from [commit e8f0d7b](https://github.com/debasishg/cqrs-akka/tree/e8f0d7b58e8bb7a7d000aefd3c1df2e8d3c49555)
 
+Command Query Responsibility Segregation
+
 
 ## Geotrellis
 **Source version:** clone from [tag 0.7.0](https://github.com/geotrellis/geotrellis/tree/v0.7.0)
@@ -71,3 +74,7 @@ Gatling is a stress test tool for HTTP servers.
 **Source version:** private repo, code not available for public
 
 
+## Simple File Reader
+**Source version:** clone from [commit 9f843a1](https://github.com/gvolpe/simple-file-reader-akka-actors/tree/9f843a1cf18b5d24c3a65d29f0c2ee95bef40ddf)
+
+A simple program that takes an file and reads the words using Akka Actors
