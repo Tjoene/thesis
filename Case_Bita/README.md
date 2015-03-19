@@ -12,8 +12,6 @@ Tool Bita
   - [Testcase Voters](#voters)
   - [Testcase Hot Swap](#hot-swap)
   - [Testcase QuickSort](#quicksort)
-- [Programs](#programs)
-  - [Tool SignalCollect](#signalcollect)
 
 Quick start
 ------
@@ -106,14 +104,3 @@ The testcase is very simple (only 2 messages), perhaps to simple since Bita is u
 
 This testcase is borrowed from Bita and is an implementation of the Quick Sort algoritme with Akka actors.
 The testcase was used to see what Bita would do with a fully deterministic example.
-
-
-Programs
-------
-
-## SignalCollect
-
-According to the paper ´Bita: Coverage-guidedn Automatic Testing of Actor Programs´, Bita is able to detect [a known bug in SignalCollect](https://github.com/uzh/signal-collect/issues/58), where the developers aren't able to reproduce it.
-In the paper, Bita claims to detect the bug in every experiment, withing an average time of 176 seconds.
-
-How ever, attempts to reproduce this result wasn't succesfull. The failing test in question always succeeds with the random shedules, and using Bita's criterions yielded 0 generated shedules, meaning there weren't any actor messages detected in this particular test. 
