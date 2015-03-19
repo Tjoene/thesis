@@ -8,6 +8,11 @@
 */target/
 */test-results/
 
+*/*/project/target/
+*/*/project/project/
+*/*/target/
+*/*/test-results/
+
 Tools/*/project/target/
 Tools/*/project/project/
 Tools/*/target/
