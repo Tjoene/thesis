@@ -12,6 +12,7 @@ Tool Bita
   - [Testcase Voters](#voters)
   - [Testcase Hot Swap](#hot-swap)
   - [Testcase QuickSort](#quicksort)
+  - [Testcase Pi](#pi)
 
 Quick start
 ------
@@ -104,3 +105,9 @@ The testcase is very simple (only 2 messages), perhaps to simple since Bita is u
 
 This testcase is borrowed from Bita and is an implementation of the Quick Sort algoritme with Akka actors.
 The testcase was used to see what Bita would do with a fully deterministic example.
+
+
+### Pi
+
+This testcase is based on the [tutorial of Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html). 
+It will calculate the number Pi with a given amount of actors
