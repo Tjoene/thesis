@@ -33,8 +33,6 @@ class BankSpec extends BitaTests {
 
             probe.send(bank, Start) // Start the simulation
 
-            probe.send(bank, RegisterSender)
-
             val amount = probe.expectMsgType[Int](timeout.duration)
             if (amount == 500) {
                 println(Console.GREEN + Console.BOLD+"**SUCCESS** Charlie has %d on his account".format(amount) + Console.RESET)
