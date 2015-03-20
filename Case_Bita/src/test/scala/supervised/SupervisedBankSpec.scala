@@ -1,4 +1,4 @@
-package bank4
+package supervised
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.{ RandomScheduleHelper, Scheduler }
@@ -19,7 +19,7 @@ import util._
 class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with FunSuite with BeforeAndAfter with BeforeAndAfterAll with SupervisedTestHelper {
 
     // feel free to change these parameters to test the bank with various configurations.
-    def name = "bank3"
+    def name = "supervised"
 
     // the time to wait for a message
     implicit val timeout = Timeout(2, TimeUnit.SECONDS)

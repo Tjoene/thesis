@@ -125,12 +125,17 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     test("validate results", Tag("validate")) {
         if (verbose >= 1) {
             var msg = ""
-            if ((numFaulty != 0) == expectFailures) { // Show the info
-                print(Console.GREEN + Console.BOLD)
-                msg = "**SUCCESS** Generated %d shedules and %d of them failed. The failures were expected.   ".format(numShedules, numFaulty)
+            if (numShedules != 0) {
+                if ((numFaulty != 0) == expectFailures) { // Show the info
+                    print(Console.GREEN + Console.BOLD)
+                    msg = "**SUCCESS** Generated %d shedules and %d of them failed. The failures were expected.   ".format(numShedules, numFaulty)
+                } else {
+                    print(Console.RED + Console.BOLD)
+                    msg = "**FAILURE** Generated %d shedules and %d of them failed. The failures weren't expected.".format(numShedules, numFaulty)
+                }
             } else {
                 print(Console.RED + Console.BOLD)
-                msg = "**FAILURE** Generated %d shedules and %d of them failed. The failures weren't expected.".format(numShedules, numFaulty)
+                msg = "**FAILURE** Something went wrong, generated %d shedules                                ".format(numShedules, numFaulty)
             }
 
             println("*===========================================================================================*")
@@ -141,6 +146,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
         }
 
         // Assert to make the test fail or succeed, for showing it in the testrunner
+        assert(numShedules != 0, "Generated %d shedules.".format(numShedules))
         assert((numFaulty != 0) == expectFailures, "Generated %d shedules and %d of them failed.".format(numShedules, numFaulty))
     }
 
