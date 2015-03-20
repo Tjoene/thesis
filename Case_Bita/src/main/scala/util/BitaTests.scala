@@ -39,12 +39,16 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     val randomTracesTestDir = resultDir+"random-test/"
 
     var verbose = 0
+    var randomTime = 0
+    var randomTraces = 1
 
     // This test will keep on generating random schedules for 5 minutes or until an bug is found. 
-    // test("Test with random sheduler within a timeout", Tag("random-schedule")) {
-    //     random = true
-    //     testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
-    // }
+    test("Test with random sheduler within a timeout", Tag("random-schedule")) {
+        if (randomTime > 0) {
+            random = true
+            testRandomByTime(name, randomTracesTestDir, randomTime)
+        }
+    }
 
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace", Tag("random")) {
@@ -52,9 +56,9 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
         FileHelper.emptyDir(randomTracesDir)
         var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-        var traceIndex = traceFiles.length + 1
-        var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
-        testRandom(name, randomTracesDir, 1)
+        //var traceIndex = traceFiles.length + 1
+        //var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
+        testRandom(name, randomTracesDir, randomTraces)
     }
 
     // Generate and test schedules at once.
@@ -143,5 +147,8 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     override def beforeEach(td: TestData) {
         val config: Map[String, Any] = td.configMap
         verbose = config.getOrElse("verbose", 0).asInstanceOf[String].toInt // read out the config passed via scalatest options 
+        randomTime = config.getOrElse("randomTime", 0).asInstanceOf[String].toInt
+        randomTraces = config.getOrElse("randomTraces", 1).asInstanceOf[String].toInt
+
     }
 }
