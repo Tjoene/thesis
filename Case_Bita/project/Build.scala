@@ -63,8 +63,9 @@ object Dependencies {
     val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.3"
     val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.3"
     val scalatest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
+    val pegdown   = "org.pegdown" % "pegdown" % "1.5.0"
 
-    val myDepencencies = Seq(bita, actor, testkit, scalatest)
+    val myDepencencies = Seq(bita, actor, testkit, scalatest, pegdown)
 }
 
 // The configuration for auto formatting when you compile the files
@@ -120,7 +121,10 @@ object BuildScript extends Build {
             // Pass options to ScalaTest.
             testOptions in Test += Tests.Argument(
                 TestFrameworks.ScalaTest, 
+                "-h", "test-reports", // Enable the HTML reporter in ScalaTest
+
                 "-oD", // Show the duration of a test. Add an F here to print the full stacktrace 
+
                 "-Dverbose=1", // This is a custom variable that is passed to the test. 
                                // These should be either 0, 1 or 3. With 0 printing no extra into and 3 all the info.
                                //   0 = No extra information, only the output of the program
@@ -132,7 +136,7 @@ object BuildScript extends Build {
                                   // It will also stop as soon as a shedule with a bug has been found.
                                   // When this is zero, the random sheduler isn't used in the benchmark
                                   
-                "-DrandomTraces=50" // The number of random traces that needs to be generated. Bita will base it's shedules on these.
+                "-DrandomTraces=5" // The number of random traces that needs to be generated. Bita will base it's shedules on these.
             ),
 
             // append several options to the list of options passed to the Java compiler

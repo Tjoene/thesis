@@ -55,9 +55,6 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
         random = true
 
         FileHelper.emptyDir(randomTracesDir)
-        var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
-        //var traceIndex = traceFiles.length + 1
-        //var newTraceName = name+"-random%s-trace.txt".format(traceIndex)
         testRandom(name, randomTracesDir, randomTraces)
     }
 
