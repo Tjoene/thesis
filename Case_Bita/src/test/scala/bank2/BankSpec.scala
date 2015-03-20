@@ -46,6 +46,11 @@ class BankSpec extends BitaTests {
                 bugDetected = false
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
+
+            case e: java.util.concurrent.TimeoutException => {
+                bugDetected = false
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
+            }
         }
     }
 }

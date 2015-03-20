@@ -136,7 +136,7 @@ object BuildScript extends Build {
                                   // It will also stop as soon as a shedule with a bug has been found.
                                   // When this is zero, the random sheduler isn't used in the benchmark
                                   
-                "-DrandomTraces=5" // The number of random traces that needs to be generated. Bita will base it's shedules on these.
+                "-DrandomTraces=1" // The number of random traces that needs to be generated. Bita will base it's shedules on these.
             ),
 
             // append several options to the list of options passed to the Java compiler
