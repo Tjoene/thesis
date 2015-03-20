@@ -12,6 +12,7 @@ Programs for the Benchmark
   - [Gatling](#gatling)
   - [Marshal](#marshal)
   - [Simple File Reader](#simple-file-reader)
+  - [PDS](#pds)
 
 Quick start
 ------
@@ -58,6 +59,7 @@ Command Query Responsibility Segregation
 
 ## Geotrellis
 **Source version:** clone from [tag 0.7.0](https://github.com/geotrellis/geotrellis/tree/v0.7.0)
+
 **Status:** Uncompilable. A depencenies named ls-sbt was used in this version for adding other depencenies, but the repo behind it has been removed from the www.
 
 A geographic data processing engine written in Scala.
@@ -65,6 +67,7 @@ A geographic data processing engine written in Scala.
 
 ## Gatling
 **Source version:** clone from [tag 1.4.0](https://github.com/gatling/gatling/tree/1.4.0)
+
 **Status:** Uncompilable. The project uses maven and not SBT. In it's current form we can not use it as we don't have the environment for it.
 
 Gatling is a stress test tool for HTTP servers.
@@ -78,3 +81,9 @@ Gatling is a stress test tool for HTTP servers.
 **Source version:** clone from [commit 9f843a1](https://github.com/gvolpe/simple-file-reader-akka-actors/tree/9f843a1cf18b5d24c3a65d29f0c2ee95bef40ddf)
 
 A simple program that takes an file and reads the words using Akka Actors
+
+
+## PDS
+**Source version:** clone from [commit 3e7b234](https://github.com/pcordemans/pds/commit/3e7b234a996e1c287e84373464c9f6111aa94243)
+
+Parallel Discrete event Simulator
