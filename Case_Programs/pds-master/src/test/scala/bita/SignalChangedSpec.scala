@@ -21,11 +21,11 @@ import LogicLevel._
 
 /**
  * Ported from pds.SimulatorTest
- * Test: AND gate propagates signal
+ * Test: introduce a new signalchanged in the simulation
  */
-class AndPropagateSpec extends Tests {
+class SignalChangedSpec extends Tests {
 
-    override def name = "PDS-AndPropagates"
+    override def name = "PDS-SignalChanged"
 
     var probe: TestProbe = _
 
@@ -59,14 +59,21 @@ class AndPropagateSpec extends Tests {
 
             cl = system.actorOf(Clock.props, "clock")
 
-            val in1 = system.actorOf(Wire.props("in1", Low, cl), "in1")
-            val in2 = system.actorOf(Wire.props("in1", High, cl), "in2")
-            val out = system.actorOf(Wire.props("out", X, cl), "out")
-            probe.send(out, AddObserver(probe.ref))
-            val andgate = system.actorOf(AndGate.props("and", in1, in2, out, cl))
-            probe.send(cl, Start(4))
-            probe.expectMsg((SignalChanged(out, X), 1))
-            probe.expectMsg((SignalChanged(out, Low), 5))
+            val w = system.actorOf(Wire.props("a", High, cl), "w2")
+            w ! AddObserver(probe.ref)
+            cl ! Start(2)
+            cl ! Register
+            probe.expectMsg(Start)
+            ticktock(0)
+            probe.expectMsg((SignalChanged(w, High), 1))
+
+            cl ! AddWorkItem(WorkItem(3, SetSignal(Low), w))
+
+            for (i <- 1 to 4) ticktock(i)
+
+            probe.expectMsg((SignalChanged(w, Low), 5))
+
+            ticktock(5)
             probe.expectMsg(StoppedAt(6))
 
             println(Console.GREEN + Console.BOLD+"**SUCCESS**"+Console.RESET)
