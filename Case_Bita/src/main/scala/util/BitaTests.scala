@@ -38,7 +38,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     val randomTracesDir = resultDir+"random/"
     val randomTracesTestDir = resultDir+"random-test/"
 
-    var verbose = "0"
+    var verbose = 0
 
     // This test will keep on generating random schedules for 5 minutes or until an bug is found. 
     // test("Test with random sheduler within a timeout", Tag("random-schedule")) {
@@ -73,7 +73,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     // This will count how many bugs there were found with a certain schedule.
     // Giving you an indication of how good a shedule is.
     test("Measure the coverage of testing with schedules", Tag("measure")) {
-        if (verbose == "3") {
+        if (verbose >= 3) {
             // The number of traces after which the coverage should be measured.
             var interval = 5
             for (criterion <- criteria) {
@@ -97,7 +97,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     // Give a summary of where the bugs 
     // This is tool dependendant information
     test("summarize results", Tag("summary")) {
-        if (verbose == "2") {
+        if (verbose >= 2) {
             for (path <- new File(resultDir).listFiles if path.isDirectory()) { // Iterate over all directories
                 val file: File = new File(path+"\\time-bug-report.txt")
                 val faulty = Source.fromFile(file).getLines().size
@@ -119,7 +119,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
     // This will validate if we have found a valid race condition.
     test("validate results", Tag("validate")) {
-        if (verbose == "1") {
+        if (verbose >= 1) {
             var msg = ""
             if ((numFaulty != 0) == expectFailures) { // Show the info
                 print(Console.GREEN + Console.BOLD)
@@ -131,7 +131,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
             println("*===========================================================================================*")
             println("|                                                                                           |")
-            println("|     "+msg+" |")
+            println("|    "+msg+" |")
             println("|                                                                                           |")
             println("*===========================================================================================*"+Console.RESET)
         }
@@ -142,6 +142,6 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
     override def beforeEach(td: TestData) {
         val config: Map[String, Any] = td.configMap
-        verbose = config.getOrElse("verbose", "0").asInstanceOf[String] // read out the config passed via scalatest options 
+        verbose = config.getOrElse("verbose", 0).asInstanceOf[String].toInt // read out the config passed via scalatest options 
     }
 }

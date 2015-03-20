@@ -1,8 +1,12 @@
 package bank3
 
 class DelayBankSpec extends BankSpec {
-
-    // feel free to change these parameters to test the bank with various configurations.
+    // The name of this test battery
     override def name = "bank3_delay"
+
+    // Are we expecting certain shedules to fail?
+    override def expectFailures = true
+
+    // delay between start and end message
     override def delay = 500
 }

@@ -1,11 +1,9 @@
 package voters
 
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
-import akka.bita.{ RandomScheduleHelper, Scheduler }
+import akka.bita.RandomScheduleHelper
 import akka.bita.pattern.Patterns._
 import akka.util.duration._
-import akka.util.Timeout
-import akka.dispatch.Await
 import org.scalatest._
 import akka.testkit.TestProbe
 

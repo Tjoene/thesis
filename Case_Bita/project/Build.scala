@@ -121,7 +121,7 @@ object BuildScript extends Build {
             testOptions in Test += Tests.Argument(
                 TestFrameworks.ScalaTest, 
                 "-oD", // Show the duration of a test. Add an F here to print the full stacktrace 
-                "-Dverbose=0" // This is a custom variable that is passed to the test. 
+                "-Dverbose=1" // This is a custom variable that is passed to the test. 
                               // These should be either 0, 1 or 3. With 0 printing no extra into and 3 all the info.
                               //   0 = No extra information, only the output of the program
                               //   1 = Make the end result of the test (success or failure) stand out
