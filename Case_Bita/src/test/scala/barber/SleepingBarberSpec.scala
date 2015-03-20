@@ -35,28 +35,35 @@ class BarberSpec extends BitaTests {
             RandomScheduleHelper.setSystem(system)
         }
 
-        var promise = Promise[HashMap[CustomerState.Value, Int]]()(system.dispatcher)
+        try {
+            var promise = Promise[HashMap[CustomerState.Value, Int]]()(system.dispatcher)
 
-        var monitor = system.actorOf(Props(new Monitor(customerNum, promise)))
-        var barber = system.actorOf(Props(new Barber))
+            var monitor = system.actorOf(Props(new Monitor(customerNum, promise)))
+            var barber = system.actorOf(Props(new Barber))
 
-        var waitingRoom = system.actorOf(Props(new WaitingRoom(capacity, barber)))
-        var customers = new Array[ActorRef](customerNum)
+            var waitingRoom = system.actorOf(Props(new WaitingRoom(capacity, barber)))
+            var customers = new Array[ActorRef](customerNum)
 
-        for (i <- 0 to customerNum - 1) {
-            customers(i) = system.actorOf(Props(new Customer(i+"", waitingRoom, monitor)))
+            for (i <- 0 to customerNum - 1) {
+                customers(i) = system.actorOf(Props(new Customer(i+"", waitingRoom, monitor)))
+            }
+
+            for (i <- 0 to customerNum - 1) {
+                customers(i) ! Go
+            }
+
+            var result = Await.result(promise.mapTo[HashMap[CustomerState.Value, Int]], timeout.duration)
+
+            if (result.asInstanceOf[HashMap[CustomerState.Value, Int]].contains(CustomerState.Exception)) {
+                bugDetected = true
+            }
+
+            println(result)
+        } catch {
+            case e: java.util.concurrent.TimeoutException => {
+                bugDetected = false
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
+            }
         }
-
-        for (i <- 0 to customerNum - 1) {
-            customers(i) ! Go
-        }
-
-        var result = Await.result(promise.mapTo[HashMap[CustomerState.Value, Int]], timeout.duration)
-
-        if (result.asInstanceOf[HashMap[CustomerState.Value, Int]].contains(CustomerState.Exception)) {
-            bugDetected = true
-        }
-
-        println(result)
     }
 }
