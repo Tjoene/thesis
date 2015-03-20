@@ -123,12 +123,18 @@ object BuildScript extends Build {
                 TestFrameworks.ScalaTest, 
                 "-h", "test-reports",
                 "-oD", // Show the duration of a test. Add an F here to print the full stacktrace 
-                "-Dverbose=1" // This is a custom variable that is passed to the test. 
-                              // These should be either 0, 1 or 3. With 0 printing no extra into and 3 all the info.
-                              //   0 = No extra information, only the output of the program
-                              //   1 = Make the end result of the test (success or failure) stand out
-                              //   2 = Give a summery of the shedules that failed
-                              //   3 = Give the Measurement of all the shedules
+                "-Dverbose=1", // This is a custom variable that is passed to the test. 
+                               // These should be either 0, 1 or 3. With 0 printing no extra into and 3 all the info.
+                               //   0 = No extra information, only the output of the program
+                               //   1 = Make the end result of the test (success or failure) stand out
+                               //   2 = Give a summery of the shedules that failed
+                               //   3 = Give the Measurement of all the shedules
+                
+                "-DrandomTime=0", // This is the time that the random sheduler needs to run before timing out.
+                                  // It will also stop as soon as a shedule with a bug has been found.
+                                  // When this is zero, the random sheduler isn't used in the benchmark
+                                  
+                "-DrandomTraces=50" // The number of random traces that needs to be generated. Bita will base it's shedules on these.
             ),
 
             // append several options to the list of options passed to the Java compiler
