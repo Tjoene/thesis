@@ -39,12 +39,12 @@ class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with Fun
     def this() = this(ActorSystem("TestSystem"))
 
     // This test will keep on generating random schedules for 5 min until an bug is trigger. 
-    // test("Test randomly within a timeout") {
+    // ignore("Test randomly within a timeout") {
     //     testRandomByTime(name, randomTracesTestDir, 300) // 5*60 = 300 sec timeout
     // }
 
     // Generates a random trace which will be used for schedule generation.
-    test("Generate a random trace") {
+    ignore("Generate a random trace") {
         FileHelper.emptyDir(randomTracesDir)
         var traceFiles = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         var traceIndex = traceFiles.length + 1
@@ -52,7 +52,7 @@ class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with Fun
         testRandom(name, randomTracesDir, 1)
     }
 
-    test("Generate and test schedules") {
+    ignore("Generate and test schedules") {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
         for (criterion <- criteria) {
             for (opt <- criterion.optimizations.-(NONE)) {
@@ -66,7 +66,7 @@ class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with Fun
 
     // This will count how many bugs there were found with a certain schedule.
     // Giving you an indication of how good a shedule is.
-    test("Measure the coverage of testing with schedules") {
+    ignore("Measure the coverage of testing with schedules") {
         // The number of traces after which the coverage should be measured.
         var interval = 5
         for (criterion <- criteria) {

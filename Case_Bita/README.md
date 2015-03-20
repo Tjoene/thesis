@@ -81,7 +81,7 @@ This testcase and the [voters testcase](#voters) brought a sporadic bug up, that
 To solve this bug, we have adapted the TestHelper of Bita to add a timeout in the shutdown code. This will throw an exception, but will prevent the test to hang indefinitely.  
 An other approache was suggested by the thesis promotor @PCordemans to use a supervising actor that will hold the actors under test as childeren.
 This allowed us to rewrite the TestHelper of Bita to use a single actor system instance, which eliminated the need of shutting it and re-creating it every new test.
-Although this approache isn't viable yet, due to an runtime error.
+Although this approache isn't viable with bita, since all the generated shedules are depending on the same actor under the same guardian actor.
 
 
 ### Voters
