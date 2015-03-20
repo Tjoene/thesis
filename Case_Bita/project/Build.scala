@@ -118,8 +118,18 @@ object BuildScript extends Build {
             // Run the tests in a seperated JVM then the one SBT is using
             fork in Test := true,
             
-            // Pass compiler options to ScalaTest
-            testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDF", "-h", "test-reports"),
+            // Pass options to ScalaTest.
+            testOptions in Test += Tests.Argument(
+                TestFrameworks.ScalaTest, 
+                "-h", "test-reports",
+                "-oD", // Show the duration of a test. Add an F here to print the full stacktrace 
+                "-Dverbose=1" // This is a custom variable that is passed to the test. 
+                              // These should be either 0, 1 or 3. With 0 printing no extra into and 3 all the info.
+                              //   0 = No extra information, only the output of the program
+                              //   1 = Make the end result of the test (success or failure) stand out
+                              //   2 = Give a summery of the shedules that failed
+                              //   3 = Give the Measurement of all the shedules
+            ),
 
             // append several options to the list of options passed to the Java compiler
             javacOptions ++= Seq(

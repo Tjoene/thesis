@@ -12,8 +12,7 @@ Tool Bita
   - [Testcase Voters](#voters)
   - [Testcase Hot Swap](#hot-swap)
   - [Testcase QuickSort](#quicksort)
-- [Programs](#programs)
-  - [Tool SignalCollect](#signalcollect)
+  - [Testcase Pi](#pi)
 
 Quick start
 ------
@@ -108,12 +107,7 @@ This testcase is borrowed from Bita and is an implementation of the Quick Sort a
 The testcase was used to see what Bita would do with a fully deterministic example.
 
 
-Programs
-------
+### Pi
 
-## SignalCollect
-
-According to the paper ´Bita: Coverage-guidedn Automatic Testing of Actor Programs´, Bita is able to detect [a known bug in SignalCollect](https://github.com/uzh/signal-collect/issues/58), where the developers aren't able to reproduce it.
-In the paper, Bita claims to detect the bug in every experiment, withing an average time of 176 seconds.
-
-How ever, attempts to reproduce this result wasn't succesfull. The failing test in question always succeeds with the random shedules, and using Bita's criterions yielded 0 generated shedules, meaning there weren't any actor messages detected in this particular test. 
+This testcase is based on the [tutorial of Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html). 
+It will calculate the number Pi with a given amount of actors

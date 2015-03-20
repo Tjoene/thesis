@@ -9,11 +9,11 @@
 */test-results/
 */test-reports/
 
-Tools/*/project/target/
-Tools/*/project/project/
-Tools/*/target/
-Tools/*/test-results/
-Tools/*/test-reports/
+*/*/project/target/
+*/*/project/project/
+*/*/target/
+*/*/test-results/
+*/*/test-reports/
 
 # Ignore all Netbeans specific folders inside the different test projects
 

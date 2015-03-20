@@ -37,7 +37,7 @@ class Ballot() extends Actor {
         }
 
         case Result => {
-            println(Console.CYAN + Console.BOLD+"**SUCCESS** The ballot was asked what the result was"+Console.RESET)
+            println(Console.CYAN + Console.BOLD+"The ballot was asked what the result was"+Console.RESET)
 
             if (voters.contains(won)) {
                 sender ! won
