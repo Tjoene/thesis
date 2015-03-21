@@ -143,7 +143,9 @@ object BuildScript extends Build {
             javacOptions ++= Seq(
                 "-source", BuildSettings.buildJavaVersion,
                 "-target", BuildSettings.buildJavaVersion,
-                "-encoding", "UTF-8"
+                "-encoding", "UTF-8",
+                "-Xms4G",
+                "-Xmx4G"
             ),
 
             // append several options  to the list of options passed to the Scala compiler
