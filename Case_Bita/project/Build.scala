@@ -49,23 +49,23 @@ object ShellPrompt {
 
 // Resolvers for looking up dependencies
 object Resolvers {
-    val typesafe = "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
-    val akka     = "Akka Repo" at "http://repo.akka.io/releases/"
-    val sonatype = "OSS Sonatype" at "https://oss.sonatype.org/content/repositories/snapshots/"
-    val maven    = "Maven" at "https://repo1.maven.org/maven2/"
-    
-    val myResolvers = Seq(typesafe, akka, sonatype, maven)
+    val myResolvers = Seq(
+        "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
+        "Akka Repo" at "http://repo.akka.io/releases/",
+        "OSS Sonatype" at "https://oss.sonatype.org/content/repositories/releases/",
+        "Maven" at "https://repo1.maven.org/maven2/"
+    )
 }
 
 // The dependencies that are required for the project
 object Dependencies {
-    val bita      = "cs.edu.uiuc" %% "bita" % "0.1"
-    val actor     = "com.typesafe.akka" % "akka-actor" % "2.0.3"
-    val testkit   = "com.typesafe.akka" % "akka-testkit" % "2.0.3"
-    val scalatest = "org.scalatest" %% "scalatest" % "2.0.M5b" % "test"
-    val pegdown   = "org.pegdown" % "pegdown" % "1.5.0"
-
-    val myDepencencies = Seq(bita, actor, testkit, scalatest, pegdown)
+    val myDepencencies = Seq(
+        "cs.edu.uiuc" %% "bita" % "0.1",
+        "com.typesafe.akka" % "akka-actor" % "2.0.3",
+        "com.typesafe.akka" % "akka-testkit" % "2.0.3",
+        "org.scalatest" %% "scalatest" % "2.0.M5b" % "test",
+        "org.pegdown" % "pegdown" % "1.5.0" % "test"
+    )
 }
 
 // The configuration for auto formatting when you compile the files
@@ -105,12 +105,18 @@ object BuildScript extends Build {
     import BuildSettings._
     import Formatting._
 
-    lazy val proj = Project (
+    lazy val proj = Project(
         id = BuildSettings.projectName,
-        base = file ("."),
+        base = file("."),
         settings = buildSettings ++ formatSettings ++ Seq(
-            resolvers := myResolvers,
-            libraryDependencies ++= myDepencencies,
+            
+            resolvers := myResolvers, // Use the defined resolvers
+
+            // Load the dependencies
+            libraryDependencies ++= myDepencencies, // Use the defined dependencies
+            //externalPom(), // Read the pom.xml
+            //externalIvySettings(), // Read the ivysettings.xml
+            //externalIvyFile(), // Read the ivy.xml
 
             // Execute tests in the current project serially
             parallelExecution in Test := false,
