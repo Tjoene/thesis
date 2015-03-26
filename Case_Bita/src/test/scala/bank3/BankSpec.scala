@@ -43,12 +43,12 @@ class BankSpec extends BitaTests {
             }
         } catch {
             case e: AssertionError => {
-                bugDetected = false
+                bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
 
             case e: java.util.concurrent.TimeoutException => {
-                bugDetected = false
+                bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
         }

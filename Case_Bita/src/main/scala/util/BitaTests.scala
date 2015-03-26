@@ -51,14 +51,6 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
         random = false
     }
 
-    // Generates a random trace which will be used for schedule generation.
-    test("Generate a random trace", Tag("random")) {
-        random = true
-        FileHelper.emptyDir(randomTracesDir)
-        testRandom(name, randomTracesDir, randomTraces)
-        random = false
-    }
-
     // Generate and test schedules at once.
     test("Generate and test schedules with criterion", Tag("test")) {
         var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
@@ -67,14 +59,18 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
                 var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
 
                 FileHelper.emptyDir(scheduleDir)
-                generateAndTestGeneratedSchedules(name, randomTrace, scheduleDir, criterion, opt, -1)
+                runGenerateSchedulesAndTest(name, scheduleDir, randomTraces, criterion, opt)
             }
         }
+
+        measure();
+        summary();
+        validate();
     }
 
     // This will count how many bugs there were found with a certain schedule.
     // Giving you an indication of how good a shedule is.
-    test("Measure the coverage of testing with schedules", Tag("measure")) {
+    private def measure() = {
         if (verbose >= 3) {
             // The number of traces after which the coverage should be measured.
             var interval = 5
@@ -98,7 +94,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
     // Give a summary of where the bugs 
     // This is tool dependendant information
-    test("summarize results", Tag("summary")) {
+    private def summary() = {
         if (verbose >= 2) {
             for (path <- new File(resultDir).listFiles if path.isDirectory()) { // Iterate over all directories
                 val file: File = new File(path+"\\time-bug-report.txt")
@@ -120,7 +116,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     }
 
     // This will validate if we have found a valid race condition.
-    test("validate results", Tag("validate")) {
+    private def validate() = {
         if (verbose >= 1) {
             var msg = ""
             if (numShedules != 0) {

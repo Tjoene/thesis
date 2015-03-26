@@ -37,7 +37,7 @@ class QuickSortSpec extends BitaTests {
     }
 
     def run {
-        try { 
+        try {
             system = ActorSystem("ActorSystem")
             if (random) {
                 RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
@@ -74,9 +74,9 @@ class QuickSortSpec extends BitaTests {
             // }
         } catch {
             case e: java.util.concurrent.TimeoutException => {
-                bugDetected = false
+                bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
-            } 
+            }
         }
     }
 }

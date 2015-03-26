@@ -48,7 +48,7 @@ class VoterSpec extends BitaTests {
             }
         } catch {
             case e: AssertionError => {
-                bugDetected = false
+                bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
 
@@ -58,9 +58,9 @@ class VoterSpec extends BitaTests {
             }
 
             case e: java.util.concurrent.TimeoutException => {
-                bugDetected = false
+                bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
-            } 
+            }
         }
     }
 }
