@@ -112,6 +112,11 @@ class SupervisedBankSpec(_system: ActorSystem) extends TestKit(_system) with Fun
                 bugDetected = false
                 println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
             }
+
+            case e: java.util.concurrent.TimeoutException => {
+                bugDetected = false
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
+            } 
         }
     }
 }

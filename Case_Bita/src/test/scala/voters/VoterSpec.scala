@@ -56,6 +56,11 @@ class VoterSpec extends BitaTests {
                 bugDetected = true
                 println(Console.RED + Console.BOLD+"**FAILURE** The ballot threw an exception: %s".format(e.getMessage()) + Console.RESET)
             }
+
+            case e: java.util.concurrent.TimeoutException => {
+                bugDetected = false
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
+            } 
         }
     }
 }

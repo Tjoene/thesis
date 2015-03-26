@@ -37,39 +37,46 @@ class QuickSortSpec extends BitaTests {
     }
 
     def run {
-        system = ActorSystem("ActorSystem")
-        if (random) {
-            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-            RandomScheduleHelper.setSystem(system)
-        }
+        try { 
+            system = ActorSystem("ActorSystem")
+            if (random) {
+                RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+                RandomScheduleHelper.setSystem(system)
+            }
 
-        var qsort = system.actorOf(Props(new QuickSort()))
+            var qsort = system.actorOf(Props(new QuickSort()))
 
-        var result1 = Await.result(ask(qsort, Sort(input1)), timeout.duration)
-        // var result2 = Await.result(ask(qsort, Sort(input2)), timeout.duration)
+            var result1 = Await.result(ask(qsort, Sort(input1)), timeout.duration)
+            // var result2 = Await.result(ask(qsort, Sort(input2)), timeout.duration)
 
-        result1 match {
-            case Result(result) => {
-                if (isSorted(result, input1)) {
-                    println(Console.GREEN + Console.BOLD+"Result is sorted"+Console.RESET)
-                    bugDetected = false
-                } else {
-                    println(Console.RED + Console.BOLD+"Result is NOT sorted"+Console.RESET)
+            result1 match {
+                case Result(result) => {
+                    if (isSorted(result, input1)) {
+                        println(Console.GREEN + Console.BOLD+"Result is sorted"+Console.RESET)
+                        bugDetected = false
+                    } else {
+                        println(Console.RED + Console.BOLD+"Result is NOT sorted"+Console.RESET)
+                        bugDetected = true
+                    }
+                    //assert(isSorted(result, input1)) // Don't use assert here, it cause it crash
+                }
+
+                case msg => {
+                    println(Console.RED + Console.BOLD+"Unknown message received: %s".format(msg) + Console.RESET)
                     bugDetected = true
                 }
-                //assert(isSorted(result, input1)) // Don't use assert here, it cause it crash
             }
 
-            case msg => {
-                println(Console.RED + Console.BOLD+"Unknown message received: %s".format(msg) + Console.RESET)
-                bugDetected = true
-            }
+            // result2 match {
+            //     case Result(result) => {
+            //         assert(isSorted(result, input2))
+            //     }
+            // }
+        } catch {
+            case e: java.util.concurrent.TimeoutException => {
+                bugDetected = false
+                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
+            } 
         }
-
-        // result2 match {
-        //     case Result(result) => {
-        //         assert(isSorted(result, input2))
-        //     }
-        // }
     }
 }

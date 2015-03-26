@@ -44,18 +44,19 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
     // This test will keep on generating random schedules for 5 minutes or until an bug is found. 
     test("Test with random sheduler within a timeout", Tag("random-schedule")) {
+        random = true
         if (randomTime > 0) {
-            random = true
             testRandomByTime(name, randomTracesTestDir, randomTime)
         }
+        random = false
     }
 
     // Generates a random trace which will be used for schedule generation.
     test("Generate a random trace", Tag("random")) {
         random = true
-
         FileHelper.emptyDir(randomTracesDir)
         testRandom(name, randomTracesDir, randomTraces)
+        random = false
     }
 
     // Generate and test schedules at once.
@@ -152,6 +153,5 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
         verbose = config.getOrElse("verbose", 0).asInstanceOf[String].toInt // read out the config passed via scalatest options 
         randomTime = config.getOrElse("randomTime", 0).asInstanceOf[String].toInt
         randomTraces = config.getOrElse("randomTraces", 1).asInstanceOf[String].toInt
-
     }
 }

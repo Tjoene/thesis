@@ -247,7 +247,6 @@ trait ImprovedTestHelper {
             }
         }
         bugDetected = false
-        random = false
         Scheduler.reset()
 
         println("\n")
