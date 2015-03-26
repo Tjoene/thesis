@@ -2,7 +2,7 @@ package pi
 
 import akka.actor.{ ActorRef, Props, Actor }
 import akka.routing.RoundRobinRouter
-import akka.util.duration._
+import scala.concurrent.duration._
 
 // Use master.prop in the code or Master()
 // See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices

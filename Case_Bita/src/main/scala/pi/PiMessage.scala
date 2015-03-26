@@ -1,6 +1,6 @@
 package pi
 
-import akka.util.Duration
+import scala.concurrent.duration.Duration
 
 sealed trait PiMessage
 case object Calculate extends PiMessage
