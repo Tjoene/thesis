@@ -43,7 +43,7 @@ class BarberSpec extends BitaTests {
         }
 
         try {
-            var promise = Promise[HashMap[CustomerState.Value, Int]]()(system.dispatcher)
+            var promise = Promise[HashMap[CustomerState.Value, Int]]() //(system.dispatcher)
 
             var monitor = system.actorOf(Props(new Monitor(customerNum, promise)))
             var barber = system.actorOf(Props(new Barber))
@@ -59,7 +59,7 @@ class BarberSpec extends BitaTests {
                 customers(i) ! Go
             }
 
-            var result = Await.result(promise.mapTo[HashMap[CustomerState.Value, Int]], timeout.duration)
+            var result = Await.result(promise.future.mapTo[HashMap[CustomerState.Value, Int]], timeout.duration)
 
             if (result.asInstanceOf[HashMap[CustomerState.Value, Int]].contains(CustomerState.Exception)) {
                 bugDetected = true
@@ -73,35 +73,4 @@ class BarberSpec extends BitaTests {
             }
         }
     }
-<<<<<<< HEAD
-
-    def run {
-        system = ActorSystem()
-        RandomScheduleHelper.setSystem(system)
-
-        var promise = Promise[HashMap[CustomerState.Value, Int]]()
-
-        var monitor = system.actorOf(Props(new Monitor(customerNum, promise)))
-        var barber = system.actorOf(Props(new Barber))
-
-        var waitingRoom = system.actorOf(Props(new WaitingRoom(capacity, barber)))
-        var customers = new Array[ActorRef](customerNum)
-
-        for (i <- 0 to customerNum - 1) {
-            customers(i) = system.actorOf(Props(new Customer(i+"", waitingRoom, monitor)))
-        }
-
-        for (i <- 0 to customerNum - 1) {
-            customers(i) ! Go
-        }
-
-        var result = Await.result(promise.future.mapTo[HashMap[CustomerState.Value, Int]], timeout.duration)
-
-        if (result.asInstanceOf[HashMap[CustomerState.Value, Int]].contains(CustomerState.Exception))
-            bugDetected = true
-
-        println(result)
-    }
-=======
->>>>>>> master
 }

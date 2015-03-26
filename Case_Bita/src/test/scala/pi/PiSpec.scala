@@ -3,7 +3,7 @@ package pi
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 import akka.bita.RandomScheduleHelper
 import akka.bita.pattern.Patterns._
-import akka.util.duration._
+import scala.concurrent.duration._
 import org.scalatest._
 import akka.testkit.TestProbe
 

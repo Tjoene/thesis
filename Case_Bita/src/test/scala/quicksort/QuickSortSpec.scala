@@ -13,7 +13,7 @@ import bita.criteria._
 import bita.ScheduleOptimization._
 import org.scalatest._
 import akka.testkit.TestProbe
-import akka.dispatch.Await
+import scala.concurrent.Await
 
 import util.BitaTests
 
