@@ -20,6 +20,8 @@ class Bank() extends Actor {
 
     def receive = {
         case Start => {
+            dest = sender
+
             var account1 = context.actorOf(Account("Freddy", 500), "Account_Freddy") // Create child actors that will host the accounts
             var account2 = context.actorOf(Account("Johnny", 0), "Account_Johnny")
 
@@ -34,10 +36,6 @@ class Bank() extends Actor {
         case amount: Int => {
             println(Console.YELLOW + Console.BOLD+"BANK:   registered an amount of %d".format(amount) + Console.RESET)
             dest ! amount
-        }
-
-        case RegisterSender => { // Give the current balance
-            dest = sender
         }
 
         case _ => println(Console.YELLOW + Console.BOLD+"BANK: 'FATAL ERROR'"+Console.RESET)

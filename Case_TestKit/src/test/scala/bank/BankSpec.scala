@@ -8,13 +8,13 @@ import akka.util.duration._
 
 import akka.testkit.{ EventFilter, TestKit, ImplicitSender, CallingThreadDispatcher }
 
-import org.scalatest.{ FunSuiteLike, BeforeAndAfter, BeforeAndAfterAll }
+import org.scalatest.{ FunSuite, BeforeAndAfter, BeforeAndAfterAll }
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.junit.JUnitRunner
 
 class BankSpec(_system: ActorSystem) extends TestKit(_system)
         with ImplicitSender
-        with FunSuiteLike
+        with FunSuite
         with ShouldMatchers
         with BeforeAndAfter
         with BeforeAndAfterAll {

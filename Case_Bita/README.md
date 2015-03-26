@@ -12,8 +12,7 @@ Tool Bita
   - [Testcase Voters](#voters)
   - [Testcase Hot Swap](#hot-swap)
   - [Testcase QuickSort](#quicksort)
-- [Programs](#programs)
-  - [Tool SignalCollect](#signalcollect)
+  - [Testcase Pi](#pi)
 
 Quick start
 ------
@@ -82,7 +81,7 @@ This testcase and the [voters testcase](#voters) brought a sporadic bug up, that
 To solve this bug, we have adapted the TestHelper of Bita to add a timeout in the shutdown code. This will throw an exception, but will prevent the test to hang indefinitely.  
 An other approache was suggested by the thesis promotor @PCordemans to use a supervising actor that will hold the actors under test as childeren.
 This allowed us to rewrite the TestHelper of Bita to use a single actor system instance, which eliminated the need of shutting it and re-creating it every new test.
-Although this approache isn't viable yet, due to an runtime error.
+Although this approache isn't viable with bita, since all the generated shedules are depending on the same actor under the same guardian actor.
 
 
 ### Voters
@@ -108,12 +107,7 @@ This testcase is borrowed from Bita and is an implementation of the Quick Sort a
 The testcase was used to see what Bita would do with a fully deterministic example.
 
 
-Programs
-------
+### Pi
 
-## SignalCollect
-
-According to the paper ´Bita: Coverage-guidedn Automatic Testing of Actor Programs´, Bita is able to detect [a known bug in SignalCollect](https://github.com/uzh/signal-collect/issues/58), where the developers aren't able to reproduce it.
-In the paper, Bita claims to detect the bug in every experiment, withing an average time of 176 seconds.
-
-How ever, attempts to reproduce this result wasn't succesfull. The failing test in question always succeeds with the random shedules, and using Bita's criterions yielded 0 generated shedules, meaning there weren't any actor messages detected in this particular test. 
+This testcase is based on the [tutorial of Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html). 
+It will calculate the number Pi with a given amount of actors
