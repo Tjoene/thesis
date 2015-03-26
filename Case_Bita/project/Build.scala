@@ -158,8 +158,8 @@ object BuildScript extends Build {
             scalacOptions ++= Seq(
                 "-deprecation", 
                 "-explaintypes", 
-                "-encoding", "UTF8", 
-                "–optimise"
+                "-encoding", "UTF8" 
+                //"–optimise"
             )
         )
     )
