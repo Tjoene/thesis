@@ -24,7 +24,7 @@ import org.scalatest._
  * Ported from com.signalcollect.IntegrationSpec
  * PageRank algorithm should deliver correct results on a 5-cycle graph
  */
-class IntegrationSpec extends Tests {
+class IntegrationSpec extends BitaTests {
 
     override def name = "SignalCollect-integration"
 
@@ -71,9 +71,11 @@ class IntegrationSpec extends Tests {
 
     def run {
         system = ActorSystem("ActorSystem")
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
+        if (random) {
+            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+            RandomScheduleHelper.setSystem(system)
+        }
+        
         println("PageRank algorithm on a 5-cycle graph")
         val fiveCycleEdges = List((0, 1), (1, 2), (2, 3), (3, 4), (4, 0))
         def pageRankFiveCycleVerifier(v: Vertex[_, _]): Boolean = {

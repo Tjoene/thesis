@@ -19,7 +19,8 @@ resolvers += "OSS Sonatype" at "https://oss.sonatype.org/content/repositories/re
 libraryDependencies ++= Seq(
   "cs.edu.uiuc" %% "bita" % "0.1" % "test",
   "com.typesafe.akka" % "akka-actor" % "2.0.3",
-  "com.typesafe.akka" % "akka-remote" % "2.0.3" ,
+  "com.typesafe.akka" % "akka-testkit" % "2.0.3",
+  "com.typesafe.akka" % "akka-remote" % "2.0.3",
   "org.scala-lang" % "scala-library" % "2.9.2" % "compile",
   "com.esotericsoftware.kryo" % "kryo" % "2.21" % "compile", 
   "ch.ethz.ganymed" % "ganymed-ssh2" % "build210"  % "compile",

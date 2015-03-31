@@ -22,7 +22,7 @@ import org.scalatest._
 /**
  * Ported from com.signalcollect.features.ComputationTerminationSpec
  */
-class ComputationTerminationSpec extends Tests {
+class ComputationTerminationSpec extends BitaTests {
 
     override def name = "SignalCollect-computation"
 
@@ -40,9 +40,11 @@ class ComputationTerminationSpec extends Tests {
 
     def run {
         system = ActorSystem("ActorSystem")
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
+        if (random) {
+            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+            RandomScheduleHelper.setSystem(system)
+        }
+        
         val graph = createCircleGraph(30)
         val terminationCondition = new GlobalTerminationCondition(new SumOfStates[Double], 1) {
             def shouldTerminate(sum: Option[Double]): Boolean = {

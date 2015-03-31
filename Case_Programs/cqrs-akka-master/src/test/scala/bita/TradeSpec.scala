@@ -25,15 +25,17 @@ import FSM._
  * Ported from net.debasishg.domain.trade.service
  * Test: trade lifecycle
  */
-class TradeSpec extends Tests {
+class TradeSpec extends BitaTests {
 
     override def name = "CQRS-trade"
 
     def run {
         system = ActorSystem("System")
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
+        if (random) {
+            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+            RandomScheduleHelper.setSystem(system)
+        }
+        
         try {
             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 

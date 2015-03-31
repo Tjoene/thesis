@@ -23,7 +23,7 @@ import LogicLevel._
  * Ported from pds.SimulatorTest
  * Test: introduce a new signalchanged in the simulation
  */
-class RegisterSpec extends Tests {
+class RegisterSpec extends BitaTests {
 
     override def name = "PDS-Register"
 
@@ -51,9 +51,11 @@ class RegisterSpec extends Tests {
             akka.actor.debug.event-stream = on
             """))
 
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
+        if (random) {
+            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+            RandomScheduleHelper.setSystem(system)
+        }
+        
         try {
             probe = new TestProbe(system) // Use a testprobe to represent the tests.
 

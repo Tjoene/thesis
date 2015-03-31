@@ -23,7 +23,7 @@ import LogicLevel._
  * Ported from pds.SimulatorTest
  * Test: AND gate propagates signal
  */
-class AndPropagateSpec extends Tests {
+class AndPropagateSpec extends BitaTests {
 
     override def name = "PDS-AndPropagates"
 
@@ -51,9 +51,11 @@ class AndPropagateSpec extends Tests {
             akka.actor.debug.event-stream = on
             """))
 
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
+        if (random) {
+            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+            RandomScheduleHelper.setSystem(system)
+        }
+        
         try {
             probe = new TestProbe(system) // Use a testprobe to represent the tests.
 

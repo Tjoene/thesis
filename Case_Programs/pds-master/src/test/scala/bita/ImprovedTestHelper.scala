@@ -31,6 +31,9 @@ trait ImprovedTestHelper {
     var startTime = 0L
     var endTime = 0L
 
+    // variable to indicate if we need to use random sheduler or not. 
+    var random = false
+
     var timeReport = ""
 
     var system: ActorSystem = _
@@ -41,7 +44,7 @@ trait ImprovedTestHelper {
         run()
         Scheduler.finish(traceFile)
         println("======================================================")
-        afterEach()
+        cleanUp()
     }
 
     /**
@@ -56,7 +59,7 @@ trait ImprovedTestHelper {
         startTime = System.currentTimeMillis()
 
         var traceFileName = workingDir + name+"-random%s-trace.txt"
-        for (i <- 1 to num) {
+        for (i ← 1 to num) {
             generateRandomTrace(traceFileName.format(i))
         }
         var end = System.currentTimeMillis()
@@ -98,7 +101,7 @@ trait ImprovedTestHelper {
         println("======================================================")
 
         curTraceFile = traceFile
-        afterEach()
+        cleanUp()
     }
 
     /**
@@ -110,9 +113,9 @@ trait ImprovedTestHelper {
         var start = System.currentTimeMillis()
         val scheduleGenerator =
             criterion match {
-                case PRCriterion   => PRScheduleGenerator
-                case PCRCriterion  => PCRScheduleGenerator
-                case PMHRCriterion => PMHRScheduleGenerator
+                case PRCriterion   ⇒ PRScheduleGenerator
+                case PCRCriterion  ⇒ PCRScheduleGenerator
+                case PMHRCriterion ⇒ PMHRScheduleGenerator
             }
 
         scheduleGenerator.maxSchedule = maxSchedule
@@ -132,13 +135,13 @@ trait ImprovedTestHelper {
     def testGeneratedSchedules(schedulesPath: String) {
         var start = System.currentTimeMillis()
         println("\n========= testing generated schedules in %s ===============".format(schedulesPath))
-        var scheduleFiles = FileHelper.getFiles(schedulesPath, (fileName => fileName.contains("-schedule.txt")))
+        var scheduleFiles = FileHelper.getFiles(schedulesPath, (fileName ⇒ fileName.contains("-schedule.txt")))
         scheduleFiles = FileHelper.sortTracesByName(scheduleFiles, "-%s-")
 
-        for (scheduleFileAbsolutePath <- scheduleFiles) {
+        for (scheduleFileAbsolutePath ← scheduleFiles) {
             var traceFile = scheduleFileAbsolutePath.replace(".txt", "-trace.txt")
             testSchedule(scheduleFileAbsolutePath)
-            //afterEach()
+            //cleanUp()
         }
 
         var end = System.currentTimeMillis()
@@ -160,7 +163,7 @@ trait ImprovedTestHelper {
             println(report)
             report = "******* TRACES WITH BUG *******"
             writer.write(report+"\n")
-            for ((trace, time) <- tracesWithBug) {
+            for ((trace, time) ← tracesWithBug) {
                 //writer.write("Time= "+time+", "+trace+"\n");
                 writer.write(trace+"\n");
             }
@@ -200,7 +203,7 @@ trait ImprovedTestHelper {
      */
     def runGenerateSchedulesAndTest(name: String, workingDir: String, randomTraceNum: Int = 1, criterion: Criterion, optimization: ScheduleOptimization = NONE) {
         var randomTraces = new Array[String](randomTraceNum)
-        for (i <- 1 to randomTraceNum) {
+        for (i ← 1 to randomTraceNum) {
             var randomTracePath = workingDir + name+"-random"+i+"-trace.txt"
             randomTraces(i - 1) = randomTracePath
             generateRandomTrace(randomTracePath)
@@ -221,7 +224,7 @@ trait ImprovedTestHelper {
      * It is called after each invocation to <code>run</code> method to clear
      * the state and shutdown the actor system.
      */
-    def afterEach() {
+    def cleanUp() {
         numShedules += 1 // count the number of shedules
 
         RandomScheduleHelper.reset()
@@ -236,9 +239,9 @@ trait ImprovedTestHelper {
         if (system != null) {
             system.shutdown()
             try {
-                system.awaitTermination(Duration(250, "millis"))
+                system.awaitTermination(Duration(500, "millis"))
             } catch {
-                case e: java.util.concurrent.TimeoutException => {
+                case e: java.util.concurrent.TimeoutException ⇒ {
                     println(Console.RED + Console.BOLD+"Timeout when waiting for the actorsystem to close."+Console.RESET)
                 }
             }

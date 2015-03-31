@@ -18,15 +18,17 @@ import akka.testkit._
 import akka.testkit.TestProbe
 import com.typesafe.config.ConfigFactory
 
-class ReadSpec extends Tests {
+class ReadSpec extends BitaTests {
 
     override def name = "reader"
 
     def run {
         system = ActorSystem("System")
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
+        if (random) {
+            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+            RandomScheduleHelper.setSystem(system)
+        }
+        
         try {
             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 

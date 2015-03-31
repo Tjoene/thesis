@@ -31,6 +31,9 @@ trait ImprovedTestHelper {
     var startTime = 0L
     var endTime = 0L
 
+    // variable to indicate if we need to use random sheduler or not. 
+    var random = false
+
     var timeReport = ""
 
     var system: ActorSystem = _
@@ -41,7 +44,7 @@ trait ImprovedTestHelper {
         run()
         Scheduler.finish(traceFile)
         println("======================================================")
-        afterEach()
+        cleanUp()
     }
 
     /**
@@ -98,7 +101,7 @@ trait ImprovedTestHelper {
         println("======================================================")
 
         curTraceFile = traceFile
-        afterEach()
+        cleanUp()
     }
 
     /**
@@ -138,7 +141,7 @@ trait ImprovedTestHelper {
         for (scheduleFileAbsolutePath <- scheduleFiles) {
             var traceFile = scheduleFileAbsolutePath.replace(".txt", "-trace.txt")
             testSchedule(scheduleFileAbsolutePath)
-            //afterEach()
+            //cleanUp()
         }
 
         var end = System.currentTimeMillis()
@@ -221,7 +224,7 @@ trait ImprovedTestHelper {
      * It is called after each invocation to <code>run</code> method to clear
      * the state and shutdown the actor system.
      */
-    def afterEach() {
+    def cleanUp() {
         numShedules += 1 // count the number of shedules
 
         RandomScheduleHelper.reset()
@@ -236,7 +239,7 @@ trait ImprovedTestHelper {
         if (system != null) {
             system.shutdown()
             try {
-                system.awaitTermination(Duration(250, "millis"))
+                system.awaitTermination(Duration(500, "millis"))
             } catch {
                 case e: java.util.concurrent.TimeoutException => {
                     println(Console.RED + Console.BOLD+"Timeout when waiting for the actorsystem to close."+Console.RESET)

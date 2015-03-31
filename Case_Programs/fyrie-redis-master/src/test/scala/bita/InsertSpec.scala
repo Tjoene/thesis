@@ -22,7 +22,7 @@ import com.typesafe.config.ConfigFactory
  * Ported from net.fyrie.redis.KeysSpec
  * Test: keys should fetch keys
  */
-class InsertSpec extends Tests {
+class InsertSpec extends BitaTests {
 
   override def name = "Fyrie-insert"
 
@@ -40,9 +40,12 @@ class InsertSpec extends Tests {
             }
         }
     """))
-    RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-    RandomScheduleHelper.setSystem(system)
 
+    if (random) {
+      RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+      RandomScheduleHelper.setSystem(system)
+    }
+    
     val probe = new TestProbe(system) // Use a testprobe to represent the tests.
     val r = new RedisClient("localhost", 6379, RedisClientConfig(connections = 1))(system)
 

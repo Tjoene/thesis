@@ -23,15 +23,17 @@ import org.scalatest._
 /**
  * Ported from com.signalcollect.GraphModificationSpec
  */
-class GraphModificationSpec extends Tests {
+class GraphModificationSpec extends BitaTests {
 
     override def name = "SignalCollect-graphmod"
 
     def run {
         system = ActorSystem("ActorSystem")
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
-
+        if (random) {
+            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+            RandomScheduleHelper.setSystem(system)
+        }
+        
         val g = GraphBuilder.build
         g.addVertex(new GraphModificationVertex(0, 1))
         g.addVertex(new GraphModificationVertex(1, 1))
