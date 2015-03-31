@@ -117,8 +117,9 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
     // This will validate if we have found a valid race condition.
     private def validate() = {
+        var msg = ""
+
         if (verbose >= 1) {
-            var msg = ""
             if (numShedules != 0) {
                 if ((numFaulty != 0) == expectFailures) { // Show the info
                     print(Console.GREEN + Console.BOLD)
@@ -129,25 +130,25 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
                 }
             } else {
                 print(Console.RED + Console.BOLD)
-                msg = "**FAILURE** Something went wrong, generated %d shedules                                ".format(numShedules, numFaulty)
+                msg = "**FAILURE** Something went wrong, generated %d shedules".format(numShedules, numFaulty)
             }
 
             println("*===========================================================================================*")
             println("|                                                                                           |")
-            println("|    "+msg+" |")
+            println("|  "+msg.padTo(86, ' ')+"  |")
             println("|                                                                                           |")
             println("*===========================================================================================*"+Console.RESET)
         }
 
         // Assert to make the test fail or succeed, for showing it in the testrunner
         assert(numShedules != 0, "Generated %d shedules.".format(numShedules))
-        assert((numFaulty != 0) == expectFailures, "Generated %d shedules and %d of them failed.".format(numShedules, numFaulty))
+        assert((numFaulty != 0) == expectFailures, msg)
     }
 
     override def beforeEach(td: TestData) {
         val config: Map[String, Any] = td.configMap
-        verbose = config.getOrElse("verbose", 0).asInstanceOf[String].toInt // read out the config passed via scalatest options 
-        randomTime = config.getOrElse("randomTime", 0).asInstanceOf[String].toInt
-        randomTraces = config.getOrElse("randomTraces", 1).asInstanceOf[String].toInt
+        verbose = config.getOrElse("verbose", "0").asInstanceOf[String].toInt // read out the config passed via scalatest options 
+        randomTime = config.getOrElse("randomTime", "0").asInstanceOf[String].toInt
+        randomTraces = config.getOrElse("randomTraces", "1").asInstanceOf[String].toInt
     }
 }
