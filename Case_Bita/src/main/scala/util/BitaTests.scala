@@ -121,12 +121,22 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
         if (verbose >= 1) {
             if (numShedules != 0) {
-                if ((numFaulty != 0) == expectFailures) { // Show the info
-                    print(Console.GREEN + Console.BOLD)
-                    msg = "**SUCCESS** Generated %d shedules and %d of them failed. The failures were expected.   ".format(numShedules, numFaulty)
+                if (expectFailures) {
+                    if ((numFaulty == 0)) { // Show the info
+                        print(Console.RED + Console.BOLD)
+                        msg = "**FAILURE** Generated %d shedules and %d of them failed (Failures expected).".format(numShedules, numFaulty)
+                    } else {
+                        print(Console.GREEN + Console.BOLD)
+                        msg = "**SUCCESS** Generated %d shedules and %d of them failed.".format(numShedules, numFaulty)
+                    }
                 } else {
-                    print(Console.RED + Console.BOLD)
-                    msg = "**FAILURE** Generated %d shedules and %d of them failed. The failures weren't expected.".format(numShedules, numFaulty)
+                    if ((numFaulty == 0)) { // Show the info
+                        print(Console.GREEN + Console.BOLD)
+                        msg = "**SUCCESS** Generated %d shedules and %d of them failed.".format(numShedules, numFaulty)
+                    } else {
+                        print(Console.RED + Console.BOLD)
+                        msg = "**FAILURE** Generated %d shedules and %d of them failed (No failures expected).".format(numShedules, numFaulty)
+                    }
                 }
             } else {
                 print(Console.RED + Console.BOLD)
@@ -135,7 +145,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
             println("*===========================================================================================*")
             println("|                                                                                           |")
-            println("|  "+msg.padTo(86, ' ')+"  |")
+            println("|  "+msg.padTo(87, ' ')+"  |")
             println("|                                                                                           |")
             println("*===========================================================================================*"+Console.RESET)
         }
