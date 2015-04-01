@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- <parent>
+        <groupId>ua.t3hnar</groupId>
+        <artifactId>scala-parent-pom</artifactId>
+        <version>1.1</version>
+    </parent -->>
+
+    <groupId>com.thenewmotion.akka</groupId>
+    <artifactId>akka-rabbitmq_2.9.2</artifactId>
+    <version>0.0.2</version>
+
+    <url>https://github.com/thenewmotion/akka-rabbitmq</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <properties>
+        <akka.version>2.0.5</akka.version>
+    </properties>
+
+    <developers>
+        <developer>
+            <name>Yaroslav Klymko</name>
+            <email>y.klymko@thenewmotion.com</email>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-testkit</artifactId>
+            <version>2.0.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+        </dependency>
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2_2.9.2</artifactId>
+            <version>1.12.4</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+            <version>4.11</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
+
+    <repositories>
+        <repository>
+            <id>thenewmotion</id>
+            <name>The New Motion Repository</name>
+            <url>http://nexus.thenewmotion.com/content/repositories/releases-public</url>
+        </repository>
+    </repositories>
+
+    <scm>
+        <url>https://github.com/thenewmotion/akka-rabbitmq</url>
+        <connection>scm:git:ssh://git@github.com/thenewmotion/akka-rabbitmq.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/thenewmotion/akka-rabbitmq.git</developerConnection>
+    </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
