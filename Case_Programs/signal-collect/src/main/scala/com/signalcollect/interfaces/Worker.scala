@@ -25,42 +25,42 @@ import akka.dispatch.Future
 
 trait Worker extends Actor with MessageRecipientRegistry with Logging {
 
-  override def toString = this.getClass.getSimpleName
-  def workerId: Int
-  
-  def processSignal(signal: SignalMessage[_])
+    override def toString = this.getClass.getSimpleName
+    def workerId: Int
 
-  def addVertex(serializedVertex: Array[Byte]) // object should be created in the heap of the thread which uses its
-  def addEdge(sourceId: Any, serializedEdge: Array[Byte]) // object should be created in the heap of the thread which uses its
-  def addVertex(vertex: Vertex[_, _])
-  def addEdge(sourceId: Any, edge: Edge[_])
-  def addPatternEdge(sourceVertexPredicate: Vertex[_, _] => Boolean, edgeFactory: Vertex[_, _] => Edge[_])
-  def removeVertex(vertexId: Any)
-  def removeEdge(edgeId: EdgeId)
-  def removeVertices(shouldRemove: Vertex[_, _] => Boolean)
-  def loadGraph(graphLoader: GraphEditor => Unit)
+    def processSignal(signal: SignalMessage[_])
 
-  def setUndeliverableSignalHandler(h: (SignalMessage[_], GraphEditor) => Unit)
+    def addVertex(serializedVertex: Array[Byte]) // object should be created in the heap of the thread which uses its
+    def addEdge(sourceId: Any, serializedEdge: Array[Byte]) // object should be created in the heap of the thread which uses its
+    def addVertex(vertex: Vertex[_, _])
+    def addEdge(sourceId: Any, edge: Edge[_])
+    def addPatternEdge(sourceVertexPredicate: Vertex[_, _] => Boolean, edgeFactory: Vertex[_, _] => Edge[_])
+    def removeVertex(vertexId: Any)
+    def removeEdge(edgeId: EdgeId)
+    def removeVertices(shouldRemove: Vertex[_, _] => Boolean)
+    def loadGraph(graphLoader: GraphEditor => Unit)
 
-  def setSignalThreshold(signalThreshold: Double)
-  def setCollectThreshold(collectThreshold: Double)
+    def setUndeliverableSignalHandler(h: (SignalMessage[_], GraphEditor) => Unit)
 
-  def recalculateScores
-  def recalculateScoresForVertexWithId(vertexId: Any)
+    def setSignalThreshold(signalThreshold: Double)
+    def setCollectThreshold(collectThreshold: Double)
 
-  def forVertexWithId[VertexType <: Vertex[_, _], ResultType](vertexId: Any, f: VertexType => ResultType): ResultType
-  def foreachVertex(f: Vertex[_, _] => Unit)
+    def recalculateScores
+    def recalculateScoresForVertexWithId(vertexId: Any)
 
-  def aggregate[ValueType](aggregationOperation: AggregationOperation[ValueType]): ValueType
+    def forVertexWithId[VertexType <: Vertex[_, _], ResultType](vertexId: Any, f: VertexType => ResultType): ResultType
+    def foreachVertex(f: Vertex[_, _] => Unit)
 
-  def pauseAsynchronousComputation
-  def startAsynchronousComputation
+    def aggregate[ValueType](aggregationOperation: AggregationOperation[ValueType]): ValueType
 
-  def signalStep
-  def collectStep: Boolean
+    def pauseAsynchronousComputation
+    def startAsynchronousComputation
 
-  def getWorkerStatistics: WorkerStatistics
+    def signalStep
+    def collectStep: Boolean
 
-  def shutdown
+    def getWorkerStatistics: WorkerStatistics
+
+    def shutdown
 
 }

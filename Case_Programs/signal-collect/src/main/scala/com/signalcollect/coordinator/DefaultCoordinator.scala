@@ -49,115 +49,115 @@ case class IsIdle(b: Boolean)
 
 class DefaultCoordinator(numberOfWorkers: Int, messageBusFactory: MessageBusFactory, maxInboxSize: Option[Long], val loggingLevel: Int) extends Actor with MessageRecipientRegistry with Logging with Coordinator with ActorLogging {
 
-  val messageBus: MessageBus = {
-    messageBusFactory.createInstance(numberOfWorkers)
-  }
+    val messageBus: MessageBus = {
+        messageBusFactory.createInstance(numberOfWorkers)
+    }
 
-  protected val workerStatus: Array[WorkerStatus] = new Array[WorkerStatus](numberOfWorkers)
+    protected val workerStatus: Array[WorkerStatus] = new Array[WorkerStatus](numberOfWorkers)
 
-  def receive = {
-    case ws: WorkerStatus =>
-      messageBus.getReceivedMessagesCounter.incrementAndGet
-      updateWorkerStatusMap(ws)
-      if (isIdle) {
-        onIdle
-      }
-    case OnIdle(action) =>
-      // Not counting these messages, because they only come from the local graph.
-      onIdleList = (sender, action) :: onIdleList
-      if (isIdle) {
-        onIdle
-      }
-    case Request(command, reply) =>
-      try {
-        val result = command(this)
-        if (reply) {
-          sender ! result
+    def receive = {
+        case ws: WorkerStatus =>
+            messageBus.getReceivedMessagesCounter.incrementAndGet
+            updateWorkerStatusMap(ws)
+            if (isIdle) {
+                onIdle
+            }
+        case OnIdle(action) =>
+            // Not counting these messages, because they only come from the local graph.
+            onIdleList = (sender, action) :: onIdleList
+            if (isIdle) {
+                onIdle
+            }
+        case Request(command, reply) =>
+            try {
+                val result = command(this)
+                if (reply) {
+                    sender ! result
+                }
+            } catch {
+                case e: Exception =>
+                    severe(e)
+                    throw e
+            }
+    }
+
+    def updateWorkerStatusMap(ws: WorkerStatus) {
+        // Only update worker status if no status received so far or if the current status is newer.
+        if (workerStatus(ws.workerId) == null || workerStatus(ws.workerId).messagesSent.sum < ws.messagesSent.sum) {
+            workerStatus(ws.workerId) = ws
         }
-      } catch {
-        case e: Exception =>
-          severe(e)
-          throw e
-      }
-  }
-
-  def updateWorkerStatusMap(ws: WorkerStatus) {
-    // Only update worker status if no status received so far or if the current status is newer.
-    if (workerStatus(ws.workerId) == null || workerStatus(ws.workerId).messagesSent.sum < ws.messagesSent.sum) {
-      workerStatus(ws.workerId) = ws
     }
-  }
 
-  def onIdle {
-    for ((from, action) <- onIdleList) {
-      action(this, from)
+    def onIdle {
+        for ((from, action) <- onIdleList) {
+            action(this, from)
+        }
+        onIdleList = List[(ActorRef, (DefaultCoordinator, ActorRef) => Unit)]()
     }
-    onIdleList = List[(ActorRef, (DefaultCoordinator, ActorRef) => Unit)]()
-  }
 
-  var waitingStart = System.nanoTime
+    var waitingStart = System.nanoTime
 
-  var onIdleList = List[(ActorRef, (DefaultCoordinator, ActorRef) => Unit)]()
+    var onIdleList = List[(ActorRef, (DefaultCoordinator, ActorRef) => Unit)]()
 
-  protected lazy val workerApi = messageBus.getWorkerApi
-  def getWorkerApi = workerApi
+    protected lazy val workerApi = messageBus.getWorkerApi
+    def getWorkerApi = workerApi
 
-  protected lazy val graphEditor = messageBus.getGraphEditor
-  def getGraphEditor = graphEditor
+    protected lazy val graphEditor = messageBus.getGraphEditor
+    def getGraphEditor = graphEditor
 
-  /**
-   * The sent worker status messages were not counted yet within that status message, that's why we add config.numberOfWorkers (eventually we will have received at least one status message per worker).
-   *
-   * Initialization messages sent to the workers do not have to be taken into account, because they are balanced by replies from the workers that do not get counted when they are received.
-   */
-  def messagesSentByWorkers: Long = messagesSentPerWorker.values.sum + numberOfWorkers
+    /**
+     * The sent worker status messages were not counted yet within that status message, that's why we add config.numberOfWorkers (eventually we will have received at least one status message per worker).
+     *
+     * Initialization messages sent to the workers do not have to be taken into account, because they are balanced by replies from the workers that do not get counted when they are received.
+     */
+    def messagesSentByWorkers: Long = messagesSentPerWorker.values.sum + numberOfWorkers
 
-  /**
-   *  Returns a map with the worker id as the key and the number of messages sent as the value.
-   */
-  def messagesSentPerWorker: Map[Int, Long] = {
-    val messagesPerWorker = new HashMap[Int, Long]()
-    var workerId = 0
-    while (workerId < numberOfWorkers) {
-      val status = workerStatus(workerId)
-      messagesPerWorker.put(workerId, if (status == null) 0 else status.messagesSent.sum)
-      workerId += 1
+    /**
+     *  Returns a map with the worker id as the key and the number of messages sent as the value.
+     */
+    def messagesSentPerWorker: Map[Int, Long] = {
+        val messagesPerWorker = new HashMap[Int, Long]()
+        var workerId = 0
+        while (workerId < numberOfWorkers) {
+            val status = workerStatus(workerId)
+            messagesPerWorker.put(workerId, if (status == null) 0 else status.messagesSent.sum)
+            workerId += 1
+        }
+        messagesPerWorker
     }
-    messagesPerWorker
-  }
 
-  def messagesSentByCoordinator = messageBus.messagesSent.sum
+    def messagesSentByCoordinator = messageBus.messagesSent.sum
 
-  def messagesReceivedByWorkers = workerStatus filter (_ != null) map (_.messagesReceived) sum
-  def messagesReceivedByCoordinator = messageBus.messagesReceived
+    def messagesReceivedByWorkers = workerStatus filter (_ != null) map (_.messagesReceived) sum
+    def messagesReceivedByCoordinator = messageBus.messagesReceived
 
-  def totalMessagesSent: Long = messagesSentByWorkers + messagesSentByCoordinator
-  def totalMessagesReceived: Long = messagesReceivedByWorkers + messagesReceivedByCoordinator
-  def globalInboxSize: Long = totalMessagesSent - totalMessagesReceived
+    def totalMessagesSent: Long = messagesSentByWorkers + messagesSentByCoordinator
+    def totalMessagesReceived: Long = messagesReceivedByWorkers + messagesReceivedByCoordinator
+    def globalInboxSize: Long = totalMessagesSent - totalMessagesReceived
 
-  def isIdle: Boolean = {
-    workerStatus.forall(workerStatus => workerStatus != null && workerStatus.isIdle) && totalMessagesSent == totalMessagesReceived
-  }
-
-  def getJVMCpuTime = {
-    val bean = ManagementFactory.getOperatingSystemMXBean
-    if (!bean.isInstanceOf[OperatingSystemMXBean]) {
-      0
-    } else {
-      (bean.asInstanceOf[OperatingSystemMXBean]).getProcessCpuTime
+    def isIdle: Boolean = {
+        workerStatus.forall(workerStatus => workerStatus != null && workerStatus.isIdle) && totalMessagesSent == totalMessagesReceived
     }
-  }
 
-  def registerWorker(workerId: Int, worker: ActorRef) {
-    messageBus.registerWorker(workerId, worker)
-  }
+    def getJVMCpuTime = {
+        val bean = ManagementFactory.getOperatingSystemMXBean
+        if (!bean.isInstanceOf[OperatingSystemMXBean]) {
+            0
+        } else {
+            (bean.asInstanceOf[OperatingSystemMXBean]).getProcessCpuTime
+        }
+    }
 
-  def registerCoordinator(coordinator: ActorRef) {
-    messageBus.registerCoordinator(coordinator)
-  }
+    def registerWorker(workerId: Int, worker: ActorRef) {
+        messageBus.registerWorker(workerId, worker)
+    }
 
-  def registerLogger(logger: ActorRef) {
-    messageBus.registerLogger(logger)
-  }
+    def registerCoordinator(coordinator: ActorRef) {
+        messageBus.registerCoordinator(coordinator)
+    }
+
+    def registerLogger(logger: ActorRef) {
+        messageBus.registerLogger(logger)
+    }
 
 }

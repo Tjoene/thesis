@@ -29,7 +29,7 @@ import com.signalcollect.storage.AboveAverageVertexIdSet
  *  The InMemory storage factory creates storage objects that store vertices in memory.
  */
 object AboveAverage extends StorageFactory {
-  def createInstance: Storage = new DefaultStorage {
-    override protected def vertexSetFactory: VertexIdSet = new AboveAverageVertexIdSet(this)
-  }
+    def createInstance: Storage = new DefaultStorage {
+        override protected def vertexSetFactory: VertexIdSet = new AboveAverageVertexIdSet(this)
+    }
 }

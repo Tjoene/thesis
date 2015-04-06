@@ -23,17 +23,17 @@ import akka.actor.ActorSystem
 
 object ActorSystemRegistry {
 
-  var systems = Map[String, ActorSystem]()
+    var systems = Map[String, ActorSystem]()
 
-  def register(system: ActorSystem) {
-    synchronized {
-      systems += ((system.name, system))
+    def register(system: ActorSystem) {
+        synchronized {
+            systems += ((system.name, system))
+        }
     }
-  }
 
-  def retrieve(name: String): Option[ActorSystem] = {
-    synchronized {
-      systems.get(name)
+    def retrieve(name: String): Option[ActorSystem] = {
+        synchronized {
+            systems.get(name)
+        }
     }
-  }
 }

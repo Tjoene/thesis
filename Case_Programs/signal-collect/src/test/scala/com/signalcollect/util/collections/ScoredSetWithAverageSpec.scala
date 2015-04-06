@@ -30,92 +30,92 @@ import scala.collection.mutable.{ IndexedSeq, ArrayBuffer, ListBuffer }
 @RunWith(classOf[JUnitRunner])
 class ScoredSetWithAverageSpec extends SpecificationWithJUnit {
 
-  "Scored set with average" should {
+    "Scored set with average" should {
 
-    "have the right initial average" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.getAverage must_== 0.0
-    }
+        "have the right initial average" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.getAverage must_== 0.0
+        }
 
-    "correctly add one item" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add(1, 1.0)
-      set.getAverage must_== 1.0
-    }
+        "correctly add one item" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add(1, 1.0)
+            set.getAverage must_== 1.0
+        }
 
-    "correctly add two items" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add("a", 1.0)
-      set.add("b", 1.0)
-      set.getAverage must_== 1.0
-    }
+        "correctly add two items" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add("a", 1.0)
+            set.add("b", 1.0)
+            set.getAverage must_== 1.0
+        }
 
-    "correctly add three items" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add("a", 1.0)
-      set.add("b", 1.0)
-      set.add("c", 4.0)
-      set.getAverage must_== 2.0
-    }
+        "correctly add three items" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add("a", 1.0)
+            set.add("b", 1.0)
+            set.add("c", 4.0)
+            set.getAverage must_== 2.0
+        }
 
-    "return the correct element" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add("a", 1.0)
-      set.add("b", 1.0)
-      set.add("c", 4.0)
-      set.nextAboveAverageItem must_== "c"
-      set.nextAboveAverageItem must_== "c"
-      set.nextAboveAverageItem must_== "c"
-    }
+        "return the correct element" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add("a", 1.0)
+            set.add("b", 1.0)
+            set.add("c", 4.0)
+            set.nextAboveAverageItem must_== "c"
+            set.nextAboveAverageItem must_== "c"
+            set.nextAboveAverageItem must_== "c"
+        }
 
-    "return the correct element after an update" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add("a", 1.0)
-      set.add("b", 1.0)
-      set.add("c", 4.0)
-      set.nextAboveAverageItem must_== "c"
-      set.nextAboveAverageItem must_== "c"
-      set.nextAboveAverageItem must_== "c"
-      set.updateItemScore("a", 10.0)
-      set.nextAboveAverageItem must_== "a"
-      set.nextAboveAverageItem must_== "a"
-      set.nextAboveAverageItem must_== "a"
-    }
+        "return the correct element after an update" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add("a", 1.0)
+            set.add("b", 1.0)
+            set.add("c", 4.0)
+            set.nextAboveAverageItem must_== "c"
+            set.nextAboveAverageItem must_== "c"
+            set.nextAboveAverageItem must_== "c"
+            set.updateItemScore("a", 10.0)
+            set.nextAboveAverageItem must_== "a"
+            set.nextAboveAverageItem must_== "a"
+            set.nextAboveAverageItem must_== "a"
+        }
 
-    "have the correct average score after an update" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add("a", 1.0)
-      set.add("b", 1.0)
-      set.add("c", 4.0)
-      set.updateItemScore("a", 10.0)
-      set.getAverage must_== 5.0
-    }
+        "have the correct average score after an update" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add("a", 1.0)
+            set.add("b", 1.0)
+            set.add("c", 4.0)
+            set.updateItemScore("a", 10.0)
+            set.getAverage must_== 5.0
+        }
 
-    "return the correct element after a removal" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add("a", 1.0)
-      set.add("b", 1.0)
-      set.add("c", 4.0)
-      set.updateItemScore("a", 10.0)
-      set.remove("a")
-      set.nextAboveAverageItem must_== "c"
-    }
+        "return the correct element after a removal" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add("a", 1.0)
+            set.add("b", 1.0)
+            set.add("c", 4.0)
+            set.updateItemScore("a", 10.0)
+            set.remove("a")
+            set.nextAboveAverageItem must_== "c"
+        }
 
-    "not compute a wrong average" in {
-      val set = new ScoredSetWithAverage[Any]()
-      for (i <- 0 to 1000000) {
-        set.add(i, 1.0 / 100000000.1)
-      }
-      set.add(1000001, 1.0 / 100000000)
-      set.nextAboveAverageItem must_== 1000001
-    }
-    
-    "not divide by zero when all elements are removed" in {
-      val set = new ScoredSetWithAverage[Any]()
-      set.add(1, 1.0)
-      set.remove(1)
-      set.getAverage must_== 0.0
-    }
+        "not compute a wrong average" in {
+            val set = new ScoredSetWithAverage[Any]()
+            for (i <- 0 to 1000000) {
+                set.add(i, 1.0 / 100000000.1)
+            }
+            set.add(1000001, 1.0 / 100000000)
+            set.nextAboveAverageItem must_== 1000001
+        }
 
-  }
+        "not divide by zero when all elements are removed" in {
+            val set = new ScoredSetWithAverage[Any]()
+            set.add(1, 1.0)
+            set.remove(1)
+            set.getAverage must_== 0.0
+        }
+
+    }
 }

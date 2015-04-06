@@ -43,92 +43,92 @@ object ExecutionConfiguration extends ExecutionConfiguration(ExecutionMode.Optim
  *  @author Philip Stutz
  */
 case class ExecutionConfiguration(
-  executionMode: ExecutionMode.Value = ExecutionMode.OptimizedAsynchronous,
-  signalThreshold: Double = 0.01,
-  collectThreshold: Double = 0.0,
-  timeLimit: Option[Long] = None,
-  stepsLimit: Option[Long] = None,
-  globalTerminationCondition: Option[GlobalTerminationCondition[_]] = None) {
+        executionMode: ExecutionMode.Value = ExecutionMode.OptimizedAsynchronous,
+        signalThreshold: Double = 0.01,
+        collectThreshold: Double = 0.0,
+        timeLimit: Option[Long] = None,
+        stepsLimit: Option[Long] = None,
+        globalTerminationCondition: Option[GlobalTerminationCondition[_]] = None) {
 
-  /**
-   *  Configures the execution mode used in a computation.
-   *
-   *  @param executionMode The execution mode used in a computation.
-   */
-  def withExecutionMode(executionMode: ExecutionMode.Value) = newExecutionConfiguration(executionMode = executionMode)
+    /**
+     *  Configures the execution mode used in a computation.
+     *
+     *  @param executionMode The execution mode used in a computation.
+     */
+    def withExecutionMode(executionMode: ExecutionMode.Value) = newExecutionConfiguration(executionMode = executionMode)
 
-  /**
-   *  Configures the signal threshold used in a computation.
-   *
-   *  @note If the signal score of a vertex is above the signal threshold, then the vertex will execute the `signal` operation in its edges.
-   *
-   *  @param signalThreshold The signal threshold used in a computation.
-   */
-  def withSignalThreshold(signalThreshold: Double) = newExecutionConfiguration(signalThreshold = signalThreshold)
+    /**
+     *  Configures the signal threshold used in a computation.
+     *
+     *  @note If the signal score of a vertex is above the signal threshold, then the vertex will execute the `signal` operation in its edges.
+     *
+     *  @param signalThreshold The signal threshold used in a computation.
+     */
+    def withSignalThreshold(signalThreshold: Double) = newExecutionConfiguration(signalThreshold = signalThreshold)
 
-  /**
-   *  Configures the collect threshold used in a computation.
-   *
-   *  @note If the collect score of a vertex is above the collect threshold, then its `collect` operation will get executed.
-   *
-   *  @param collectThreshold The collect threshold used in a computation.
-   */
-  def withCollectThreshold(collectThreshold: Double) = newExecutionConfiguration(collectThreshold = collectThreshold)
+    /**
+     *  Configures the collect threshold used in a computation.
+     *
+     *  @note If the collect score of a vertex is above the collect threshold, then its `collect` operation will get executed.
+     *
+     *  @param collectThreshold The collect threshold used in a computation.
+     */
+    def withCollectThreshold(collectThreshold: Double) = newExecutionConfiguration(collectThreshold = collectThreshold)
 
-  /**
-   *  Configures the time limit in milliseconds used in a computation.
-   *
-   *  @param timeLimit The time limit in milliseconds used for a computation.
-   */
-  def withTimeLimit(timeLimit: Long) = {
-    newExecutionConfiguration(timeLimit = Some(timeLimit))
-  }
+    /**
+     *  Configures the time limit in milliseconds used in a computation.
+     *
+     *  @param timeLimit The time limit in milliseconds used for a computation.
+     */
+    def withTimeLimit(timeLimit: Long) = {
+        newExecutionConfiguration(timeLimit = Some(timeLimit))
+    }
 
-  /**
-   *  Configures the maximum number of computation steps executed in a computation.
-   *
-   *  @note Only relevant for synchronous computations.
-   *
-   *  @param stepsLimit The maximum number of computation steps executed in a computation.
-   */
-  def withStepsLimit(stepsLimit: Long) = newExecutionConfiguration(stepsLimit = Some(stepsLimit))
+    /**
+     *  Configures the maximum number of computation steps executed in a computation.
+     *
+     *  @note Only relevant for synchronous computations.
+     *
+     *  @param stepsLimit The maximum number of computation steps executed in a computation.
+     */
+    def withStepsLimit(stepsLimit: Long) = newExecutionConfiguration(stepsLimit = Some(stepsLimit))
 
-  /**
-   *  Configures the maximum number of computation steps executed in a computation.
-   *
-   *  @note Only relevant for synchronous computations.
-   *
-   *  @param stepsLimit The maximum number of computation steps executed in a computation.
-   */
-  def withGlobalTerminationCondition(globalTerminationCondition: GlobalTerminationCondition[_]) = newExecutionConfiguration(globalTerminationCondition = Some(globalTerminationCondition))
+    /**
+     *  Configures the maximum number of computation steps executed in a computation.
+     *
+     *  @note Only relevant for synchronous computations.
+     *
+     *  @param stepsLimit The maximum number of computation steps executed in a computation.
+     */
+    def withGlobalTerminationCondition(globalTerminationCondition: GlobalTerminationCondition[_]) = newExecutionConfiguration(globalTerminationCondition = Some(globalTerminationCondition))
 
-  /**
-   *  Internal function to create a new configuration instance that defaults
-   *  to parameters that are the same as the ones in this instance, unless explicitly set differently.
-   */
-  protected def newExecutionConfiguration(
-    executionMode: ExecutionMode.Value = executionMode,
-    signalThreshold: Double = signalThreshold,
-    collectThreshold: Double = collectThreshold,
-    timeLimit: Option[Long] = timeLimit,
-    stepsLimit: Option[Long] = stepsLimit,
-    globalTerminationCondition: Option[GlobalTerminationCondition[_]] = globalTerminationCondition): ExecutionConfiguration = {
-    ExecutionConfiguration(
-      executionMode = executionMode,
-      signalThreshold = signalThreshold,
-      collectThreshold = collectThreshold,
-      timeLimit = timeLimit,
-      stepsLimit = stepsLimit,
-      globalTerminationCondition = globalTerminationCondition)
-  }
+    /**
+     *  Internal function to create a new configuration instance that defaults
+     *  to parameters that are the same as the ones in this instance, unless explicitly set differently.
+     */
+    protected def newExecutionConfiguration(
+        executionMode: ExecutionMode.Value = executionMode,
+        signalThreshold: Double = signalThreshold,
+        collectThreshold: Double = collectThreshold,
+        timeLimit: Option[Long] = timeLimit,
+        stepsLimit: Option[Long] = stepsLimit,
+        globalTerminationCondition: Option[GlobalTerminationCondition[_]] = globalTerminationCondition): ExecutionConfiguration = {
+        ExecutionConfiguration(
+            executionMode = executionMode,
+            signalThreshold = signalThreshold,
+            collectThreshold = collectThreshold,
+            timeLimit = timeLimit,
+            stepsLimit = stepsLimit,
+            globalTerminationCondition = globalTerminationCondition)
+    }
 
-  override def toString: String = {
-    "execution mode" + "\t" + "\t" + executionMode + "\n" +
-      "signal threshold" + "\t" + signalThreshold + "\n" +
-      "collect threshold" + "\t" + collectThreshold + "\n" +
-      "time limit" + "\t" + "\t" + timeLimit + "\n" +
-      "steps limit" + "\t" + "\t" + stepsLimit
-  }
+    override def toString: String = {
+        "execution mode"+"\t"+"\t"+executionMode+"\n"+
+            "signal threshold"+"\t"+signalThreshold+"\n"+
+            "collect threshold"+"\t"+collectThreshold+"\n"+
+            "time limit"+"\t"+"\t"+timeLimit+"\n"+
+            "steps limit"+"\t"+"\t"+stepsLimit
+    }
 }
 
 /**
@@ -140,14 +140,14 @@ case class ExecutionConfiguration(
  *  						   In an asynchronous computation: aggregation interval in milliseconds
  */
 abstract class GlobalTerminationCondition[ValueType](
-  val aggregationOperation: AggregationOperation[ValueType],
-  val aggregationInterval: Long = 1000l) {
+        val aggregationOperation: AggregationOperation[ValueType],
+        val aggregationInterval: Long = 1000l) {
 
-  /**
-   *  Determines if the computation should terminate when the aggregated value is `value`.
-   *
-   *   @param value The current value computed by `aggregationOperation`
-   *   @return If the computation should terminate
-   */
-  def shouldTerminate(value: ValueType): Boolean
+    /**
+     *  Determines if the computation should terminate when the aggregated value is `value`.
+     *
+     *   @param value The current value computed by `aggregationOperation`
+     *   @return If the computation should terminate
+     */
+    def shouldTerminate(value: ValueType): Boolean
 }

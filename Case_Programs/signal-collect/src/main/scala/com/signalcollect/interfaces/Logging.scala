@@ -23,59 +23,59 @@ import com.signalcollect.configuration.LoggingLevel
 
 trait Logging {
 
-  protected def messageBus: MessageBus
-  protected val loggingLevel: Int // = LoggingLevel.Warning
+    protected def messageBus: MessageBus
+    protected val loggingLevel: Int // = LoggingLevel.Warning
 
-  lazy val from = this.toString
+    lazy val from = this.toString
 
-  def debug(msg: Any, msgs: Any*) = {
-    if (loggingLevel <= LoggingLevel.Debug) {
-      if (msgs != null && !msgs.isEmpty) {
-        messageBus.sendToLogger(Debug(msg :: msgs.toList, from))
-      } else {
-        messageBus.sendToLogger(Debug(msg, from))
-      }
+    def debug(msg: Any, msgs: Any*) = {
+        if (loggingLevel <= LoggingLevel.Debug) {
+            if (msgs != null && !msgs.isEmpty) {
+                messageBus.sendToLogger(Debug(msg :: msgs.toList, from))
+            } else {
+                messageBus.sendToLogger(Debug(msg, from))
+            }
+        }
     }
-  }
 
-  def config(msg: Any, msgs: Any*) = {
-    if (loggingLevel <= LoggingLevel.Config) {
-      if (msgs != null && !msgs.isEmpty) {
-        messageBus.sendToLogger(Config(msg :: msgs.toList, from))
-      } else {
-        messageBus.sendToLogger(Config(msg, from))
-      }
+    def config(msg: Any, msgs: Any*) = {
+        if (loggingLevel <= LoggingLevel.Config) {
+            if (msgs != null && !msgs.isEmpty) {
+                messageBus.sendToLogger(Config(msg :: msgs.toList, from))
+            } else {
+                messageBus.sendToLogger(Config(msg, from))
+            }
+        }
     }
-  }
 
-  def info(msg: Any, msgs: Any*) = {
-    if (loggingLevel <= LoggingLevel.Info) {
-      if (msgs != null && !msgs.isEmpty) {
-        messageBus.sendToLogger(Info(msg :: msgs.toList, from))
-      } else {
-        messageBus.sendToLogger(Info(msg, from))
-      }
+    def info(msg: Any, msgs: Any*) = {
+        if (loggingLevel <= LoggingLevel.Info) {
+            if (msgs != null && !msgs.isEmpty) {
+                messageBus.sendToLogger(Info(msg :: msgs.toList, from))
+            } else {
+                messageBus.sendToLogger(Info(msg, from))
+            }
+        }
     }
-  }
 
-  def warning(msg: Any, msgs: Any*) = {
-    if (loggingLevel <= LoggingLevel.Warning) {
-      if (msgs != null && !msgs.isEmpty) {
-        messageBus.sendToLogger(Warning(msg :: msgs.toList, from))
-      } else {
-        messageBus.sendToLogger(Warning(msg, from))
-      }
+    def warning(msg: Any, msgs: Any*) = {
+        if (loggingLevel <= LoggingLevel.Warning) {
+            if (msgs != null && !msgs.isEmpty) {
+                messageBus.sendToLogger(Warning(msg :: msgs.toList, from))
+            } else {
+                messageBus.sendToLogger(Warning(msg, from))
+            }
+        }
     }
-  }
 
-  def severe(msg: Any, msgs: Any*) = {
-    if (loggingLevel <= LoggingLevel.Severe) {
-      if (msgs != null && !msgs.isEmpty) {
-        messageBus.sendToLogger(Severe(msg :: msgs.toList, from))
-      } else {
-        messageBus.sendToLogger(Severe(msg, from))
-      }
+    def severe(msg: Any, msgs: Any*) = {
+        if (loggingLevel <= LoggingLevel.Severe) {
+            if (msgs != null && !msgs.isEmpty) {
+                messageBus.sendToLogger(Severe(msg :: msgs.toList, from))
+            } else {
+                messageBus.sendToLogger(Severe(msg, from))
+            }
+        }
     }
-  }
 
 }

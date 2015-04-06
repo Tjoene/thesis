@@ -28,20 +28,20 @@ import com.signalcollect.coordinator.WorkerApi
  */
 trait Coordinator extends Actor with MessageRecipientRegistry with Logging {
 
-  override def toString = this.getClass.getSimpleName
+    override def toString = this.getClass.getSimpleName
 
-  def isIdle: Boolean
+    def isIdle: Boolean
 
-  def getWorkerApi: WorkerApi  //TODO remove dependency on class inside of an implementation package.
-  
-  def getGraphEditor: GraphEditor
-  
-  def globalInboxSize: Long
+    def getWorkerApi: WorkerApi //TODO remove dependency on class inside of an implementation package.
+
+    def getGraphEditor: GraphEditor
+
+    def globalInboxSize: Long
 }
 
 object Coordinator {
-  // Returns the position of the number of messages sent to the coordinator in the message counter array.
-  def getCoodinatorPosition(numberOfWorkers: Int): Int = numberOfWorkers
-  // Returns the position of the number of messages sent to other actors in the message counter array.
-  def getOthersPosition(numberOfWorkers: Int): Int = numberOfWorkers + 1
+    // Returns the position of the number of messages sent to the coordinator in the message counter array.
+    def getCoodinatorPosition(numberOfWorkers: Int): Int = numberOfWorkers
+    // Returns the position of the number of messages sent to other actors in the message counter array.
+    def getOthersPosition(numberOfWorkers: Int): Int = numberOfWorkers + 1
 }

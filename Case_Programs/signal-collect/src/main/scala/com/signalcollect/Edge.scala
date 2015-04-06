@@ -28,39 +28,39 @@ import com.signalcollect.interfaces.EdgeId
  *  @author Philip Stutz
  */
 trait Edge[TargetId] extends Serializable {
-  /** An edge id uniquely identifies an edge in the graph. */
-  def id: EdgeId
+    /** An edge id uniquely identifies an edge in the graph. */
+    def id: EdgeId
 
-  def sourceId: Any = sourceVertex.id
-  def targetId: TargetId
-  def sourceVertex: Vertex[_, _]
+    def sourceId: Any = sourceVertex.id
+    def targetId: TargetId
+    def sourceVertex: Vertex[_, _]
 
-  /** Called when the edge is attached to a source vertex */
-  def onAttach(source: Vertex[_, _], graphEditor: GraphEditor)
+    /** Called when the edge is attached to a source vertex */
+    def onAttach(source: Vertex[_, _], graphEditor: GraphEditor)
 
-  /** The weight of this edge. */
-  def weight: Double
+    /** The weight of this edge. */
+    def weight: Double
 
-  /** EdgeClassName(id=`edge id`) */
-  override def toString = getClass.getSimpleName + "(id=" + id + ")"
+    /** EdgeClassName(id=`edge id`) */
+    override def toString = getClass.getSimpleName+"(id="+id+")"
 
-  /** The edge hashCode is the hashCode of the id */
-  override def hashCode = id.hashCode
+    /** The edge hashCode is the hashCode of the id */
+    override def hashCode = id.hashCode
 
-  /** Two edges are equal if their ids are equal */
-  override def equals(other: Any): Boolean =
-    other match {
-      case e: Edge[_] => e.id == id
-      case _          => false
-    }
+    /** Two edges are equal if their ids are equal */
+    override def equals(other: Any): Boolean =
+        other match {
+            case e: Edge[_] => e.id == id
+            case _          => false
+        }
 
-  /**
-   *  Function that gets called by the source vertex whenever this edge is supposed to send a signal.
-   *
-   *  @param sourceVertex The source vertex of this edge.
-   *
-   *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
-   */
-  def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor)
+    /**
+     *  Function that gets called by the source vertex whenever this edge is supposed to send a signal.
+     *
+     *  @param sourceVertex The source vertex of this edge.
+     *
+     *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
+     */
+    def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor)
 
 }

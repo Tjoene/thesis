@@ -23,23 +23,23 @@ import com.signalcollect.Vertex
 
 /**
  *  An aggregation operation aggregates some value of type `ValueType` over all the vertices in a graph.
-  */
+ */
 trait AggregationOperation[ValueType] extends Serializable {
-  /**
-   *  Extracts values of type `ValueType` from vertices.
-   */
-  def extract(v: Vertex[_, _]): ValueType
+    /**
+     *  Extracts values of type `ValueType` from vertices.
+     */
+    def extract(v: Vertex[_, _]): ValueType
 
-  /**
-   *  Aggregates all the values extracted by the `extract` function.
-   *
-   *  @note There is no guarantee about the order in which this function gets executed on the extracted values.
-   */
-  def aggregate(a: ValueType, b: ValueType): ValueType
+    /**
+     *  Aggregates all the values extracted by the `extract` function.
+     *
+     *  @note There is no guarantee about the order in which this function gets executed on the extracted values.
+     */
+    def aggregate(a: ValueType, b: ValueType): ValueType
 
-  /**
-   *  Neutral element of the `aggregate` function:
-   *  `aggregate(x, neutralElement) == x`
-   */
-  val neutralElement: ValueType
+    /**
+     *  Neutral element of the `aggregate` function:
+     *  `aggregate(x, neutralElement) == x`
+     */
+    val neutralElement: ValueType
 }

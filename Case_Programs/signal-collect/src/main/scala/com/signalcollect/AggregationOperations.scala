@@ -27,13 +27,13 @@ import com.signalcollect.interfaces.AggregationOperation
  *  Only works on graphs where this information fits into memory.
  */
 class IdStateMapAggregator[IdType, StateType] extends AggregationOperation[Map[IdType, StateType]] {
-  val neutralElement = Map[IdType, StateType]()
-  def extract(v: Vertex[_, _]): Map[IdType, StateType] = {
-    try {
-      Map[IdType, StateType]((v.id.asInstanceOf[IdType], v.state.asInstanceOf[StateType]))
+    val neutralElement = Map[IdType, StateType]()
+    def extract(v: Vertex[_, _]): Map[IdType, StateType] = {
+        try {
+            Map[IdType, StateType]((v.id.asInstanceOf[IdType], v.state.asInstanceOf[StateType]))
+        }
     }
-  }
-  def aggregate(a: Map[IdType, StateType], b: Map[IdType, StateType]): Map[IdType, StateType] = a ++ b
+    def aggregate(a: Map[IdType, StateType], b: Map[IdType, StateType]): Map[IdType, StateType] = a ++ b
 }
 
 /**
@@ -41,12 +41,12 @@ class IdStateMapAggregator[IdType, StateType] extends AggregationOperation[Map[I
  */
 class SumOfStates[N: Numeric: Manifest] extends ReduceStatesOperation[N] {
 
-  val numeric = implicitly[Numeric[N]]
+    val numeric = implicitly[Numeric[N]]
 
-  /**
-   *  Sums up the values
-   */
-  def operation(a: N, b: N): N = numeric.plus(a, b)
+    /**
+     *  Sums up the values
+     */
+    def operation(a: N, b: N): N = numeric.plus(a, b)
 
 }
 
@@ -55,12 +55,12 @@ class SumOfStates[N: Numeric: Manifest] extends ReduceStatesOperation[N] {
  */
 class ProductOfStates[N: Numeric: Manifest] extends ReduceStatesOperation[N] {
 
-  val numeric = implicitly[Numeric[N]]
+    val numeric = implicitly[Numeric[N]]
 
-  /**
-   *  Multiplies the values
-   */
-  def operation(a: N, b: N): N = numeric.times(a, b)
+    /**
+     *  Multiplies the values
+     */
+    def operation(a: N, b: N): N = numeric.times(a, b)
 
 }
 
@@ -69,16 +69,16 @@ class ProductOfStates[N: Numeric: Manifest] extends ReduceStatesOperation[N] {
  */
 class SampleVertexIds(sampleSize: Int) extends AggregationOperation[List[Any]] {
 
-  val neutralElement = List[Any]()
+    val neutralElement = List[Any]()
 
-  def aggregate(a: List[Any], b: List[Any]): List[Any] = {
-    val combinedList = a ++ b
-    combinedList.slice(0, math.min(sampleSize, combinedList.size))
-  }
+    def aggregate(a: List[Any], b: List[Any]): List[Any] = {
+        val combinedList = a ++ b
+        combinedList.slice(0, math.min(sampleSize, combinedList.size))
+    }
 
-  def extract(v: Vertex[_, _]): List[Any] = {
-    List(v.id)
-  }
+    def extract(v: Vertex[_, _]): List[Any] = {
+        List(v.id)
+    }
 }
 
 /**
@@ -89,25 +89,25 @@ class SampleVertexIds(sampleSize: Int) extends AggregationOperation[List[Any]] {
  *  @usecase CountVertices[Vertex]
  */
 class CountVertices[VertexType <: Vertex[_, _]: Manifest] extends AggregationOperation[Long] {
-  val m = manifest[VertexType]
+    val m = manifest[VertexType]
 
-  val neutralElement: Long = 0l
+    val neutralElement: Long = 0l
 
-  /**
-   *  Sums up the number of vertices of type `VertexType` that were found.
-   */
-  def aggregate(a: Long, b: Long): Long = a + b
+    /**
+     *  Sums up the number of vertices of type `VertexType` that were found.
+     */
+    def aggregate(a: Long, b: Long): Long = a + b
 
-  /**
-   *  Returns 1 for vertices that match `VertexType`, 0 for other types
-   */
-  def extract(v: Vertex[_, _]): Long = {
-    if (m.erasure.isInstance(v)) {
-      1l
-    } else {
-      0l
+    /**
+     *  Returns 1 for vertices that match `VertexType`, 0 for other types
+     */
+    def extract(v: Vertex[_, _]): Long = {
+        if (m.erasure.isInstance(v)) {
+            1l
+        } else {
+            0l
+        }
     }
-  }
 
 }
 
@@ -116,16 +116,16 @@ class CountVertices[VertexType <: Vertex[_, _]: Manifest] extends AggregationOpe
  */
 abstract class StateExtractor[StateType: Manifest] extends AggregationOperation[Option[StateType]] {
 
-  /**
-   * Extracts the state from v if it matches `StateType`
-   */
-  def extract(v: Vertex[_, _]): Option[StateType] = {
-    try {
-      Some(v.state.asInstanceOf[StateType]) // not nice, but isAssignableFrom is slow and has nasty issues with boxed/unboxed
-    } catch {
-      case _ => None
+    /**
+     * Extracts the state from v if it matches `StateType`
+     */
+    def extract(v: Vertex[_, _]): Option[StateType] = {
+        try {
+            Some(v.state.asInstanceOf[StateType]) // not nice, but isAssignableFrom is slow and has nasty issues with boxed/unboxed
+        } catch {
+            case _ => None
+        }
     }
-  }
 
 }
 
@@ -134,18 +134,18 @@ abstract class StateExtractor[StateType: Manifest] extends AggregationOperation[
  */
 abstract class ReduceStatesOperation[ValueType: Manifest] extends StateExtractor[ValueType] {
 
-  def operation(a: ValueType, b: ValueType): ValueType
+    def operation(a: ValueType, b: ValueType): ValueType
 
-  val neutralElement = None
+    val neutralElement = None
 
-  def aggregate(a: Option[ValueType], b: Option[ValueType]): Option[ValueType] = {
-    (a, b) match {
-      case (Some(x), Some(y)) => Some(operation(x, y))
-      case (Some(x), None)    => Some(x)
-      case (None, Some(y))    => Some(y)
-      case (None, None)       => None
+    def aggregate(a: Option[ValueType], b: Option[ValueType]): Option[ValueType] = {
+        (a, b) match {
+            case (Some(x), Some(y)) => Some(operation(x, y))
+            case (Some(x), None)    => Some(x)
+            case (None, Some(y))    => Some(y)
+            case (None, None)       => None
+        }
     }
-  }
 
 }
 
@@ -154,15 +154,15 @@ abstract class ReduceStatesOperation[ValueType: Manifest] extends StateExtractor
  */
 abstract class StateAggregator[StateType] extends AggregationOperation[StateType] {
 
-  /**
-   *  Extracts the state from v if it matches `StateType`
-   */
-  def extract(v: Vertex[_, _]): StateType = {
-    try {
-      v.state.asInstanceOf[StateType] // not nice, but isAssignableFrom is slow and has nasty issues with boxed/unboxed
-    } catch {
-      case _ => neutralElement
+    /**
+     *  Extracts the state from v if it matches `StateType`
+     */
+    def extract(v: Vertex[_, _]): StateType = {
+        try {
+            v.state.asInstanceOf[StateType] // not nice, but isAssignableFrom is slow and has nasty issues with boxed/unboxed
+        } catch {
+            case _ => neutralElement
+        }
     }
-  }
 
 }

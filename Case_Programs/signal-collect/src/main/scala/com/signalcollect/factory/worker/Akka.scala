@@ -34,25 +34,25 @@ import com.signalcollect.worker.ImmediateCollectScheduler
  *  The local worker factory creates worker instances that work in the local-machine scenario.
  */
 object Akka extends WorkerFactory {
-  def createInstance(
-    workerId: Int,
-    numberOfWorkers: Int,
-    messageBusFactory: MessageBusFactory,
-    storageFactory: StorageFactory,
-    statusUpdateIntervalInMillis: Option[Long],
-    loggingLevel: Int): Worker = {
-    new AkkaWorker(workerId, numberOfWorkers, messageBusFactory, storageFactory, statusUpdateIntervalInMillis, loggingLevel)
-  }
+    def createInstance(
+        workerId: Int,
+        numberOfWorkers: Int,
+        messageBusFactory: MessageBusFactory,
+        storageFactory: StorageFactory,
+        statusUpdateIntervalInMillis: Option[Long],
+        loggingLevel: Int): Worker = {
+        new AkkaWorker(workerId, numberOfWorkers, messageBusFactory, storageFactory, statusUpdateIntervalInMillis, loggingLevel)
+    }
 }
 
 object CollectFirstAkka extends WorkerFactory {
-  def createInstance(
-    workerId: Int,
-    numberOfWorkers: Int,
-    messageBusFactory: MessageBusFactory,
-    storageFactory: StorageFactory,
-    statusUpdateIntervalInMillis: Option[Long],
-    loggingLevel: Int): Worker = {
-    new AkkaWorker(workerId, numberOfWorkers, messageBusFactory, storageFactory, statusUpdateIntervalInMillis, loggingLevel) with ImmediateCollectScheduler
-  }
+    def createInstance(
+        workerId: Int,
+        numberOfWorkers: Int,
+        messageBusFactory: MessageBusFactory,
+        storageFactory: StorageFactory,
+        statusUpdateIntervalInMillis: Option[Long],
+        loggingLevel: Int): Worker = {
+        new AkkaWorker(workerId, numberOfWorkers, messageBusFactory, storageFactory, statusUpdateIntervalInMillis, loggingLevel) with ImmediateCollectScheduler
+    }
 }

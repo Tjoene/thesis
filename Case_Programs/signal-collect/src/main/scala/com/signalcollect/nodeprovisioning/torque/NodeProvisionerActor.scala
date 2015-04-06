@@ -52,23 +52,23 @@ import com.signalcollect.configuration.AkkaConfig
 
 class NodeProvisionerActor(numberOfNodes: Int) extends Actor {
 
-  var nodeListRequestor: ActorRef = _
+    var nodeListRequestor: ActorRef = _
 
-  var nodeControllers = List[ActorRef]()
+    var nodeControllers = List[ActorRef]()
 
-  def receive = {
-    case "GetNodes" =>
-      nodeListRequestor = sender
-      sendNodesIfReady
-    case "NodeReady" =>
-      nodeControllers = sender :: nodeControllers
-      sendNodesIfReady
-  }
-
-  def sendNodesIfReady {
-    if (nodeControllers.size == numberOfNodes) {
-      nodeListRequestor ! nodeControllers
-      self ! PoisonPill
+    def receive = {
+        case "GetNodes" =>
+            nodeListRequestor = sender
+            sendNodesIfReady
+        case "NodeReady" =>
+            nodeControllers = sender :: nodeControllers
+            sendNodesIfReady
     }
-  }
+
+    def sendNodesIfReady {
+        if (nodeControllers.size == numberOfNodes) {
+            nodeListRequestor ! nodeControllers
+            self ! PoisonPill
+        }
+    }
 }

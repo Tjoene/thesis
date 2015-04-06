@@ -59,42 +59,42 @@ import com.signalcollect.nodeprovisioning.AkkaHelper
 
 class NodeControllerActor(nodeId: Any, nodeProvisionerAddress: String) extends Actor with Node {
 
-  var nodeProvisioner: ActorRef = _
+    var nodeProvisioner: ActorRef = _
 
-  def shutdown = context.system.shutdown
-  
-  def createWorker(workerId: Int, dispatcher: AkkaDispatcher, creator: () => Worker): String = {
-    val workerName = "Worker" + workerId
-    dispatcher match {
-      case EventBased => 
-        val worker = context.system.actorOf(Props().withCreator(creator()), name = workerName)
-        AkkaHelper.getRemoteAddress(worker, context.system)
-      case Pinned =>
-        val worker = context.system.actorOf(Props().withCreator(creator()).withDispatcher("akka.actor.pinned-dispatcher"), name = workerName)
-        AkkaHelper.getRemoteAddress(worker, context.system)
-    }
-  }
+    def shutdown = context.system.shutdown
 
-  def numberOfCores = Runtime.getRuntime.availableProcessors
-
-  override def preStart() = {
-    nodeProvisioner = context.actorFor(nodeProvisionerAddress)
-    nodeProvisioner ! "NodeReady"
-  }
-
-  def receive = {
-    case Request(command, reply) =>
-      println("Received command: " + command)
-      val result = command(this)
-      if (reply) {
-        if (result == null) { // Netty does not like null messages: org.jboss.netty.channel.socket.nio.NioWorker - WARNING: Unexpected exception in the selector loop. - java.lang.NullPointerException 
-          sender ! None
-        } else {
-          sender ! result
+    def createWorker(workerId: Int, dispatcher: AkkaDispatcher, creator: () => Worker): String = {
+        val workerName = "Worker"+workerId
+        dispatcher match {
+            case EventBased =>
+                val worker = context.system.actorOf(Props().withCreator(creator()), name = workerName)
+                AkkaHelper.getRemoteAddress(worker, context.system)
+            case Pinned =>
+                val worker = context.system.actorOf(Props().withCreator(creator()).withDispatcher("akka.actor.pinned-dispatcher"), name = workerName)
+                AkkaHelper.getRemoteAddress(worker, context.system)
         }
-      }
-    case other =>
-      println("Received unexpected message from " + sender + ": " + other)
-  }
+    }
+
+    def numberOfCores = Runtime.getRuntime.availableProcessors
+
+    override def preStart() = {
+        nodeProvisioner = context.actorFor(nodeProvisionerAddress)
+        nodeProvisioner ! "NodeReady"
+    }
+
+    def receive = {
+        case Request(command, reply) =>
+            println("Received command: "+command)
+            val result = command(this)
+            if (reply) {
+                if (result == null) { // Netty does not like null messages: org.jboss.netty.channel.socket.nio.NioWorker - WARNING: Unexpected exception in the selector loop. - java.lang.NullPointerException 
+                    sender ! None
+                } else {
+                    sender ! result
+                }
+            }
+        case other =>
+            println("Received unexpected message from "+sender+": "+other)
+    }
 
 }

@@ -32,57 +32,57 @@ import com.signalcollect.interfaces.SignalMessage
  */
 abstract class DefaultEdge[TargetId](val targetId: TargetId) extends Edge[TargetId] {
 
-  /** The type of signals that are sent along this edge. */
-  type Signal = Any
+    /** The type of signals that are sent along this edge. */
+    type Signal = Any
 
-  var sourceVertex: Vertex[_, _] = _
-  
-  /**
-   *  An edge id uniquely identifies an edge in the graph.
-   */
-  def id = EdgeId(sourceId, targetId)
+    var sourceVertex: Vertex[_, _] = _
 
-  /** The weight of this edge: 1.0 by default, can be overridden. */
-  def weight: Double = 1
+    /**
+     *  An edge id uniquely identifies an edge in the graph.
+     */
+    def id = EdgeId(sourceId, targetId)
 
-  /**
-   *  The abstract `signal` function is algorithm specific and is implemented by a user of the framework.
-   *  It calculates the signal that is sent from the source vertex to the target vertex.
-   *
-   *  @param sourceVertex The source vertex to which this edge is currently attached as an outgoing edge.
-   *
-   *  @return The signal that will be sent along this edge.
-   */
-  def signal(sourceVertex: Vertex[_, _]): Signal
+    /** The weight of this edge: 1.0 by default, can be overridden. */
+    def weight: Double = 1
 
-  /**
-   *  The hash code of the target vertex id is cached to speed up signaling.
-   */
-  val cachedTargetIdHashCode = targetId.hashCode
+    /**
+     *  The abstract `signal` function is algorithm specific and is implemented by a user of the framework.
+     *  It calculates the signal that is sent from the source vertex to the target vertex.
+     *
+     *  @param sourceVertex The source vertex to which this edge is currently attached as an outgoing edge.
+     *
+     *  @return The signal that will be sent along this edge.
+     */
+    def signal(sourceVertex: Vertex[_, _]): Signal
 
-  /**
-   *  The edge id that is send with signal messages.
-   *  Usually it is the real id, but for data flow algorithms there is no need to send the sourceId.
-   *  Data flow usage example: def senderEdgeId = EdgeId(null, targetId)
-   *  
-   *  To trade memory for speed, use a value instead to cache the edge id.
-   */
-  def senderEdgeId = id
+    /**
+     *  The hash code of the target vertex id is cached to speed up signaling.
+     */
+    val cachedTargetIdHashCode = targetId.hashCode
 
-  /**
-   *  Function that gets called by the source vertex whenever this edge is supposed to send a signal.
-   *
-   *  @param sourceVertex The source vertex of this edge.
-   *
-   *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
-   */
-  def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor) {
-    graphEditor.sendToWorkerForVertexIdHash(SignalMessage(signal(sourceVertex), senderEdgeId), cachedTargetIdHashCode)
-  }
-  
-  /** Called when the edge is attached to a source vertex */
-  def onAttach(source: Vertex[_, _], graphEditor: GraphEditor) = {
-    sourceVertex = source
-  }
+    /**
+     *  The edge id that is send with signal messages.
+     *  Usually it is the real id, but for data flow algorithms there is no need to send the sourceId.
+     *  Data flow usage example: def senderEdgeId = EdgeId(null, targetId)
+     *
+     *  To trade memory for speed, use a value instead to cache the edge id.
+     */
+    def senderEdgeId = id
+
+    /**
+     *  Function that gets called by the source vertex whenever this edge is supposed to send a signal.
+     *
+     *  @param sourceVertex The source vertex of this edge.
+     *
+     *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
+     */
+    def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor) {
+        graphEditor.sendToWorkerForVertexIdHash(SignalMessage(signal(sourceVertex), senderEdgeId), cachedTargetIdHashCode)
+    }
+
+    /** Called when the edge is attached to a source vertex */
+    def onAttach(source: Vertex[_, _], graphEditor: GraphEditor) = {
+        sourceVertex = source
+    }
 
 }

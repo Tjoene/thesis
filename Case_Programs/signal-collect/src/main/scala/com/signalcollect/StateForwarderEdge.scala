@@ -28,8 +28,8 @@ import com.signalcollect.interfaces._
  *  @param targetId id of this edges's target vertex
  */
 class StateForwarderEdge[TargetIdType](targetId: TargetIdType)
-    extends DefaultEdge(targetId) {
+        extends DefaultEdge(targetId) {
 
-  def signal(sourceVertex: Vertex[_, _]) = sourceVertex.state.asInstanceOf[Signal]
+    def signal(sourceVertex: Vertex[_, _]) = sourceVertex.state.asInstanceOf[Signal]
 
 }

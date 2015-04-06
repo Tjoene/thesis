@@ -32,38 +32,38 @@ import java.io.File
 @RunWith(classOf[JUnitRunner])
 class VertexStorageSpec extends SpecificationWithJUnit with Mockito {
 
-  /**
-   * Check for read/write permission on current folder
-   */
-  def hasReadAndWritePermission(path: String): Boolean = {
-    val tempFolder = new File(path)
-    tempFolder.canWrite && tempFolder.canRead
-  }
-
-  "InMemory Vertex Store" should {
-    val defaultMessageBus = mock[DefaultMessageBus]
-    val vertexList = List(new PageRankVertex(0, 1), new PageRankVertex(1, 1), new PageRankVertex(2, 1))
-    val inMemoryStore = new DefaultStorage
-    vertexList.foreach(v => inMemoryStore.vertices.put(v))
-
-    "hold all vertices inserted" in {
-      inMemoryStore.vertices.size must_== vertexList.size
+    /**
+     * Check for read/write permission on current folder
+     */
+    def hasReadAndWritePermission(path: String): Boolean = {
+        val tempFolder = new File(path)
+        tempFolder.canWrite && tempFolder.canRead
     }
 
-    "don't add vertices automatically to the toSignal list" in {
-      inMemoryStore.toSignal.size must_== 0
-    }
+    "InMemory Vertex Store" should {
+        val defaultMessageBus = mock[DefaultMessageBus]
+        val vertexList = List(new PageRankVertex(0, 1), new PageRankVertex(1, 1), new PageRankVertex(2, 1))
+        val inMemoryStore = new DefaultStorage
+        vertexList.foreach(v => inMemoryStore.vertices.put(v))
 
-    "don't add vertices automatically to the toCollect list" in {
-      inMemoryStore.toCollect.size must_== 0
-    }
+        "hold all vertices inserted" in {
+            inMemoryStore.vertices.size must_== vertexList.size
+        }
 
-    "remove vertices from the store" in {
-      val inMemoryStore = new DefaultStorage
-      vertexList.foreach(v => inMemoryStore.vertices.put(v))
-      inMemoryStore.vertices.remove(0)
-      inMemoryStore.vertices.size must_== vertexList.size - 1
+        "don't add vertices automatically to the toSignal list" in {
+            inMemoryStore.toSignal.size must_== 0
+        }
+
+        "don't add vertices automatically to the toCollect list" in {
+            inMemoryStore.toCollect.size must_== 0
+        }
+
+        "remove vertices from the store" in {
+            val inMemoryStore = new DefaultStorage
+            vertexList.foreach(v => inMemoryStore.vertices.put(v))
+            inMemoryStore.vertices.remove(0)
+            inMemoryStore.vertices.size must_== vertexList.size - 1
+        }
     }
-  }
 
 }

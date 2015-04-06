@@ -32,71 +32,71 @@ import java.util.LinkedHashMap.Entry
  */
 class ScoredSetWithAverage[ItemType] {
 
-  protected val implementation: LinkedHashMap[ItemType, Double] = new LinkedHashMap[ItemType, Double]()
+    protected val implementation: LinkedHashMap[ItemType, Double] = new LinkedHashMap[ItemType, Double]()
 
-  protected var averageScore = 0.0
+    protected var averageScore = 0.0
 
-  protected var entrySetIterator = implementation.entrySet.iterator
+    protected var entrySetIterator = implementation.entrySet.iterator
 
-  def isEmpty = implementation.isEmpty
+    def isEmpty = implementation.isEmpty
 
-  def contains(item: ItemType): Boolean = {
-    implementation.containsKey(item)
-  }
-
-  def getScore(item: ItemType): Double = {
-    implementation.get(item)
-  }
-
-  def size = implementation.size
-
-  def getAverage = averageScore
-
-  def foreach[U](f: (Any) => U) = {
-    implementation.keySet.foreach(f)
-  }
-
-  def updateItemScore(item: ItemType, newScore: Double) {
-    val oldScore = implementation.get(item)
-    implementation.put(item, newScore)
-    averageScore = averageScore + (newScore - oldScore) / implementation.size
-  }
-
-  def add(item: ItemType, score: Double) {
-    implementation.put(item, score)
-    averageScore = averageScore + (score - averageScore) / implementation.size
-  }
-
-  def remove(item: ItemType): Unit = {
-    val score = implementation.get(item)
-    implementation.remove(item)
-    if (implementation.size == 0) {
-      averageScore = 0.0
-    } else {
-      averageScore = averageScore - (score - averageScore) / implementation.size
+    def contains(item: ItemType): Boolean = {
+        implementation.containsKey(item)
     }
-  }
 
-  protected def nextEntry = {
-    if (entrySetIterator.hasNext) {
-      entrySetIterator.next
-    } else {
-      entrySetIterator = implementation.entrySet.iterator
-      entrySetIterator.next
+    def getScore(item: ItemType): Double = {
+        implementation.get(item)
     }
-  }
 
-  protected def recomputeAverage {
-    averageScore = implementation.values.sum
-  }
+    def size = implementation.size
 
-  def nextAboveAverageItem: ItemType = {
-    var entry = nextEntry
-    while (entry.getValue < averageScore) {
-      entry = nextEntry
+    def getAverage = averageScore
+
+    def foreach[U](f: (Any) => U) = {
+        implementation.keySet.foreach(f)
     }
-    val item = entry.getKey
-    item
-  }
+
+    def updateItemScore(item: ItemType, newScore: Double) {
+        val oldScore = implementation.get(item)
+        implementation.put(item, newScore)
+        averageScore = averageScore + (newScore - oldScore) / implementation.size
+    }
+
+    def add(item: ItemType, score: Double) {
+        implementation.put(item, score)
+        averageScore = averageScore + (score - averageScore) / implementation.size
+    }
+
+    def remove(item: ItemType): Unit = {
+        val score = implementation.get(item)
+        implementation.remove(item)
+        if (implementation.size == 0) {
+            averageScore = 0.0
+        } else {
+            averageScore = averageScore - (score - averageScore) / implementation.size
+        }
+    }
+
+    protected def nextEntry = {
+        if (entrySetIterator.hasNext) {
+            entrySetIterator.next
+        } else {
+            entrySetIterator = implementation.entrySet.iterator
+            entrySetIterator.next
+        }
+    }
+
+    protected def recomputeAverage {
+        averageScore = implementation.values.sum
+    }
+
+    def nextAboveAverageItem: ItemType = {
+        var entry = nextEntry
+        while (entry.getValue < averageScore) {
+            entry = nextEntry
+        }
+        val item = entry.getKey
+        item
+    }
 
 }

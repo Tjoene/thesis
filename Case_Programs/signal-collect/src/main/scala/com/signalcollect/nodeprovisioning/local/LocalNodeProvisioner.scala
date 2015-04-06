@@ -28,8 +28,8 @@ import com.typesafe.config.ConfigFactory
 import com.signalcollect.configuration.AkkaConfig
 
 class LocalNodeProvisioner extends NodeProvisioner {
-  
-  def getNodes: List[Node] = {
-    List(new LocalNode())
-  }
+
+    def getNodes: List[Node] = {
+        List(new LocalNode())
+    }
 }

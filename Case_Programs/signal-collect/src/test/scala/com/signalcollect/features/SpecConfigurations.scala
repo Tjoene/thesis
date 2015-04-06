@@ -30,26 +30,26 @@ import com.signalcollect.configuration._
 
 trait SpecConfigurations {
 
-  def computeGraphBuilders = List(GraphBuilder)
-  def numberOfWorkers = List(1, 2, 4, 8, 16, 32, 64, 128)
-  def executionModes = List(ExecutionMode.OptimizedAsynchronous, ExecutionMode.Synchronous)
+    def computeGraphBuilders = List(GraphBuilder)
+    def numberOfWorkers = List(1, 2, 4, 8, 16, 32, 64, 128)
+    def executionModes = List(ExecutionMode.OptimizedAsynchronous, ExecutionMode.Synchronous)
 
-  def computeGraphs: Seq[Graph] = {
-    var computeGraphs = Seq[Graph]()
-    for (workers <- numberOfWorkers) {
-      for (computeGraphBuilder <- computeGraphBuilders) {
-        computeGraphs = computeGraphBuilder.build +: computeGraphs
-      }
+    def computeGraphs: Seq[Graph] = {
+        var computeGraphs = Seq[Graph]()
+        for (workers <- numberOfWorkers) {
+            for (computeGraphBuilder <- computeGraphBuilders) {
+                computeGraphs = computeGraphBuilder.build +: computeGraphs
+            }
+        }
+        computeGraphs
     }
-    computeGraphs
-  }
 
-  def executionConfigurations: Seq[ExecutionConfiguration] = {
-    var executionConfigurations = Seq[ExecutionConfiguration]()
-    for (executionMode <- executionModes) {
-      executionConfigurations = ExecutionConfiguration(executionMode = executionMode) +: executionConfigurations
+    def executionConfigurations: Seq[ExecutionConfiguration] = {
+        var executionConfigurations = Seq[ExecutionConfiguration]()
+        for (executionMode <- executionModes) {
+            executionConfigurations = ExecutionConfiguration(executionMode = executionMode) +: executionConfigurations
+        }
+        executionConfigurations
     }
-    executionConfigurations
-  }
 
 }

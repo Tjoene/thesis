@@ -27,68 +27,68 @@ import com.signalcollect.Vertex
  */
 class InMemoryVertexIdSet(vertexStore: Storage) extends VertexIdSet {
 
-  protected var toHandle: LinkedHashSet[Any] = new LinkedHashSet[Any]() //Stores all the IDs of the vertices that need to be processed
+    protected var toHandle: LinkedHashSet[Any] = new LinkedHashSet[Any]() //Stores all the IDs of the vertices that need to be processed
 
-  /**
-   * Adds a new ID to the collection
-   *
-   * @param vetexId the ID of the vertex that should be added to the collection.
-   */
-  def add(vertexId: Any): Unit = {
-    toHandle.add(vertexId)
-  }
-
-  /**
-   * Removes an ID from the collection
-   *
-   * @param vertexId the ID of the vertex that should be removed
-   */
-  def remove(vertexId: Any): Unit = {
-    toHandle.remove(vertexId)
-  }
-
-  def isEmpty: Boolean = toHandle.isEmpty
-
-  def size: Int = toHandle.size
-
-  /**
-   * Applies the specified function to each vertex id and removes the ids if necessary
-   *
-   * @param f the function to apply to each id
-   * @removeAfterProcessing whether the ids should be deleted after they are covered by the function
-   */
-  def foreach[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
-    if (!isEmpty) {
-      val i = toHandle.iterator
-      while (i.hasNext) {
-        f(i.next)
-      }
-      if (removeAfterProcessing) {
-        cleanUp
-      }
+    /**
+     * Adds a new ID to the collection
+     *
+     * @param vetexId the ID of the vertex that should be added to the collection.
+     */
+    def add(vertexId: Any): Unit = {
+        toHandle.add(vertexId)
     }
-  }
 
-  def applyToNext[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
-    if (!isEmpty) {
-      val vertexId = toHandle.head
-      f(vertexId)
-      if (removeAfterProcessing) {
+    /**
+     * Removes an ID from the collection
+     *
+     * @param vertexId the ID of the vertex that should be removed
+     */
+    def remove(vertexId: Any): Unit = {
         toHandle.remove(vertexId)
-      }
     }
-  }
 
-  /**
-   * Ignored for this implementation.
-   */
-  def updateStateOfVertex(vertex: Vertex[_, _]) = {}
+    def isEmpty: Boolean = toHandle.isEmpty
 
-  /**
-   * Removes all entries from the collection.
-   */
-  def cleanUp = {
-    toHandle = null
-    toHandle = new LinkedHashSet[Any]()
-  }
+    def size: Int = toHandle.size
+
+    /**
+     * Applies the specified function to each vertex id and removes the ids if necessary
+     *
+     * @param f the function to apply to each id
+     * @removeAfterProcessing whether the ids should be deleted after they are covered by the function
+     */
+    def foreach[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
+        if (!isEmpty) {
+            val i = toHandle.iterator
+            while (i.hasNext) {
+                f(i.next)
+            }
+            if (removeAfterProcessing) {
+                cleanUp
+            }
+        }
+    }
+
+    def applyToNext[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
+        if (!isEmpty) {
+            val vertexId = toHandle.head
+            f(vertexId)
+            if (removeAfterProcessing) {
+                toHandle.remove(vertexId)
+            }
+        }
+    }
+
+    /**
+     * Ignored for this implementation.
+     */
+    def updateStateOfVertex(vertex: Vertex[_, _]) = {}
+
+    /**
+     * Removes all entries from the collection.
+     */
+    def cleanUp = {
+        toHandle = null
+        toHandle = new LinkedHashSet[Any]()
+    }
 }

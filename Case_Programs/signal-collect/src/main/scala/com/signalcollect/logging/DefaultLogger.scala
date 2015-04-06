@@ -23,22 +23,22 @@ import com.signalcollect.interfaces.LogMessage
 import akka.actor.Actor
 
 object DefaultLogger {
-  def log(logMessage: LogMessage) {
-    logMessage.msg match {
-      case e: Exception =>
-        println(logMessage.from + ": " + e.getMessage)
-        e.printStackTrace
-      case other =>
-        println(logMessage.from + ": " + logMessage.msg)
+    def log(logMessage: LogMessage) {
+        logMessage.msg match {
+            case e: Exception =>
+                println(logMessage.from+": "+e.getMessage)
+                e.printStackTrace
+            case other =>
+                println(logMessage.from+": "+logMessage.msg)
+        }
     }
-  }
 }
 
 class DefaultLogger(loggingFunction: LogMessage => Unit = DefaultLogger.log) extends Actor {
 
-  def receive = {
-    case logMessage: LogMessage =>
-      loggingFunction(logMessage)
-  }
+    def receive = {
+        case logMessage: LogMessage =>
+            loggingFunction(logMessage)
+    }
 
 }

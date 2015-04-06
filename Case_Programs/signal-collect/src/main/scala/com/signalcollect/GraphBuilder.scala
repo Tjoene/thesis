@@ -39,82 +39,82 @@ object GraphBuilder extends GraphBuilder(GraphConfiguration())
  */
 class GraphBuilder(protected val config: GraphConfiguration = GraphConfiguration()) extends Serializable {
 
-  /**
-   *  Creates a graph with the specified configuration.
-   */
-  def build: Graph = new DefaultGraph(config)
+    /**
+     *  Creates a graph with the specified configuration.
+     */
+    def build: Graph = new DefaultGraph(config)
 
-  /**
-   *  Configures the node provider.
-   *
-   *  @param newNodeProvider The node provider will acquire the resources for running a graph algorithm.
-   */
-  def withNodeProvisioner(newNodeProvisioner: NodeProvisioner) = newLocalBuilder(nodeProvisioner = newNodeProvisioner)
+    /**
+     *  Configures the node provider.
+     *
+     *  @param newNodeProvider The node provider will acquire the resources for running a graph algorithm.
+     */
+    def withNodeProvisioner(newNodeProvisioner: NodeProvisioner) = newLocalBuilder(nodeProvisioner = newNodeProvisioner)
 
-  /**
-   *  Configures the logging level.
-   *
-   *  @note Logging levels available:
-   *    Debug = 0
-   *    Config = 100
-   *    Info = 200
-   *    Warning = 300
-   *    Severe = 400
-   *
-   *  @param newLoggingLevel The logging level used by the graph.
-   */
-  def withLoggingLevel(newLoggingLevel: Int) = newLocalBuilder(loggingLevel = newLoggingLevel)
+    /**
+     *  Configures the logging level.
+     *
+     *  @note Logging levels available:
+     *    Debug = 0
+     *    Config = 100
+     *    Info = 200
+     *    Warning = 300
+     *    Severe = 400
+     *
+     *  @param newLoggingLevel The logging level used by the graph.
+     */
+    def withLoggingLevel(newLoggingLevel: Int) = newLocalBuilder(loggingLevel = newLoggingLevel)
 
-  /**
-   *  Configures the logger used by the graph.
-   *
-   *  @param logger The logger used by the graph.
-   */
-  def withLogger(logger: LogMessage => Unit) = newLocalBuilder(logger = logger)
+    /**
+     *  Configures the logger used by the graph.
+     *
+     *  @param logger The logger used by the graph.
+     */
+    def withLogger(logger: LogMessage => Unit) = newLocalBuilder(logger = logger)
 
-  /**
-   *  Configures the worker factory used by the graph to instantiate workers.
-   *
-   *  @param newWorkerFactory The worker factory used to instantiate workers.
-   */
-  def withWorkerFactory(newWorkerFactory: WorkerFactory) = newLocalBuilder(workerFactory = newWorkerFactory)
+    /**
+     *  Configures the worker factory used by the graph to instantiate workers.
+     *
+     *  @param newWorkerFactory The worker factory used to instantiate workers.
+     */
+    def withWorkerFactory(newWorkerFactory: WorkerFactory) = newLocalBuilder(workerFactory = newWorkerFactory)
 
-  /**
-   *  Configures the message bus factory used by the graph to instantiate message buses.
-   *
-   *  @param newMessageBusFactory The message bus factory used to instantiate message buses.
-   */
-  def withMessageBusFactory(newMessageBusFactory: MessageBusFactory) = newLocalBuilder(messageBusFactory = newMessageBusFactory)
+    /**
+     *  Configures the message bus factory used by the graph to instantiate message buses.
+     *
+     *  @param newMessageBusFactory The message bus factory used to instantiate message buses.
+     */
+    def withMessageBusFactory(newMessageBusFactory: MessageBusFactory) = newLocalBuilder(messageBusFactory = newMessageBusFactory)
 
-  /**
-   *  Configures the storage factory used by the workers to instantiate vertex stores.
-   *
-   *  @param newStorageFactory The storage factory used to instantiate vertex stores.
-   */
-  def withStorageFactory(newStorageFactory: StorageFactory) = newLocalBuilder(storageFactory = newStorageFactory)
+    /**
+     *  Configures the storage factory used by the workers to instantiate vertex stores.
+     *
+     *  @param newStorageFactory The storage factory used to instantiate vertex stores.
+     */
+    def withStorageFactory(newStorageFactory: StorageFactory) = newLocalBuilder(storageFactory = newStorageFactory)
 
-  /**
-   *  Internal function to create a new builder instance that has a configuration which defaults
-   *  to parameters that are the same as the ones in this instance, unless explicitly set differently.
-   */
-  protected def newLocalBuilder(
-    loggingLevel: Int = config.loggingLevel,
-    logger: LogMessage => Unit = config.logger,
-    workerFactory: WorkerFactory = config.workerFactory,
-    messageBusFactory: MessageBusFactory = config.messageBusFactory,
-    storageFactory: StorageFactory = config.storageFactory,
-    nodeProvisioner: NodeProvisioner = config.nodeProvisioner): GraphBuilder = {
-    new GraphBuilder(
-      GraphConfiguration(
-        maxInboxSize = config.maxInboxSize, 
-        loggingLevel = loggingLevel,
-        logger = logger,
-        workerFactory = workerFactory,
-        messageBusFactory = messageBusFactory,
-        storageFactory = storageFactory,
-        statusUpdateIntervalInMillis = config.statusUpdateIntervalInMillis,
-        akkaDispatcher = config.akkaDispatcher,
-        nodeProvisioner = nodeProvisioner))
-  }
+    /**
+     *  Internal function to create a new builder instance that has a configuration which defaults
+     *  to parameters that are the same as the ones in this instance, unless explicitly set differently.
+     */
+    protected def newLocalBuilder(
+        loggingLevel: Int = config.loggingLevel,
+        logger: LogMessage => Unit = config.logger,
+        workerFactory: WorkerFactory = config.workerFactory,
+        messageBusFactory: MessageBusFactory = config.messageBusFactory,
+        storageFactory: StorageFactory = config.storageFactory,
+        nodeProvisioner: NodeProvisioner = config.nodeProvisioner): GraphBuilder = {
+        new GraphBuilder(
+            GraphConfiguration(
+                maxInboxSize = config.maxInboxSize,
+                loggingLevel = loggingLevel,
+                logger = logger,
+                workerFactory = workerFactory,
+                messageBusFactory = messageBusFactory,
+                storageFactory = storageFactory,
+                statusUpdateIntervalInMillis = config.statusUpdateIntervalInMillis,
+                akkaDispatcher = config.akkaDispatcher,
+                nodeProvisioner = nodeProvisioner))
+    }
 
 }

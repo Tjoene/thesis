@@ -31,18 +31,18 @@ import com.signalcollect.configuration.ExecutionMode
  *  @param initialState: initial state of the agent: 0 = dead, 1 = alive
  */
 class GameOfLifeCell(id: Any, initialState: Int) extends DataGraphVertex(id, initialState) {
-  type Signal = Int
+    type Signal = Int
 
-  def collect(oldState: Int, mostRecentSignals: Iterable[Int], graphEditor: GraphEditor): Int = {
-    val numberOfAliveNeighbors = mostRecentSignals.sum
-    numberOfAliveNeighbors match {
-      case 0 => 0 // dies of loneliness
-      case 1 => 0 // dies of loneliness
-      case 2 => oldState // same as before
-      case 3 => 1 // becomes alive if dead
-      case higher => 0 // dies of overcrowding
+    def collect(oldState: Int, mostRecentSignals: Iterable[Int], graphEditor: GraphEditor): Int = {
+        val numberOfAliveNeighbors = mostRecentSignals.sum
+        numberOfAliveNeighbors match {
+            case 0      => 0 // dies of loneliness
+            case 1      => 0 // dies of loneliness
+            case 2      => oldState // same as before
+            case 3      => 1 // becomes alive if dead
+            case higher => 0 // dies of overcrowding
+        }
     }
-  }
 
 }
 
@@ -51,65 +51,65 @@ class GameOfLifeCell(id: Any, initialState: Int) extends DataGraphVertex(id, ini
  * simulation on a random grid and executes it
  */
 object GameOfLife extends App {
-  val graph = GraphBuilder.build
+    val graph = GraphBuilder.build
 
-  //Dimensions of the grid
-  val columns = 100
-  val rows = 100
-  val generations = 10000
+    //Dimensions of the grid
+    val columns = 100
+    val rows = 100
+    val generations = 10000
 
-  println("Adding vertices ...") //Create all cells.
-  for (column <- 0 to columns; row <- 0 to rows) {
-    graph.addVertex(new GameOfLifeCell((column, row), (math.random * 2.0).floor.toInt))
-  }
-
-  println("Adding edges ...") // Connect the neighboring cells.
-  for (column <- 0 to columns; row <- 0 to rows) {
-    for (neighbor <- neighbors(column, row)) {
-      if (inGrid(neighbor._1, neighbor._2)) {
-        graph.addEdge((column, row), new StateForwarderEdge((neighbor._1, neighbor._2)))
-      }
+    println("Adding vertices ...") //Create all cells.
+    for (column <- 0 to columns; row <- 0 to rows) {
+        graph.addVertex(new GameOfLifeCell((column, row), (math.random * 2.0).floor.toInt))
     }
-  }
 
-  val execConfig = ExecutionConfiguration.withExecutionMode(ExecutionMode.Synchronous).withStepsLimit(1)
-
-  for (i <- 0 to generations) {
-//    println(stringRepresentationOfGraph)
-    val stats = graph.execute(execConfig)
-  }
-//  println(stringRepresentationOfGraph)
-
-  graph.shutdown
-
-  // Returns all the neighboring cells of the cell with the given row/column
-  def neighbors(column: Int, row: Int): List[(Int, Int)] = {
-    List(
-      (column - 1, row - 1), (column, row - 1), (column + 1, row - 1),
-      (column - 1, row), (column + 1, row),
-      (column - 1, row + 1), (column, row + 1), (column + 1, row + 1))
-  }
-
-  // Tests if a cell is within the grid boundaries
-  def inGrid(column: Int, row: Int): Boolean = {
-    column >= 0 && row >= 0 && column <= columns && row <= rows
-  }
-
-  // Creates a string representation of the graph
-  def stringRepresentationOfGraph: String = {
-    val stateMap = graph.aggregate(new IdStateMapAggregator[(Int, Int), Int])
-    val stringBuilder = new StringBuilder
-    for (row <- 0 to rows) {
-      for (column <- 0 to columns) {
-        val state = stateMap((column, row))
-        val symbol = state match {
-          case 0 => " "
-          case other => "x"
+    println("Adding edges ...") // Connect the neighboring cells.
+    for (column <- 0 to columns; row <- 0 to rows) {
+        for (neighbor <- neighbors(column, row)) {
+            if (inGrid(neighbor._1, neighbor._2)) {
+                graph.addEdge((column, row), new StateForwarderEdge((neighbor._1, neighbor._2)))
+            }
         }
-        stringBuilder.append(symbol)
-      }
-      stringBuilder.append("\n")
     }
-    stringBuilder.toString
-  }
+
+    val execConfig = ExecutionConfiguration.withExecutionMode(ExecutionMode.Synchronous).withStepsLimit(1)
+
+    for (i <- 0 to generations) {
+        //    println(stringRepresentationOfGraph)
+        val stats = graph.execute(execConfig)
+    }
+    //  println(stringRepresentationOfGraph)
+
+    graph.shutdown
+
+    // Returns all the neighboring cells of the cell with the given row/column
+    def neighbors(column: Int, row: Int): List[(Int, Int)] = {
+        List(
+            (column - 1, row - 1), (column, row - 1), (column + 1, row - 1),
+            (column - 1, row), (column + 1, row),
+            (column - 1, row + 1), (column, row + 1), (column + 1, row + 1))
+    }
+
+    // Tests if a cell is within the grid boundaries
+    def inGrid(column: Int, row: Int): Boolean = {
+        column >= 0 && row >= 0 && column <= columns && row <= rows
+    }
+
+    // Creates a string representation of the graph
+    def stringRepresentationOfGraph: String = {
+        val stateMap = graph.aggregate(new IdStateMapAggregator[(Int, Int), Int])
+        val stringBuilder = new StringBuilder
+        for (row <- 0 to rows) {
+            for (column <- 0 to columns) {
+                val state = stateMap((column, row))
+                val symbol = state match {
+                    case 0     => " "
+                    case other => "x"
+                }
+                stringBuilder.append(symbol)
+            }
+            stringBuilder.append("\n")
+        }
+        stringBuilder.toString
+    }
 }

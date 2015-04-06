@@ -33,13 +33,13 @@ import com.signalcollect.nodeprovisioning._
  */
 class PageRankEdge(t: Any) extends DefaultEdge(t) {
 
-  /**
-   * The signal function calculates how much rank the source vertex
-   *  transfers to the target vertex.
-   */
-  override def signal(sourceVertex: Vertex[_, _]) = {
-   sourceVertex.asInstanceOf[PageRankVertex].state * weight / sourceVertex.asInstanceOf[PageRankVertex].sumOfOutWeights 
-  }
+    /**
+     * The signal function calculates how much rank the source vertex
+     *  transfers to the target vertex.
+     */
+    override def signal(sourceVertex: Vertex[_, _]) = {
+        sourceVertex.asInstanceOf[PageRankVertex].state * weight / sourceVertex.asInstanceOf[PageRankVertex].sumOfOutWeights
+    }
 
 }
 
@@ -51,84 +51,84 @@ class PageRankEdge(t: Any) extends DefaultEdge(t) {
  */
 class PageRankVertex(id: Any, dampingFactor: Double = 0.85) extends DataGraphVertex(id, 1 - dampingFactor) {
 
-  type Signal = Double
+    type Signal = Double
 
-  /**
-   * The collect function calculates the rank of this vertex based on the rank
-   *  received from neighbors and the damping factor.
-   */
-  def collect(oldState: Double, mostRecentSignals: Iterable[Double], graphEditor: GraphEditor): Double = {
-    1 - dampingFactor + dampingFactor * mostRecentSignals.sum
-  }
-
-  override def scoreSignal: Double = {
-    lastSignalState match {
-      case None           => 1
-      case Some(oldState) => (state - oldState).abs
+    /**
+     * The collect function calculates the rank of this vertex based on the rank
+     *  received from neighbors and the damping factor.
+     */
+    def collect(oldState: Double, mostRecentSignals: Iterable[Double], graphEditor: GraphEditor): Double = {
+        1 - dampingFactor + dampingFactor * mostRecentSignals.sum
     }
-  }
+
+    override def scoreSignal: Double = {
+        lastSignalState match {
+            case None           => 1
+            case Some(oldState) => (state - oldState).abs
+        }
+    }
 
 }
 
 /** Builds a PageRank compute graph and executes the computation */
 object PageRank extends App {
-  //  For distributed execution on a torque cluster
-  //  val kraken = new TorqueHost(torqueHostname = "kraken.ifi.uzh.ch", localJarPath = "./target/signal-collect-core-2.0.0-SNAPSHOT-jar-with-dependencies.jar")
-  //  val krakenNodeProvisioner = new TorqueNodeProvisioner(kraken, 1, "")
-  //  val graph = GraphBuilder.withNodeProvisioner(krakenNodeProvisioner).build
+    //  For distributed execution on a torque cluster
+    //  val kraken = new TorqueHost(torqueHostname = "kraken.ifi.uzh.ch", localJarPath = "./target/signal-collect-core-2.0.0-SNAPSHOT-jar-with-dependencies.jar")
+    //  val krakenNodeProvisioner = new TorqueNodeProvisioner(kraken, 1, "")
+    //  val graph = GraphBuilder.withNodeProvisioner(krakenNodeProvisioner).build
 
-  //  val graph = GraphBuilder.withNodeProvisioner(krakenNodeProvisioner).withLoggingLevel(LoggingLevel.Debug).build
-  //  val graph = GraphBuilder.withLoggingLevel(LoggingLevel.Debug).build
+    //  val graph = GraphBuilder.withNodeProvisioner(krakenNodeProvisioner).withLoggingLevel(LoggingLevel.Debug).build
+    //  val graph = GraphBuilder.withLoggingLevel(LoggingLevel.Debug).build
 
-  val graph = GraphBuilder.withNodeProvisioner(new LocalNodeProvisioner {
-    override def getNodes: List[Node] = {
-      List(new LocalNode {
-        override def numberOfCores = 1
-      })
-    }
-  }).withLoggingLevel(LoggingLevel.Debug).build
+    val graph = GraphBuilder.withNodeProvisioner(new LocalNodeProvisioner {
+        override def getNodes: List[Node] = {
+            List(new LocalNode {
+                override def numberOfCores = 1
+            })
+        }
+    }).withLoggingLevel(LoggingLevel.Debug).build
 
-  // Loading Method 1: Blocking loading
+    // Loading Method 1: Blocking loading
 
-  //      graph.addVertex(new PageRankVertex(1), true)
-  //      graph.addVertex(new PageRankVertex(2), true)
-  //      graph.addVertex(new PageRankVertex(3), true)
-  //      graph.addEdge(new PageRankEdge(1, 2), true)
-  //      graph.addEdge(new PageRankEdge(2, 1), true)
-  //      graph.addEdge(new PageRankEdge(2, 3), true)
-  //      graph.addEdge(new PageRankEdge(3, 2), true)
+    //      graph.addVertex(new PageRankVertex(1), true)
+    //      graph.addVertex(new PageRankVertex(2), true)
+    //      graph.addVertex(new PageRankVertex(3), true)
+    //      graph.addEdge(new PageRankEdge(1, 2), true)
+    //      graph.addEdge(new PageRankEdge(2, 1), true)
+    //      graph.addEdge(new PageRankEdge(2, 3), true)
+    //      graph.addEdge(new PageRankEdge(3, 2), true)
 
-  // Loading Method 2: Non blocking loading
+    // Loading Method 2: Non blocking loading
 
-  graph.addVertex(new PageRankVertex(1))
-  graph.addVertex(new PageRankVertex(2))
-  graph.addVertex(new PageRankVertex(3))
-  graph.addEdge(1, new PageRankEdge(2))
-  graph.addEdge(2, new PageRankEdge(1))
-  graph.addEdge(2, new PageRankEdge(3))
-  graph.addEdge(3, new PageRankEdge(2))
+    graph.addVertex(new PageRankVertex(1))
+    graph.addVertex(new PageRankVertex(2))
+    graph.addVertex(new PageRankVertex(3))
+    graph.addEdge(1, new PageRankEdge(2))
+    graph.addEdge(2, new PageRankEdge(1))
+    graph.addEdge(2, new PageRankEdge(3))
+    graph.addEdge(3, new PageRankEdge(2))
 
-  // Loading Method 3: Distributed Lading
+    // Loading Method 3: Distributed Lading
 
-  //  graph.loadGraph(Some(1), graph =>
-  //    {
-  //      graph.addVertex(new PageRankVertex(1))
-  //      graph.addVertex(new PageRankVertex(3))
-  //      graph.addEdge(new PageRankEdge(1, 2))
-  //      graph.addEdge(new PageRankEdge(3, 2))
-  //    })
-  //
-  //  graph.loadGraph(Some(2), graph => {
-  //    graph.addVertex(new PageRankVertex(2))
-  //    graph.addEdge(new PageRankEdge(2, 1))
-  //    graph.addEdge(new PageRankEdge(2, 3))
-  //  })
+    //  graph.loadGraph(Some(1), graph =>
+    //    {
+    //      graph.addVertex(new PageRankVertex(1))
+    //      graph.addVertex(new PageRankVertex(3))
+    //      graph.addEdge(new PageRankEdge(1, 2))
+    //      graph.addEdge(new PageRankEdge(3, 2))
+    //    })
+    //
+    //  graph.loadGraph(Some(2), graph => {
+    //    graph.addVertex(new PageRankVertex(2))
+    //    graph.addEdge(new PageRankEdge(2, 1))
+    //    graph.addEdge(new PageRankEdge(2, 3))
+    //  })
 
-  val stats = graph.execute //(ExecutionConfiguration())
-  //  val stats = graph.execute(ExecutionConfiguration().withExecutionMode(ExecutionMode.ContinuousAsynchronous))
-  graph.awaitIdle
-  //  val stats = graph.execute(ExecutionConfiguration().withExecutionMode(ExecutionMode.Synchronous))
-  println(stats)
-  graph.foreachVertex(println(_))
-  graph.shutdown
+    val stats = graph.execute //(ExecutionConfiguration())
+    //  val stats = graph.execute(ExecutionConfiguration().withExecutionMode(ExecutionMode.ContinuousAsynchronous))
+    graph.awaitIdle
+    //  val stats = graph.execute(ExecutionConfiguration().withExecutionMode(ExecutionMode.Synchronous))
+    println(stats)
+    graph.foreachVertex(println(_))
+    graph.shutdown
 }

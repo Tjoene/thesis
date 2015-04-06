@@ -23,15 +23,15 @@ import com.signalcollect._
 import com.signalcollect.interfaces.MessageBus
 
 trait ResetStateAfterSignaling[Id, State] extends AbstractVertex[Id, State] {
-  
-  def resetState: State
 
-  /**
-   * Delegates to superclass and resets the state to the initial state after signaling.
-   */
-  abstract override def executeSignalOperation(graphEditor: GraphEditor) {
-    super.executeSignalOperation(graphEditor)
-    setState(resetState)
-  }
+    def resetState: State
+
+    /**
+     * Delegates to superclass and resets the state to the initial state after signaling.
+     */
+    abstract override def executeSignalOperation(graphEditor: GraphEditor) {
+        super.executeSignalOperation(graphEditor)
+        setState(resetState)
+    }
 
 }

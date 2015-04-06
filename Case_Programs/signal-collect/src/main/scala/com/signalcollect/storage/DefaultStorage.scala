@@ -28,20 +28,20 @@ import java.util.Set
  * Uses in-memory implementations for all collections.
  */
 class DefaultStorage extends Storage {
-  
-  var vertices = vertexStoreFactory
-  protected def vertexStoreFactory: VertexStore = new InMemoryStorage(this)
-  
-  var toCollect = vertexSignalFactory //holds all signals that are not collected yet
-  protected def vertexSignalFactory: VertexSignalBuffer = new InMemoryVertexSignalBuffer 
-  var toSignal = vertexSetFactory //holds all vertex ids that need to signal
-  protected def vertexSetFactory: VertexIdSet = new InMemoryVertexIdSet(this)
-  
-  def serializer: Serializer = DefaultSerializer
-  
-  def cleanUp {
-    vertexStoreFactory.cleanUp
-    toCollect.cleanUp
-    toSignal.cleanUp
-  }
+
+    var vertices = vertexStoreFactory
+    protected def vertexStoreFactory: VertexStore = new InMemoryStorage(this)
+
+    var toCollect = vertexSignalFactory //holds all signals that are not collected yet
+    protected def vertexSignalFactory: VertexSignalBuffer = new InMemoryVertexSignalBuffer
+    var toSignal = vertexSetFactory //holds all vertex ids that need to signal
+    protected def vertexSetFactory: VertexIdSet = new InMemoryVertexIdSet(this)
+
+    def serializer: Serializer = DefaultSerializer
+
+    def cleanUp {
+        vertexStoreFactory.cleanUp
+        toCollect.cleanUp
+        toSignal.cleanUp
+    }
 }

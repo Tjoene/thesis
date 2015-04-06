@@ -36,59 +36,59 @@ import scala.util.Random
  */
 class ColoredVertex(id: Any, numColors: Int, initialColor: Int, isFixed: Boolean = false) extends DataGraphVertex(id, initialColor) {
 
-  /**
-   * Indicates that every signal this vertex receives is
-   * an instance of Int. This avoids type-checks/-casts.
-   */
-  type Signal = Int
+    /**
+     * Indicates that every signal this vertex receives is
+     * an instance of Int. This avoids type-checks/-casts.
+     */
+    type Signal = Int
 
-  /** The set of available colors */
-  val colors: Set[Int] = (1 to numColors).toSet
+    /** The set of available colors */
+    val colors: Set[Int] = (1 to numColors).toSet
 
-  /** Returns a random color */
-  def getRandomColor: Int = Random.nextInt(numColors) + 1
+    /** Returns a random color */
+    def getRandomColor: Int = Random.nextInt(numColors) + 1
 
-  /**
-   * Variable that indicates if the neighbors of this vertex should be informed
-   * about its color choice. This is the case if the color has changed or if the color is the same but a conflict persists.
-   */
-  var informNeighbors: Boolean = false
+    /**
+     * Variable that indicates if the neighbors of this vertex should be informed
+     * about its color choice. This is the case if the color has changed or if the color is the same but a conflict persists.
+     */
+    var informNeighbors: Boolean = false
 
-  /**
-   * Checks if one of the neighbors shares the same color. If so, the state is
-   * set to a random color and the neighbors are informed about this vertex'
-   * new color. If no neighbor shares the same color, we stay with the old color.
-   */
-  def collect(oldState: Int, mostRecentSignals: Iterable[Int], graphEditor: GraphEditor): Int = {
-    if (mostRecentSignals.iterator.contains(state)) {
-      informNeighbors = true
-      if (isFixed) {
-        initialColor
-      } else {
-        val r = Random.nextDouble
-        if (r > 0.8) {
-          val freeColors = colors -- signals(classOf[Int])
-          val numberOfFreeColors = freeColors.size
-          if (numberOfFreeColors > 0) {
-            freeColors.toSeq(Random.nextInt(numberOfFreeColors))
-          } else {
-            getRandomColor
-          }
+    /**
+     * Checks if one of the neighbors shares the same color. If so, the state is
+     * set to a random color and the neighbors are informed about this vertex'
+     * new color. If no neighbor shares the same color, we stay with the old color.
+     */
+    def collect(oldState: Int, mostRecentSignals: Iterable[Int], graphEditor: GraphEditor): Int = {
+        if (mostRecentSignals.iterator.contains(state)) {
+            informNeighbors = true
+            if (isFixed) {
+                initialColor
+            } else {
+                val r = Random.nextDouble
+                if (r > 0.8) {
+                    val freeColors = colors -- signals(classOf[Int])
+                    val numberOfFreeColors = freeColors.size
+                    if (numberOfFreeColors > 0) {
+                        freeColors.toSeq(Random.nextInt(numberOfFreeColors))
+                    } else {
+                        getRandomColor
+                    }
+                } else {
+                    getRandomColor
+                }
+            }
         } else {
-          getRandomColor
+            informNeighbors = false || (lastSignalState.isDefined && lastSignalState.get != oldState)
+            oldState
         }
-      }
-    } else {
-      informNeighbors = false || (lastSignalState.isDefined && lastSignalState.get != oldState)
-      oldState
     }
-  }
 
-  /**
-   * The signal score is 1 if this vertex hasn't signaled before or if it has
-   *  changed its color (kept track of by informNeighbors). Else it's 0.
-   */
-  override def scoreSignal = if (informNeighbors || lastSignalState == None) 1 else 0
+    /**
+     * The signal score is 1 if this vertex hasn't signaled before or if it has
+     *  changed its color (kept track of by informNeighbors). Else it's 0.
+     */
+    override def scoreSignal = if (informNeighbors || lastSignalState == None) 1 else 0
 
 }
 
@@ -100,16 +100,16 @@ class ColoredVertex(id: Any, numColors: Int, initialColor: Int, isFixed: Boolean
  * not require a custom edge type.
  */
 object VertexColoring extends App {
-  val graph = GraphBuilder.build
-  graph.addVertex(new ColoredVertex(1, 2, 1))
-  graph.addVertex(new ColoredVertex(2, 2, 1))
-  graph.addVertex(new ColoredVertex(3, 2, 1))
-  graph.addEdge(1, new StateForwarderEdge(2))
-  graph.addEdge(2, new StateForwarderEdge(1))
-  graph.addEdge(2, new StateForwarderEdge(3))
-  graph.addEdge(3, new StateForwarderEdge(2))
-  val stats = graph.execute
-  println(stats)
-  graph.foreachVertex(println(_))
-  graph.shutdown
+    val graph = GraphBuilder.build
+    graph.addVertex(new ColoredVertex(1, 2, 1))
+    graph.addVertex(new ColoredVertex(2, 2, 1))
+    graph.addVertex(new ColoredVertex(3, 2, 1))
+    graph.addEdge(1, new StateForwarderEdge(2))
+    graph.addEdge(2, new StateForwarderEdge(1))
+    graph.addEdge(2, new StateForwarderEdge(3))
+    graph.addEdge(3, new StateForwarderEdge(2))
+    val stats = graph.execute
+    println(stats)
+    graph.foreachVertex(println(_))
+    graph.shutdown
 }

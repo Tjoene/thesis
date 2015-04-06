@@ -26,7 +26,7 @@ import com.signalcollect.interfaces.MessageBus
  *  Regular expression to match links in Html strings
  */
 object Regex {
-  val hyperlink = """<a\s+href=(?:"([^"]+)"|'([^']+)').*?</a>""".r
+    val hyperlink = """<a\s+href=(?:"([^"]+)"|'([^']+)').*?</a>""".r
 }
 
 /**
@@ -36,12 +36,12 @@ object Regex {
  *  	- lacks proper user agent string
  */
 object WebCrawler extends App {
-  val graph = GraphBuilder.build
-  graph.addVertex(new Webpage("http://www.ifi.uzh.ch/ddis/", 2))
-  val stats = graph.execute
-  graph.foreachVertex(println(_))
-  println(stats)
-  graph.shutdown
+    val graph = GraphBuilder.build
+    graph.addVertex(new Webpage("http://www.ifi.uzh.ch/ddis/", 2))
+    val stats = graph.execute
+    graph.foreachVertex(println(_))
+    println(stats)
+    graph.shutdown
 }
 
 /**
@@ -49,19 +49,19 @@ object WebCrawler extends App {
  */
 class Webpage(id: String, crawlDepth: Int, dampingFactor: Double = 0.85) extends PageRankVertex(id, dampingFactor) {
 
-  /** This method gets called by the framework after the vertex has been fully initialized. */
-  override def afterInitialization(graphEditor: GraphEditor) {
-    super.afterInitialization(graphEditor)
-    if (crawlDepth > 0) {
-      try {
-        val webpage = io.Source.fromURL(id, "ISO-8859-1").mkString
-        Regex.hyperlink.findAllIn(webpage).matchData map (_.group(1)) foreach { linked =>
-          graphEditor.addVertex(new Webpage(linked, crawlDepth - 1))
-          graphEditor.addEdge(id, new PageRankEdge(linked))
+    /** This method gets called by the framework after the vertex has been fully initialized. */
+    override def afterInitialization(graphEditor: GraphEditor) {
+        super.afterInitialization(graphEditor)
+        if (crawlDepth > 0) {
+            try {
+                val webpage = io.Source.fromURL(id, "ISO-8859-1").mkString
+                Regex.hyperlink.findAllIn(webpage).matchData map (_.group(1)) foreach { linked =>
+                    graphEditor.addVertex(new Webpage(linked, crawlDepth - 1))
+                    graphEditor.addEdge(id, new PageRankEdge(linked))
+                }
+            } catch {
+                case _ =>
+            }
         }
-      } catch {
-        case _ =>
-      }
     }
-  }
 }

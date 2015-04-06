@@ -61,38 +61,38 @@ import com.signalcollect.nodeprovisioning.AkkaHelper
  * Creator in separate class to prevent excessive closure-capture of the TorqueNodeProvisioner class (Error[java.io.NotSerializableException TorqueNodeProvisioner])
  */
 case class NodeControllerCreator(jobId: Any, nodeProvisionerAddress: String) extends Creator[NodeControllerActor] {
-  def create: NodeControllerActor = new NodeControllerActor(jobId, nodeProvisionerAddress)
+    def create: NodeControllerActor = new NodeControllerActor(jobId, nodeProvisionerAddress)
 }
 
 /**
  * Creator in separate class to prevent excessive closure-capture of the TorqueNodeProvisioner class (Error[java.io.NotSerializableException TorqueNodeProvisioner])
  */
 case class NodeProvisionerCreator(numberOfNodes: Int) extends Creator[NodeProvisionerActor] {
-  def create: NodeProvisionerActor = new NodeProvisionerActor(numberOfNodes)
+    def create: NodeProvisionerActor = new NodeProvisionerActor(numberOfNodes)
 }
 
 class TorqueNodeProvisioner(torqueHost: TorqueHost, numberOfNodes: Int, jvmParameters: String) extends NodeProvisioner {
-  def getNodes: List[Node] = {
-    val system: ActorSystem = ActorSystem("NodeProvisioner", AkkaConfig.get)
-    val nodeProvisionerCreator = NodeProvisionerCreator(numberOfNodes)
-    val nodeProvisioner = system.actorOf(Props().withCreator(nodeProvisionerCreator.create), name = "NodeProvisioner")
-    val nodeProvisionerAddress = AkkaHelper.getRemoteAddress(nodeProvisioner, system)
-    var jobs = List[TorqueJob]()
-    implicit val timeout = new Timeout(1800 seconds)
-    for (jobId <- 0 until numberOfNodes) {
-      val function: () => Map[String, String] = {
-        () =>
-          val system = ActorSystem("SignalCollect", AkkaConfig.get)
-          val nodeControllerCreator = NodeControllerCreator(jobId, nodeProvisionerAddress)
-          val nodeController = system.actorOf(Props().withCreator(nodeControllerCreator.create), name = "NodeController" + jobId.toString)
-          Map[String, String]()
-      }
-      jobs = new TorqueJob(jobId=jobId, execute=function, jvmParameters=jvmParameters) :: jobs
+    def getNodes: List[Node] = {
+        val system: ActorSystem = ActorSystem("NodeProvisioner", AkkaConfig.get)
+        val nodeProvisionerCreator = NodeProvisionerCreator(numberOfNodes)
+        val nodeProvisioner = system.actorOf(Props().withCreator(nodeProvisionerCreator.create), name = "NodeProvisioner")
+        val nodeProvisionerAddress = AkkaHelper.getRemoteAddress(nodeProvisioner, system)
+        var jobs = List[TorqueJob]()
+        implicit val timeout = new Timeout(1800 seconds)
+        for (jobId <- 0 until numberOfNodes) {
+            val function: () => Map[String, String] = {
+                () =>
+                    val system = ActorSystem("SignalCollect", AkkaConfig.get)
+                    val nodeControllerCreator = NodeControllerCreator(jobId, nodeProvisionerAddress)
+                    val nodeController = system.actorOf(Props().withCreator(nodeControllerCreator.create), name = "NodeController"+jobId.toString)
+                    Map[String, String]()
+            }
+            jobs = new TorqueJob(jobId = jobId, execute = function, jvmParameters = jvmParameters) :: jobs
+        }
+        torqueHost.executeJobs(jobs)
+        val nodesFuture = nodeProvisioner ? "GetNodes"
+        val result = Await.result(nodesFuture, timeout.duration)
+        val nodes: List[Node] = result.asInstanceOf[List[ActorRef]] map (AkkaProxy.newInstance[Node](_))
+        nodes
     }
-    torqueHost.executeJobs(jobs)
-    val nodesFuture = nodeProvisioner ? "GetNodes"
-    val result = Await.result(nodesFuture, timeout.duration)
-    val nodes: List[Node] = result.asInstanceOf[List[ActorRef]] map (AkkaProxy.newInstance[Node](_))
-    nodes
-  }
 }

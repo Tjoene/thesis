@@ -38,73 +38,73 @@ import scala.collection.mutable.IndexedSeq
  *  @author Philip Stutz
  */
 abstract class DataGraphVertex[Id, State](
-    val id: Id,
-    var state: State) extends AbstractVertex[Id, State] with SumOfOutWeights[Id, State] {
+        val id: Id,
+        var state: State) extends AbstractVertex[Id, State] with SumOfOutWeights[Id, State] {
 
-  type Signal
+    type Signal
 
-  /**
-   *  @return the object that stores the current state for this `Vertex`.
-   */
-  def getState: State = state
-  def setState(s: State) {
-    state = s
-  }
-
-  /**
-   *  The abstract `collect` function is algorithm specific and calculates the new vertex state.
-   *
-   *  @note If the edge along which a signal was sent is relevant, then mostRecentSignalMap can be used to access the edge id of a signal.
-   *
-   *  @param mostRecentSignals An iterable that returns the most recently received signal for each edge that has sent at least one signal already.
-   *
-   *  @return The new vertex state.
-   *
-   *  @note Beware of modifying and returning a referenced object,
-   *  default signal scoring and termination detection fail in this case.
-   */
-  def collect(oldState: State, mostRecentSignals: Iterable[Signal], graphEditor: GraphEditor): State
-
-  /**
-   *  A map that has edge ids as keys and stores the most recent signal received along the edge with that id as the value for that key.
-   */
-  protected val mostRecentSignalMap = new HashMap[Any, Signal]()
-
-  /**
-   *  Utility function to filter out only certain signals of interest.
-   */
-  protected def signals[G](filterClass: Class[G]): Iterable[G] = {
-    mostRecentSignalMap.values flatMap (value => Filter.bySuperClass(filterClass, value))
-  }
-
-  /**
-   *  Returns the most recent signal received from the vertex with id `id`.
-   *
-   *  @param id The id of the vertex from which we received a signal.
-   */
-  def getMostRecentSignal(id: Any): Option[_] =
-    mostRecentSignalMap.get(id) match {
-      case null => None
-      case s    => Some(s)
+    /**
+     *  @return the object that stores the current state for this `Vertex`.
+     */
+    def getState: State = state
+    def setState(s: State) {
+        state = s
     }
 
-  /**
-   *  Function that gets called by the framework whenever this vertex is supposed to collect new signals.
-   *
-   *  @param signals new signals that have arrived since the last time this vertex collected
-   *
-   *  @param messageBus an instance of MessageBus which can be used by this vertex to interact with the graph.
-   */
-  override def executeCollectOperation(signals: IndexedSeq[SignalMessage[_]], graphEditor: GraphEditor) {
-    super.executeCollectOperation(signals, graphEditor)
-    val castS = signals.asInstanceOf[Iterable[SignalMessage[Signal]]]
-    // Faster than Scala foreach.
-    val i = castS.iterator
-    while (i.hasNext) {
-      val signalMessage = i.next
-      mostRecentSignalMap.put(signalMessage.edgeId.sourceId, signalMessage.signal)
+    /**
+     *  The abstract `collect` function is algorithm specific and calculates the new vertex state.
+     *
+     *  @note If the edge along which a signal was sent is relevant, then mostRecentSignalMap can be used to access the edge id of a signal.
+     *
+     *  @param mostRecentSignals An iterable that returns the most recently received signal for each edge that has sent at least one signal already.
+     *
+     *  @return The new vertex state.
+     *
+     *  @note Beware of modifying and returning a referenced object,
+     *  default signal scoring and termination detection fail in this case.
+     */
+    def collect(oldState: State, mostRecentSignals: Iterable[Signal], graphEditor: GraphEditor): State
+
+    /**
+     *  A map that has edge ids as keys and stores the most recent signal received along the edge with that id as the value for that key.
+     */
+    protected val mostRecentSignalMap = new HashMap[Any, Signal]()
+
+    /**
+     *  Utility function to filter out only certain signals of interest.
+     */
+    protected def signals[G](filterClass: Class[G]): Iterable[G] = {
+        mostRecentSignalMap.values flatMap (value => Filter.bySuperClass(filterClass, value))
     }
-    state = collect(state, mostRecentSignalMap.values, graphEditor)
-  }
+
+    /**
+     *  Returns the most recent signal received from the vertex with id `id`.
+     *
+     *  @param id The id of the vertex from which we received a signal.
+     */
+    def getMostRecentSignal(id: Any): Option[_] =
+        mostRecentSignalMap.get(id) match {
+            case null => None
+            case s    => Some(s)
+        }
+
+    /**
+     *  Function that gets called by the framework whenever this vertex is supposed to collect new signals.
+     *
+     *  @param signals new signals that have arrived since the last time this vertex collected
+     *
+     *  @param messageBus an instance of MessageBus which can be used by this vertex to interact with the graph.
+     */
+    override def executeCollectOperation(signals: IndexedSeq[SignalMessage[_]], graphEditor: GraphEditor) {
+        super.executeCollectOperation(signals, graphEditor)
+        val castS = signals.asInstanceOf[Iterable[SignalMessage[Signal]]]
+        // Faster than Scala foreach.
+        val i = castS.iterator
+        while (i.hasNext) {
+            val signalMessage = i.next
+            mostRecentSignalMap.put(signalMessage.edgeId.sourceId, signalMessage.signal)
+        }
+        state = collect(state, mostRecentSignalMap.values, graphEditor)
+    }
 
 }

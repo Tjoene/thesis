@@ -39,43 +39,43 @@ import scala.collection.mutable.IndexedSeq
  *  @author Philip Stutz
  */
 abstract class DataFlowVertex[Id, State](
-  val id: Id,
-  var state: State,
-  val resetState: State)
-  extends AbstractVertex[Id, State] with ResetStateAfterSignaling[Id, State] {
-  
-  type Signal
+    val id: Id,
+    var state: State,
+    val resetState: State)
+        extends AbstractVertex[Id, State] with ResetStateAfterSignaling[Id, State] {
 
-  /**
-   *  @return the object that stores the current state for this `Vertex`.
-   */
-  def getState: State = state
-  def setState(s: State) {
-    state = s
-  }
-  
-  /**
-   *  The abstract `collect` function is algorithm specific and calculates the new vertex state.
-   *
-   *  @param uncollectedSignals all signals received by this vertex since the last time this function was executed
-   *
-   *  @return The new vertex state.
-   *
-   *  @note Beware of modifying and returning a referenced object,
-   *  default signal scoring and termination detection fail in this case.
-   */
-  def collect(oldState: State, uncollectedSignals: Iterable[Signal], graphEditor: GraphEditor): State
+    type Signal
 
-  /**
-   *  Function that gets called by the framework whenever this vertex is supposed to collect new signals.
-   *
-   *  @param signals new signals that have arrived since the last time this vertex collected
-   *
-   *  @param messageBus an instance of MessageBus which can be used by this vertex to interact with the graph.
-   */
-  override def executeCollectOperation(signals: IndexedSeq[SignalMessage[_]], graphEditor: GraphEditor) {
-    super.executeCollectOperation(signals, graphEditor)
-    state = collect(state, (signals map (_.signal)).asInstanceOf[Iterable[Signal]], graphEditor)
-  }
+    /**
+     *  @return the object that stores the current state for this `Vertex`.
+     */
+    def getState: State = state
+    def setState(s: State) {
+        state = s
+    }
+
+    /**
+     *  The abstract `collect` function is algorithm specific and calculates the new vertex state.
+     *
+     *  @param uncollectedSignals all signals received by this vertex since the last time this function was executed
+     *
+     *  @return The new vertex state.
+     *
+     *  @note Beware of modifying and returning a referenced object,
+     *  default signal scoring and termination detection fail in this case.
+     */
+    def collect(oldState: State, uncollectedSignals: Iterable[Signal], graphEditor: GraphEditor): State
+
+    /**
+     *  Function that gets called by the framework whenever this vertex is supposed to collect new signals.
+     *
+     *  @param signals new signals that have arrived since the last time this vertex collected
+     *
+     *  @param messageBus an instance of MessageBus which can be used by this vertex to interact with the graph.
+     */
+    override def executeCollectOperation(signals: IndexedSeq[SignalMessage[_]], graphEditor: GraphEditor) {
+        super.executeCollectOperation(signals, graphEditor)
+        state = collect(state, (signals map (_.signal)).asInstanceOf[Iterable[Signal]], graphEditor)
+    }
 
 }

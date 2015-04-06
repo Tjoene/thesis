@@ -34,25 +34,25 @@ import com.signalcollect.GraphEditor
 @RunWith(classOf[JUnitRunner])
 class BeforeRemovalSpec extends SpecificationWithJUnit with Mockito {
 
-  "Framework" should {
-    val g = GraphBuilder.build
-    g.addVertex(new BeforeRemovalVertex)
-    g.removeVertex(1)
-    
-    g.execute
+    "Framework" should {
+        val g = GraphBuilder.build
+        g.addVertex(new BeforeRemovalVertex)
+        g.removeVertex(1)
 
-    "call the beforeRemoval function of a vertex before removing it" in {
-      RemovalDetector.beforeRemovalWorked must_== true
+        g.execute
+
+        "call the beforeRemoval function of a vertex before removing it" in {
+            RemovalDetector.beforeRemovalWorked must_== true
+        }
     }
-  }
 
 }
 
 object RemovalDetector {
-  var beforeRemovalWorked = false
+    var beforeRemovalWorked = false
 }
 
 class BeforeRemovalVertex extends DataGraphVertex(1, 0) {
-  def collect(oldState: Int, mostRecentSignals: Iterable[Signal], graphEditor: GraphEditor): Int = 0
-  override def beforeRemoval(ge: GraphEditor) = RemovalDetector.beforeRemovalWorked = true
+    def collect(oldState: Int, mostRecentSignals: Iterable[Signal], graphEditor: GraphEditor): Int = 0
+    override def beforeRemoval(ge: GraphEditor) = RemovalDetector.beforeRemovalWorked = true
 }

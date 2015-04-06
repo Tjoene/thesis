@@ -29,47 +29,47 @@ import com.signalcollect.Vertex
  */
 class AboveAverageVertexIdSet(vertexStore: Storage) extends VertexIdSet {
 
-  protected var implementation: ScoredSetWithAverage[Any] = new ScoredSetWithAverage[Any]()
+    protected var implementation: ScoredSetWithAverage[Any] = new ScoredSetWithAverage[Any]()
 
-  override def add(vertexId: Any): Unit = {
-    implementation.add(vertexId, vertexStore.vertices.get(vertexId).scoreSignal)
-  }
-
-  override def remove(vertexId: Any): Unit = {
-    implementation.remove(vertexId)
-  }
-
-  def isEmpty: Boolean = implementation.isEmpty
-
-  def size: Int = implementation.size
-
-  def foreach[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
-    if (!isEmpty) {
-      implementation.foreach(f)
-      if (removeAfterProcessing) {
-        cleanUp
-      }
+    override def add(vertexId: Any): Unit = {
+        implementation.add(vertexId, vertexStore.vertices.get(vertexId).scoreSignal)
     }
-  }
 
-  def applyToNext[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
-    if (!isEmpty) {
-      val vertexId = implementation.nextAboveAverageItem
-      f(vertexId)
-      if (removeAfterProcessing) {
+    override def remove(vertexId: Any): Unit = {
         implementation.remove(vertexId)
-      }
     }
-  }
 
-  def updateStateOfVertex(vertex: Vertex[_, _]) = {
-    if (implementation.contains(vertex.id)) {
-      implementation.updateItemScore(item = vertex.id, newScore = vertex.scoreSignal)
+    def isEmpty: Boolean = implementation.isEmpty
+
+    def size: Int = implementation.size
+
+    def foreach[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
+        if (!isEmpty) {
+            implementation.foreach(f)
+            if (removeAfterProcessing) {
+                cleanUp
+            }
+        }
     }
-  }
 
-  def cleanUp = {
-    implementation = null
-    implementation = new ScoredSetWithAverage[Any]()
-  }
+    def applyToNext[U](f: (Any) => U, removeAfterProcessing: Boolean) = {
+        if (!isEmpty) {
+            val vertexId = implementation.nextAboveAverageItem
+            f(vertexId)
+            if (removeAfterProcessing) {
+                implementation.remove(vertexId)
+            }
+        }
+    }
+
+    def updateStateOfVertex(vertex: Vertex[_, _]) = {
+        if (implementation.contains(vertex.id)) {
+            implementation.updateItemScore(item = vertex.id, newScore = vertex.scoreSignal)
+        }
+    }
+
+    def cleanUp = {
+        implementation = null
+        implementation = new ScoredSetWithAverage[Any]()
+    }
 }

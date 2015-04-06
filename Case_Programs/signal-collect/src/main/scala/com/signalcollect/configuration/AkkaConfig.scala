@@ -3,8 +3,8 @@ package com.signalcollect.configuration
 import com.typesafe.config._
 
 object AkkaConfig {
-  lazy val get = ConfigFactory.parseString(distributedConfig).withFallback(ConfigFactory.load).resolve
-  val distributedConfig = """
+    lazy val get = ConfigFactory.parseString(distributedConfig).withFallback(ConfigFactory.load).resolve
+    val distributedConfig = """
 akka {
   #logConfigOnStart=on
   #loglevel = DEBUG

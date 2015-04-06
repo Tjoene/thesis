@@ -31,88 +31,88 @@ import java.io.File
 @RunWith(classOf[JUnitRunner])
 class ToHandleColletionSpec extends SpecificationWithJUnit with Mockito {
 
-  sequential
-  
-  "InMemoryVertexIdSet" should {
-    val storage = mock[Storage]
-    val toSignal = new InMemoryVertexIdSet(storage)
-    val fakeVertexIds = List(1, 2, 3, 4)
+    sequential
 
-    "hold all ids inserted" in {
-      for (id <- fakeVertexIds) {
-        toSignal.add(id)
-      }
-      toSignal.size === fakeVertexIds.size
+    "InMemoryVertexIdSet" should {
+        val storage = mock[Storage]
+        val toSignal = new InMemoryVertexIdSet(storage)
+        val fakeVertexIds = List(1, 2, 3, 4)
+
+        "hold all ids inserted" in {
+            for (id <- fakeVertexIds) {
+                toSignal.add(id)
+            }
+            toSignal.size === fakeVertexIds.size
+        }
+
+        "contain no duplicates" in {
+            for (id <- fakeVertexIds) {
+                toSignal.add(id)
+            }
+            toSignal.add(fakeVertexIds(1))
+            toSignal.size === fakeVertexIds.size
+        }
+
+        "call foreach on each id without removing them" in {
+            for (id <- fakeVertexIds) {
+                toSignal.add(id)
+            }
+            toSignal.foreach(id => id.toString(), false)
+            toSignal.size === fakeVertexIds.size
+        }
+
+        "call foreach on each id and removing them" in {
+            for (id <- fakeVertexIds) {
+                toSignal.add(id)
+            }
+            toSignal.foreach(id => id.toString(), true)
+            toSignal.size === 0
+        }
     }
 
-    "contain no duplicates" in {
-      for (id <- fakeVertexIds) {
-        toSignal.add(id)
-      }
-      toSignal.add(fakeVertexIds(1))
-      toSignal.size === fakeVertexIds.size
+    "DefaultVertexSignalBuffer" should {
+        val storage = mock[Storage]
+        val toCollect = new InMemoryVertexSignalBuffer
+        val signalMessage1a = new SignalMessage(1, EdgeId(0, 1))
+        val signalMessage1b = new SignalMessage(1, EdgeId(2, 1))
+        val signalMessage2 = new SignalMessage(1, EdgeId(1, 2))
+        val signalMessage3 = new SignalMessage(1, EdgeId(1, 3))
+
+        val allSignalMessages = List(signalMessage1a, signalMessage2, signalMessage3)
+
+        "hold buffered signals" in {
+            for (signalMessage <- allSignalMessages) {
+                toCollect.addSignal(signalMessage)
+            }
+            toCollect.size === allSignalMessages.size
+        }
+
+        "collect signals for the same target vertex" in {
+            for (signalMessage <- allSignalMessages) {
+                toCollect.addSignal(signalMessage)
+            }
+            toCollect.addSignal(signalMessage1b)
+            toCollect.size === allSignalMessages.size
+        }
+
+        "call foreach on each id without removing them" in {
+            for (signalMessage <- allSignalMessages) {
+                toCollect.addSignal(signalMessage)
+            }
+            toCollect.addSignal(signalMessage1b)
+
+            toCollect.foreach((id, signals) => id.toString(), false)
+            toCollect.size === allSignalMessages.size
+        }
+
+        "call foreach on each id and removing them" in {
+            for (signalMessage <- allSignalMessages) {
+                toCollect.addSignal(signalMessage)
+            }
+            toCollect.addSignal(signalMessage1b)
+
+            toCollect.foreach((id, signals) => id.toString(), true)
+            toCollect.size === 0
+        }
     }
-
-    "call foreach on each id without removing them" in {
-      for (id <- fakeVertexIds) {
-        toSignal.add(id)
-      }
-      toSignal.foreach(id => id.toString(), false)
-      toSignal.size === fakeVertexIds.size
-    }
-
-    "call foreach on each id and removing them" in {
-      for (id <- fakeVertexIds) {
-        toSignal.add(id)
-      }
-      toSignal.foreach(id => id.toString(), true)
-      toSignal.size === 0
-    }
-  }
-
-  "DefaultVertexSignalBuffer" should {
-    val storage = mock[Storage]
-    val toCollect = new InMemoryVertexSignalBuffer
-    val signalMessage1a = new SignalMessage(1, EdgeId(0, 1))
-    val signalMessage1b = new SignalMessage(1, EdgeId(2, 1))
-    val signalMessage2 = new SignalMessage(1, EdgeId(1, 2))
-    val signalMessage3 = new SignalMessage(1, EdgeId(1, 3))
-
-    val allSignalMessages = List(signalMessage1a, signalMessage2, signalMessage3)
-
-    "hold buffered signals" in {
-      for (signalMessage <- allSignalMessages) {
-        toCollect.addSignal(signalMessage)
-      }
-      toCollect.size === allSignalMessages.size
-    }
-
-    "collect signals for the same target vertex" in {
-      for (signalMessage <- allSignalMessages) {
-        toCollect.addSignal(signalMessage)
-      }
-      toCollect.addSignal(signalMessage1b)
-      toCollect.size === allSignalMessages.size
-    }
-
-    "call foreach on each id without removing them" in {
-      for (signalMessage <- allSignalMessages) {
-        toCollect.addSignal(signalMessage)
-      }
-      toCollect.addSignal(signalMessage1b)
-
-      toCollect.foreach((id, signals) => id.toString(), false)
-      toCollect.size === allSignalMessages.size
-    }
-
-    "call foreach on each id and removing them" in {
-      for (signalMessage <- allSignalMessages) {
-        toCollect.addSignal(signalMessage)
-      }
-      toCollect.addSignal(signalMessage1b)
-
-      toCollect.foreach((id, signals) => id.toString(), true)
-      toCollect.size === 0
-    }
-  }
 }

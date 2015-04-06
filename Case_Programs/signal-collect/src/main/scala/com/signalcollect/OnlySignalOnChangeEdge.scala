@@ -32,25 +32,25 @@ import com.signalcollect.interfaces._
  *  @note Beware of modifying and signaling a referenced object, change detection fails in this case.
  */
 abstract class OnlySignalOnChangeEdge[SourceIdType, TargetIdType](targetId: TargetIdType)
-    extends DefaultEdge(targetId) {
+        extends DefaultEdge(targetId) {
 
-  /** Last signal sent along this edge */
-  var lastSignalSent: Option[Signal] = None
+    /** Last signal sent along this edge */
+    var lastSignalSent: Option[Signal] = None
 
-  /**
-   *  Function that gets called by the source vertex whenever this edge is supposed to send a signal.
-   *  Compared to the default implementation there is an additional check if the signal has changed
-   *  and no signal is sent if the signal has not changed.
-   *
-   *  @param sourceVertex The source vertex of this edge.
-   *
-   *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
-   */
-  override def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor) {
-    val newSignal = signal(sourceVertex)
-    if (!lastSignalSent.isDefined || !lastSignalSent.get.equals(newSignal)) {
-      graphEditor.sendToWorkerForVertexIdHash(SignalMessage(newSignal, senderEdgeId), cachedTargetIdHashCode)
-      lastSignalSent = Some(newSignal)
+    /**
+     *  Function that gets called by the source vertex whenever this edge is supposed to send a signal.
+     *  Compared to the default implementation there is an additional check if the signal has changed
+     *  and no signal is sent if the signal has not changed.
+     *
+     *  @param sourceVertex The source vertex of this edge.
+     *
+     *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
+     */
+    override def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor) {
+        val newSignal = signal(sourceVertex)
+        if (!lastSignalSent.isDefined || !lastSignalSent.get.equals(newSignal)) {
+            graphEditor.sendToWorkerForVertexIdHash(SignalMessage(newSignal, senderEdgeId), cachedTargetIdHashCode)
+            lastSignalSent = Some(newSignal)
+        }
     }
-  }
 }

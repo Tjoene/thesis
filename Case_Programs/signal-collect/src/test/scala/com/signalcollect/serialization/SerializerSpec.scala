@@ -27,50 +27,50 @@ import org.specs2.mock.Mockito
 
 @RunWith(classOf[JUnitRunner])
 class SerializerSpec extends SpecificationWithJUnit with Mockito {
-  "DefaultSerializer" should {
+    "DefaultSerializer" should {
 
-    "correclty serialize/deserialize a Double" in {
-      DefaultSerializer.read[Double](DefaultSerializer.write(1024.0)) === 1024.0
+        "correclty serialize/deserialize a Double" in {
+            DefaultSerializer.read[Double](DefaultSerializer.write(1024.0)) === 1024.0
+        }
+
+        "correclty serialize/deserialize a job configuration" in {
+            val job = new Job(
+                100,
+                Some(SpreadsheetConfiguration("some.emailAddress@gmail.com", "somePasswordHere", "someSpreadsheetNameHere", "someWorksheetNameHere")),
+                "someUsername",
+                "someJobDescription")
+            DefaultSerializer.read[Job](DefaultSerializer.write(job)) === job
+        }
+
     }
 
-    "correclty serialize/deserialize a job configuration" in {
-      val job = new Job(
-        100,
-        Some(SpreadsheetConfiguration("some.emailAddress@gmail.com", "somePasswordHere", "someSpreadsheetNameHere", "someWorksheetNameHere")),
-        "someUsername",
-        "someJobDescription")
-      DefaultSerializer.read[Job](DefaultSerializer.write(job)) === job
+    "CompressingSerializer" should {
+
+        "correclty serialize/deserialize a Double" in {
+            CompressingSerializer.read[Double](CompressingSerializer.write(1024.0)) === 1024.0
+        }
+
+        "correclty serialize/deserialize a job configuration" in {
+            val job = new Job(
+                100,
+                Some(SpreadsheetConfiguration("some.emailAddress@gmail.com", "somePasswordHere", "someSpreadsheetNameHere", "someWorksheetNameHere")),
+                "someUsername",
+                "someJobDescription")
+            CompressingSerializer.read[Job](CompressingSerializer.write(job)) === job
+        }
+
     }
-
-  }
-  
-  "CompressingSerializer" should {
-
-    "correclty serialize/deserialize a Double" in {
-      CompressingSerializer.read[Double](CompressingSerializer.write(1024.0)) === 1024.0
-    }
-
-    "correclty serialize/deserialize a job configuration" in {
-      val job = new Job(
-        100,
-        Some(SpreadsheetConfiguration("some.emailAddress@gmail.com", "somePasswordHere", "someSpreadsheetNameHere", "someWorksheetNameHere")),
-        "someUsername",
-        "someJobDescription")
-      CompressingSerializer.read[Job](CompressingSerializer.write(job)) === job
-    }
-
-  }
 
 }
 
 case class SpreadsheetConfiguration(
-  gmailAccount: String,
-  gmailPassword: String,
-  spreadsheetName: String,
-  worksheetName: String)
+    gmailAccount: String,
+    gmailPassword: String,
+    spreadsheetName: String,
+    worksheetName: String)
 
 case class Job(
-  var jobId: Int,
-  var spreadsheetConfiguration: Option[SpreadsheetConfiguration],
-  var submittedByUser: String,
-  var jobDescription: String)
+    var jobId: Int,
+    var spreadsheetConfiguration: Option[SpreadsheetConfiguration],
+    var submittedByUser: String,
+    var jobDescription: String)

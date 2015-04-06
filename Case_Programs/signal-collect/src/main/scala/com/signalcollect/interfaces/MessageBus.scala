@@ -30,60 +30,60 @@ import com.signalcollect.coordinator.WorkerApi
  *  It has to guarantee per-sender FIFO when delivering messages.
  */
 trait MessageBus extends MessageRecipientRegistry with VertexToWorkerMapper {
-  def isInitialized: Boolean
-  
-  def numberOfWorkers: Int
+    def isInitialized: Boolean
 
-  def messagesSent: Array[Int]
-  def messagesReceived: Long
+    def numberOfWorkers: Int
 
-  def getReceivedMessagesCounter: AtomicInteger
+    def messagesSent: Array[Int]
+    def messagesReceived: Long
 
-  def sendToActor(actor: ActorRef, m: Any) 
-  
-  def sendToLogger(m: LogMessage)
+    def getReceivedMessagesCounter: AtomicInteger
 
-  def sendToWorkerForVertexIdHash(m: Any, vertexIdHash: Int)
+    def sendToActor(actor: ActorRef, m: Any)
 
-  def sendToWorkerForVertexId(m: Any, vertexId: Any)
+    def sendToLogger(m: LogMessage)
 
-  def sendToWorker(workerId: Int, m: Any)
+    def sendToWorkerForVertexIdHash(m: Any, vertexIdHash: Int)
 
-  def sendToWorkers(m: Any)
+    def sendToWorkerForVertexId(m: Any, vertexId: Any)
 
-  def sendToCoordinator(m: Any)
+    def sendToWorker(workerId: Int, m: Any)
 
-  // Returns an api that treats all workers as if there were only one.
-  def getWorkerApi: WorkerApi  //TODO remove dependency on coordinator package.
+    def sendToWorkers(m: Any)
 
-  // Returns an array of worker proxies for all workers, indexed by workerId.
-  def getWorkerProxies: Array[Worker]
+    def sendToCoordinator(m: Any)
 
-  // Returns a graph editor that allows to manipulate the graph.
-  def getGraphEditor: GraphEditor
+    // Returns an api that treats all workers as if there were only one.
+    def getWorkerApi: WorkerApi //TODO remove dependency on coordinator package.
+
+    // Returns an array of worker proxies for all workers, indexed by workerId.
+    def getWorkerProxies: Array[Worker]
+
+    // Returns a graph editor that allows to manipulate the graph.
+    def getGraphEditor: GraphEditor
 }
 
 trait MessageRecipientRegistry {
-  
-  /**
-   *  Registers a worker.
-   *
-   *  @param workerId is the worker id
-   *  @param worker is the worker to be registered
-   */
-  def registerWorker(workerId: Int, worker: ActorRef)
 
-  /**
-   *  Registers a coordinator.
-   *
-   *  @param coordinator is the coordinator to be registered
-   */
-  def registerCoordinator(coordinator: ActorRef)
+    /**
+     *  Registers a worker.
+     *
+     *  @param workerId is the worker id
+     *  @param worker is the worker to be registered
+     */
+    def registerWorker(workerId: Int, worker: ActorRef)
 
-  /**
-   *  Registers a logger.
-   *
-   *  @param logger is the logger to be registered
-   */
-  def registerLogger(logger: ActorRef)
+    /**
+     *  Registers a coordinator.
+     *
+     *  @param coordinator is the coordinator to be registered
+     */
+    def registerCoordinator(coordinator: ActorRef)
+
+    /**
+     *  Registers a logger.
+     *
+     *  @param logger is the logger to be registered
+     */
+    def registerLogger(logger: ActorRef)
 }

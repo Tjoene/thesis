@@ -32,22 +32,22 @@ import com.signalcollect.nodeprovisioning.local.LocalNodeProvisioner
  * All the graph configuration parameters with their defaults.
  */
 case class GraphConfiguration(
-  maxInboxSize: Option[Long] = Some(Runtime.getRuntime.availableProcessors * 5000), //None
-  loggingLevel: Int = LoggingLevel.Warning,
-  logger: LogMessage => Unit = DefaultLogger.log,
-  workerFactory: WorkerFactory = factory.worker.Akka,
-  messageBusFactory: MessageBusFactory = factory.messagebus.SharedMemory,
-  storageFactory: StorageFactory = factory.storage.InMemory,
-  statusUpdateIntervalInMillis: Option[Long] = Some(500l),
-  akkaDispatcher: AkkaDispatcher = Pinned,
-  nodeProvisioner: NodeProvisioner = new LocalNodeProvisioner)
+    maxInboxSize: Option[Long] = Some(Runtime.getRuntime.availableProcessors * 5000), //None
+    loggingLevel: Int = LoggingLevel.Warning,
+    logger: LogMessage => Unit = DefaultLogger.log,
+    workerFactory: WorkerFactory = factory.worker.Akka,
+    messageBusFactory: MessageBusFactory = factory.messagebus.SharedMemory,
+    storageFactory: StorageFactory = factory.storage.InMemory,
+    statusUpdateIntervalInMillis: Option[Long] = Some(500l),
+    akkaDispatcher: AkkaDispatcher = Pinned,
+    nodeProvisioner: NodeProvisioner = new LocalNodeProvisioner)
 
 object LoggingLevel {
-  val Debug = 0
-  val Config = 100
-  val Info = 200
-  val Warning = 300
-  val Severe = 400
+    val Debug = 0
+    val Config = 100
+    val Info = 200
+    val Warning = 300
+    val Severe = 400
 }
 
 sealed trait AkkaDispatcher

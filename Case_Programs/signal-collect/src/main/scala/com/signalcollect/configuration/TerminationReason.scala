@@ -24,32 +24,32 @@ package com.signalcollect.configuration
  */
 object TerminationReason extends Enumeration with Serializable {
 
-  /**
-   *  Computation terminated because the specified time limit was reached.
-   */
-  val TimeLimitReached = Value
+    /**
+     *  Computation terminated because the specified time limit was reached.
+     */
+    val TimeLimitReached = Value
 
-  /**
-   *  Computation terminated because all the signalScores and collectScores
-   *  of the vertices were below the respective thresholds.
-   */
-  val Converged = Value
+    /**
+     *  Computation terminated because all the signalScores and collectScores
+     *  of the vertices were below the respective thresholds.
+     */
+    val Converged = Value
 
-  /**
-   *  Computation terminated because the global constraint was met.
-   */
-  val GlobalConstraintMet = Value
+    /**
+     *  Computation terminated because the global constraint was met.
+     */
+    val GlobalConstraintMet = Value
 
-  /**
-   *  Computation terminated because the step limit was reached.
-   *  This is only relevant for the synchronous execution mode.
-   */
-  val ComputationStepLimitReached = Value
+    /**
+     *  Computation terminated because the step limit was reached.
+     *  This is only relevant for the synchronous execution mode.
+     */
+    val ComputationStepLimitReached = Value
 
-  /**
-   *  Computation has not termination. This is used for the continuous
-   *  asynchronous execution mode, which returns immediately, but keeps on processing.
-   */
-  val Ongoing = Value
+    /**
+     *  Computation has not termination. This is used for the continuous
+     *  asynchronous execution mode, which returns immediately, but keeps on processing.
+     */
+    val Ongoing = Value
 
 }

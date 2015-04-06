@@ -20,8 +20,8 @@
 package com.signalcollect.nodeprovisioning.torque
 
 trait ExecutionHost {
-  var resultHandlers = List[ResultHandler]()
-  def setResultHandlers(handlers: List[ResultHandler]) = { resultHandlers = handlers }
-  def executeJobs(jobs: List[TorqueJob])
+    var resultHandlers = List[ResultHandler]()
+    def setResultHandlers(handlers: List[ResultHandler]) = { resultHandlers = handlers }
+    def executeJobs(jobs: List[TorqueJob])
 }
 

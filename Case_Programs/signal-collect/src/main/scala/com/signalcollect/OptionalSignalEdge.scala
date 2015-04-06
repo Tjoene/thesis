@@ -32,18 +32,18 @@ import com.signalcollect.interfaces._
  */
 abstract class OptionalSignalEdge[TargetIdType](targetId: TargetIdType) extends DefaultEdge(targetId) {
 
-  /**
-   *  Calculates the new signal and potentially sends it. If the return value of the `signal` function is of type `Some`,
-   *  then the encapsulated value is sent. If it is of type `None`, then nothing is sent.
-   *
-   *  @param sourceVertex The source vertex of this edge.
-   *
-   *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
-   */
-  override def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor) {
-    val optionalSignal = signal(sourceVertex).asInstanceOf[Option[_]]
-    if (optionalSignal.isDefined) {
-      graphEditor.sendToWorkerForVertexIdHash(SignalMessage(optionalSignal.get, senderEdgeId), cachedTargetIdHashCode)
+    /**
+     *  Calculates the new signal and potentially sends it. If the return value of the `signal` function is of type `Some`,
+     *  then the encapsulated value is sent. If it is of type `None`, then nothing is sent.
+     *
+     *  @param sourceVertex The source vertex of this edge.
+     *
+     *  @param messageBus an instance of MessageBus which can be used by this edge to interact with the graph.
+     */
+    override def executeSignalOperation(sourceVertex: Vertex[_, _], graphEditor: GraphEditor) {
+        val optionalSignal = signal(sourceVertex).asInstanceOf[Option[_]]
+        if (optionalSignal.isDefined) {
+            graphEditor.sendToWorkerForVertexIdHash(SignalMessage(optionalSignal.get, senderEdgeId), cachedTargetIdHashCode)
+        }
     }
-  }
 }

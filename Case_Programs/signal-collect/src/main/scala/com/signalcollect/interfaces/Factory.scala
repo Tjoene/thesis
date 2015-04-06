@@ -20,23 +20,23 @@
 package com.signalcollect.interfaces
 
 trait Factory extends Serializable {
-  def name: String = this.getClass.getSimpleName.replace("$", "")
+    def name: String = this.getClass.getSimpleName.replace("$", "")
 }
 
 trait WorkerFactory extends Factory {
-  def createInstance(
-    workerId: Int,
-    numberOfWorkers: Int,
-    messageBusFactory: MessageBusFactory,
-    storageFactory: StorageFactory,
-    statusUpdateIntervalInMillis: Option[Long],
-    loggingLevel: Int): Worker
+    def createInstance(
+        workerId: Int,
+        numberOfWorkers: Int,
+        messageBusFactory: MessageBusFactory,
+        storageFactory: StorageFactory,
+        statusUpdateIntervalInMillis: Option[Long],
+        loggingLevel: Int): Worker
 }
 
 trait MessageBusFactory extends Factory {
-  def createInstance(numberOfWorkers: Int): MessageBus
+    def createInstance(numberOfWorkers: Int): MessageBus
 }
 
 trait StorageFactory extends Factory {
-  def createInstance: Storage
+    def createInstance: Storage
 }

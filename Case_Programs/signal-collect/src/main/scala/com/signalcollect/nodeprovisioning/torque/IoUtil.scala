@@ -27,26 +27,26 @@ import ch.ethz.ssh2.StreamGobbler
 
 object IoUtil {
 
-  def streamToString(in: InputStream): String = {
-    val reader = new BufferedReader(new InputStreamReader(in))
-    val builder = new StringBuilder
-    var line = reader.readLine
-    while (line != null) {
-      builder.append(line)
-      builder.append("\n")
-      line = reader.readLine
+    def streamToString(in: InputStream): String = {
+        val reader = new BufferedReader(new InputStreamReader(in))
+        val builder = new StringBuilder
+        var line = reader.readLine
+        while (line != null) {
+            builder.append(line)
+            builder.append("\n")
+            line = reader.readLine
+        }
+        builder.toString
     }
-    builder.toString
-  }
 
-  def printStream(in: InputStream) {
-    val reader = new BufferedReader(new InputStreamReader(in))
-    val builder = new StringBuilder
-    var line = reader.readLine
-    while (line != null) {
-      println(line)
-      line = reader.readLine
+    def printStream(in: InputStream) {
+        val reader = new BufferedReader(new InputStreamReader(in))
+        val builder = new StringBuilder
+        var line = reader.readLine
+        while (line != null) {
+            println(line)
+            line = reader.readLine
+        }
     }
-  }
-  
+
 }
