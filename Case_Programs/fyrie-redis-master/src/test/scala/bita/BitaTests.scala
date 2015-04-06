@@ -120,34 +120,34 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     var msg = ""
 
     if (verbose >= 1) {
-        if (numShedules != 0) {
-            if (expectFailures) {
-                if ((numFaulty == 0)) { // Show the info
-                    print(Console.RED + Console.BOLD)
-                    msg = "**FAILURE** Generated %d shedules and %d of them failed (Failures expected).".format(numShedules, numFaulty)
-                } else {
-                    print(Console.GREEN + Console.BOLD)
-                    msg = "**SUCCESS** Generated %d shedules and %d of them failed.".format(numShedules, numFaulty)
-                }
-            } else {
-                if ((numFaulty == 0)) { // Show the info
-                    print(Console.GREEN + Console.BOLD)
-                    msg = "**SUCCESS** Generated %d shedules and %d of them failed.".format(numShedules, numFaulty)
-                } else {
-                    print(Console.RED + Console.BOLD)
-                    msg = "**FAILURE** Generated %d shedules and %d of them failed (No failures expected).".format(numShedules, numFaulty)
-                }
-            }
-        } else {
+      if (numShedules != 0) {
+        if (expectFailures) {
+          if ((numFaulty == 0)) { // Show the info
             print(Console.RED + Console.BOLD)
-            msg = "**FAILURE** Something went wrong, generated %d shedules".format(numShedules, numFaulty)
+            msg = "**FAILURE** Generated %d shedules and %d of them failed (Failures expected).".format(numShedules, numFaulty)
+          } else {
+            print(Console.GREEN + Console.BOLD)
+            msg = "**SUCCESS** Generated %d shedules and %d of them failed.".format(numShedules, numFaulty)
+          }
+        } else {
+          if ((numFaulty == 0)) { // Show the info
+            print(Console.GREEN + Console.BOLD)
+            msg = "**SUCCESS** Generated %d shedules and %d of them failed.".format(numShedules, numFaulty)
+          } else {
+            print(Console.RED + Console.BOLD)
+            msg = "**FAILURE** Generated %d shedules and %d of them failed (No failures expected).".format(numShedules, numFaulty)
+          }
         }
+      } else {
+        print(Console.RED + Console.BOLD)
+        msg = "**FAILURE** Something went wrong, generated %d shedules".format(numShedules, numFaulty)
+      }
 
-        println("*===========================================================================================*")
-        println("|                                                                                           |")
-        println("|  "+msg.padTo(87, ' ')+"  |")
-        println("|                                                                                           |")
-        println("*===========================================================================================*"+Console.RESET)
+      println("*===========================================================================================*")
+      println("|                                                                                           |")
+      println("|  " + msg.padTo(87, ' ') + "  |")
+      println("|                                                                                           |")
+      println("*===========================================================================================*" + Console.RESET)
     }
 
     // Assert to make the test fail or succeed, for showing it in the testrunner

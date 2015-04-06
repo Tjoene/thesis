@@ -42,10 +42,10 @@ class ZrankSpec extends BitaTests {
     """))
 
     if (random) {
-        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-        RandomScheduleHelper.setSystem(system)
+      RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+      RandomScheduleHelper.setSystem(system)
     }
-    
+
     val probe = new TestProbe(system) // Use a testprobe to represent the tests.
     val r = new RedisClient("localhost", 6379, RedisClientConfig(connections = 1))(system)
 
