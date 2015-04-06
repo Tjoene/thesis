@@ -29,6 +29,8 @@ class TradeSpec extends BitaTests {
 
     override def name = "CQRS-trade"
 
+    override def expectFailures = true
+
     def run {
         system = ActorSystem("System")
         if (random) {

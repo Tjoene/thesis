@@ -4,7 +4,7 @@ package service
 import event.{EventLog, EventLogEntry}
 import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.dispatch._
-import akka.pattern.ask
+import akka.pattern.Patterns.ask
 import akka.util.{Timeout, Duration}
 import akka.util.duration._
 import model.TradeModel._
@@ -21,7 +21,7 @@ trait TradeSnapshot {
         mar += ((oid, system.actorOf(Props(new TradeLifecycle(d.asInstanceOf[Option[Trade]].get, timeout.duration, None)), name = "tlc-" + oid)))
         mar(oid) ! ev
       } else if (state.toString == "Enriched") {
-        val future = mar(oid) ? SendOutContractNote
+        val future = ask(mar(oid), SendOutContractNote, timeout.duration)
         l += Await.result(future, timeout.duration).asInstanceOf[Trade]
       } else {
         mar(oid) ! ev

@@ -5,7 +5,7 @@ import akka.dispatch._
 import akka.util.Timeout
 import akka.util.duration._
 import akka.actor.{Actor, ActorRef, Props, ActorSystem}
-import akka.pattern.ask
+import akka.pattern.Patterns.ask
 import Actor._
 
 class InMemoryEventLog(as: ActorSystem) extends EventLog {
@@ -24,10 +24,10 @@ class InMemoryEventLog(as: ActorSystem) extends EventLog {
     getEntries.drop(fromEntryId.toInt).iterator
 
   def appendAsync(id: String, state: State, data: Option[Any], event: Event): Future[EventLogEntry] =
-    (logger ? LogEvent(id, state, data, event)).asInstanceOf[Future[EventLogEntry]]
+    ask(logger, LogEvent(id, state, data, event), timeout.duration).asInstanceOf[Future[EventLogEntry]]
 
   def getEntries: List[EventLogEntry] = {
-    val future = logger ? GetEntries()
+    val future = ask(logger, GetEntries(), timeout.duration)
     Await.result(future, timeout.duration).asInstanceOf[List[EventLogEntry]]
   }
 
