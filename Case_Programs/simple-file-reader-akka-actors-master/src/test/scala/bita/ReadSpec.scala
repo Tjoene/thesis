@@ -21,6 +21,7 @@ import com.typesafe.config.ConfigFactory
 class ReadSpec extends BitaTests {
 
     override def name = "reader"
+    override def expectFailures = false
 
     def run {
         system = ActorSystem("System")
