@@ -24,6 +24,34 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<!-- CUSTOM DEPENDENCIES -->
+		<dependency>
+			<groupId>cs.edu.uiuc</groupId>
+			<artifactId>bita_${scala.version}</artifactId>
+			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-actor</artifactId>
+			<version>${akka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-testkit</artifactId>
+			<version>${akka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scalatest</groupId>
+			<artifactId>scalatest_${scala.version}</artifactId>
+			<version>2.0.M5b</version>
+		</dependency>
+		<dependency>
+			<groupId>org.pegdown</groupId>
+			<artifactId>pegdown</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+		<!-- END CUSTOM DEPENDENCIES -->
+
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
 			<artifactId>akka-actor</artifactId>
