@@ -21,6 +21,9 @@ object ScalaRedisProject extends Build
     name := "RedisClient",
 
     libraryDependencies ++=  Seq(
+      "cs.edu.uiuc"       %% "bita"                   % "0.1",
+      "com.typesafe.akka" % "akka-testkit"            % "2.0.3",
+
       "commons-pool"      % "commons-pool"            % "1.6",
       "com.typesafe.akka" % "akka-actor"              % "2.0.3",
       "org.scala-lang"    % "scala-library"           % "2.9.2",
