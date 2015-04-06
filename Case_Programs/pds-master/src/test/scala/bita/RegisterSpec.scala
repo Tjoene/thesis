@@ -26,6 +26,7 @@ import LogicLevel._
 class RegisterSpec extends BitaTests {
 
     override def name = "PDS-Register"
+    override def expectFailures = true
 
     var probe: TestProbe = _
 
@@ -55,7 +56,7 @@ class RegisterSpec extends BitaTests {
             RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
             RandomScheduleHelper.setSystem(system)
         }
-        
+
         try {
             probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
@@ -73,6 +74,11 @@ class RegisterSpec extends BitaTests {
             println(Console.GREEN + Console.BOLD+"**SUCCESS**"+Console.RESET)
         } catch {
             case e: AssertionError => {
+                bugDetected = true
+                println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
+            }
+
+            case e: java.util.concurrent.TimeoutException => {
                 bugDetected = true
                 println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
             }

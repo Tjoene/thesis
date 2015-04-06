@@ -26,6 +26,7 @@ import LogicLevel._
 class SignalChangedSpec extends BitaTests {
 
     override def name = "PDS-SignalChanged"
+    override def expectFailures = true
 
     var probe: TestProbe = _
 
@@ -55,7 +56,7 @@ class SignalChangedSpec extends BitaTests {
             RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
             RandomScheduleHelper.setSystem(system)
         }
-        
+
         try {
             probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
@@ -81,6 +82,11 @@ class SignalChangedSpec extends BitaTests {
             println(Console.GREEN + Console.BOLD+"**SUCCESS**"+Console.RESET)
         } catch {
             case e: AssertionError => {
+                bugDetected = true
+                println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
+            }
+
+            case e: java.util.concurrent.TimeoutException => {
                 bugDetected = true
                 println(Console.RED + Console.BOLD+"**FAILURE** %s".format(e.getMessage()) + Console.RESET)
             }
