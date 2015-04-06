@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
 import akka.dispatch.Future
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicInteger
-import akka.pattern.ask
+import akka.pattern.Patterns.ask
 import com.signalcollect.interfaces.LogMessage
 import com.signalcollect.serialization.DefaultSerializer
 
@@ -66,7 +66,7 @@ class AkkaProxy[ProxiedClass](actor: ActorRef, sentMessagesCounter: AtomicIntege
     def invoke(proxy: Object, method: Method, arguments: Array[Object]) = {
         val command = new Command[ProxiedClass](method.getDeclaringClass.getName, method.toString, arguments)
         try {
-            val resultFuture: Future[Any] = actor ? Request(command, returnResult = true)
+            val resultFuture: Future[Any] = ask(actor, Request(command, returnResult = true), timeout.duration)
             sentMessagesCounter.incrementAndGet
             val result = Await.result(resultFuture, timeout.duration)
             receivedMessagesCounter.incrementAndGet

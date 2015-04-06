@@ -39,7 +39,7 @@ import akka.actor.Props
 import akka.actor.Actor
 import com.typesafe.config.ConfigFactory
 import akka.actor.ActorRef
-import akka.pattern.ask
+import akka.pattern.Patterns.ask
 import akka.util.Timeout
 import akka.util.Duration
 import akka.util.duration._
