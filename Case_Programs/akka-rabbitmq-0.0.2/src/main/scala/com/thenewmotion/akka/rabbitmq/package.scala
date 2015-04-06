@@ -17,8 +17,8 @@ package object rabbitmq {
     implicit def reachConnectionActor(connection: ActorRef) = new {
         def createChannel(props: Props, name: Option[String] = None)(implicit timeout: Timeout = Timeout(2 seconds)): ActorRef = {
             import akka.dispatch.Await
-            import akka.pattern.ask
-            val future = connection ? Create(props, name)
+            import akka.pattern.Patterns.ask
+            val future = ask(connection, Create(props, name), timeout.duration)
             Await.result(future, timeout.duration).asInstanceOf[Created].channel
         }
     }

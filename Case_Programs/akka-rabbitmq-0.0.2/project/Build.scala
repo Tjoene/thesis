@@ -11,11 +11,11 @@ import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
  // Build and Project settings
 object BuildSettings {
-    val projectName       = "Bita"
+    val projectName       = "Akka-RabbitMQ"
     val buildOrg          = "org.kuleuven"
     val buildOrgName      = "KU Leuven, EP"
     val buildOrgURL       = "http://ep.khbo.be/"
-    val buildDesc         = "Testing the case(s) with Bita."
+    val buildDesc         = "Testing the case(s) with Akka-RabbitMQ."
     val buildVersion      = "1.0"
     val buildScalaVersion = "2.9.2"
     val buildJavaVersion  = "1.7"
@@ -113,7 +113,7 @@ object BuildScript extends Build {
             resolvers := myResolvers, // Use the defined resolvers
 
             // Load the dependencies
-            libraryDependencies ++= myDepencencies, // Use the defined dependencies
+            //libraryDependencies ++= myDepencencies, // Use the defined dependencies
             externalPom(), // Read the pom.xml
             //externalIvySettings(), // Read the ivysettings.xml
             //externalIvyFile(), // Read the ivy.xml
