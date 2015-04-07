@@ -39,7 +39,7 @@ import akka.actor.Props
 import akka.actor.Actor
 import com.typesafe.config.ConfigFactory
 import akka.actor.ActorRef
-import akka.pattern.Patterns.ask
+import akka.pattern.ask
 import akka.util.Timeout
 import akka.util.Duration
 import akka.util.duration._
@@ -90,7 +90,7 @@ class TorqueNodeProvisioner(torqueHost: TorqueHost, numberOfNodes: Int, jvmParam
             jobs = new TorqueJob(jobId = jobId, execute = function, jvmParameters = jvmParameters) :: jobs
         }
         torqueHost.executeJobs(jobs)
-        val nodesFuture = ask(nodeProvisioner, "GetNodes", timeout.duration)
+        val nodesFuture = nodeProvisioner ? "GetNodes"
         val result = Await.result(nodesFuture, timeout.duration)
         val nodes: List[Node] = result.asInstanceOf[List[ActorRef]] map (AkkaProxy.newInstance[Node](_))
         nodes

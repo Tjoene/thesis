@@ -12,7 +12,7 @@ import com.typesafe.sbt.SbtScalariform.ScalariformKeys
  // Build and Project settings
 object BuildSettings {
     val projectName       = "signal-collect"
-    val buildOrg          = "org.kuleuven"
+    val buildOrg          = "com.signalcollect"
     val buildOrgName      = "Signal/Collect"
     val buildOrgURL       = "http://www.signalcollect.com"
     val buildDesc         = "Testing the program Signal Collect."
@@ -113,7 +113,7 @@ object BuildScript extends Build {
             resolvers := myResolvers, // Use the defined resolvers
 
             // Load the dependencies
-            libraryDependencies ++= myDepencencies, // Use the defined dependencies
+            //libraryDependencies ++= myDepencencies, // Use the defined dependencies
             externalPom(), // Read the pom.xml
             //externalIvySettings(), // Read the ivysettings.xml
             //externalIvyFile(), // Read the ivy.xml

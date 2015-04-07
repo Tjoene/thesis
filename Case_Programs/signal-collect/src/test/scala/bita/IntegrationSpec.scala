@@ -25,7 +25,6 @@ import org.scalatest._
 class IntegrationSpec extends BitaTests {
 
     override def name = "SignalCollect-integration"
-    override def expectFailures = true
 
     val computeGraphFactories: List[() => Graph] = List(() => GraphBuilder.build)
     val executionModes = List(ExecutionMode.Synchronous, ExecutionMode.OptimizedAsynchronous)
@@ -70,41 +69,27 @@ class IntegrationSpec extends BitaTests {
 
     def run {
         system = ActorSystem("ActorSystem")
-        if (random) {
-            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-            RandomScheduleHelper.setSystem(system)
-        }
+        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+        RandomScheduleHelper.setSystem(system)
 
-        try {
-            println("PageRank algorithm on a 5-cycle graph")
-            val fiveCycleEdges = List((0, 1), (1, 2), (2, 3), (3, 4), (4, 0))
-                def pageRankFiveCycleVerifier(v: Vertex[_, _]): Boolean = {
-                    val state = v.state.asInstanceOf[Double]
-                    val expectedState = 1.0
-                    val correct = (state - expectedState).abs < 0.001
-                    if (!correct) {
-                        System.out.println("Problematic vertex:  id="+v.id+", expected state="+expectedState+", actual state="+state)
-                    }
-                    correct
+        println("PageRank algorithm on a 5-cycle graph")
+        val fiveCycleEdges = List((0, 1), (1, 2), (2, 3), (3, 4), (4, 0))
+            def pageRankFiveCycleVerifier(v: Vertex[_, _]): Boolean = {
+                val state = v.state.asInstanceOf[Double]
+                val expectedState = 1.0
+                val correct = (state - expectedState).abs < 0.001
+                if (!correct) {
+                    System.out.println("Problematic vertex:  id="+v.id+", expected state="+expectedState+", actual state="+state)
                 }
-
-            if (test(verify = pageRankFiveCycleVerifier, buildGraph = buildPageRankGraph(_, fiveCycleEdges), signalThreshold = 0.00001)) {
-                bugDetected = false
-                println(Console.GREEN + Console.BOLD+"***SUCCESS***"+Console.RESET)
-            } else {
-                bugDetected = true
-                println(Console.RED + Console.BOLD+"***FAILURE***"+Console.RESET)
-            }
-        } catch {
-            case e: AssertionError => {
-                bugDetected = false
-                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
+                correct
             }
 
-            case e: java.util.concurrent.TimeoutException => {
-                bugDetected = false
-                println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
-            }
+        if (test(verify = pageRankFiveCycleVerifier, buildGraph = buildPageRankGraph(_, fiveCycleEdges), signalThreshold = 0.00001)) {
+            bugDetected = false
+            println(Console.GREEN + Console.BOLD+"***SUCCESS***"+Console.RESET)
+        } else {
+            bugDetected = true
+            println(Console.RED + Console.BOLD+"***FAILURE***"+Console.RESET)
         }
     }
 }

@@ -27,10 +27,8 @@ class GraphModificationSpec extends BitaTests {
 
     def run {
         system = ActorSystem("ActorSystem")
-        if (random) {
-            RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
-            RandomScheduleHelper.setSystem(system)
-        }
+        RandomScheduleHelper.setMaxDelay(250) // Increase the delay between messages to 250 ms
+        RandomScheduleHelper.setSystem(system)
 
         val g = GraphBuilder.build
         g.addVertex(new GraphModificationVertex(0, 1))

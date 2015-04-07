@@ -53,9 +53,9 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
     // Generate and test schedules at once.
     test("Generate and test schedules with criterion", Tag("test")) {
-        var randomTrace = FileHelper.getFiles(randomTracesDir, (name ⇒ name.contains("-trace.txt")))
-        for (criterion ← criteria) {
-            for (opt ← criterion.optimizations.-(NONE)) {
+        var randomTrace = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
+        for (criterion <- criteria) {
+            for (opt <- criterion.optimizations.-(NONE)) {
                 var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
 
                 FileHelper.emptyDir(scheduleDir)
@@ -74,16 +74,16 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
         if (verbose >= 3) {
             // The number of traces after which the coverage should be measured.
             var interval = 5
-            for (criterion ← criteria) {
-                for (opt ← criterion.optimizations.-(NONE)) {
+            for (criterion <- criteria) {
+                for (opt <- criterion.optimizations.-(NONE)) {
                     var scheduleDir = resultDir+"%s-%s/".format(criterion.name, opt)
 
                     if (new java.io.File(scheduleDir).exists) {
-                        var randomTraces = FileHelper.getFiles(randomTracesDir, (name ⇒ name.contains("-trace.txt")))
+                        var randomTraces = FileHelper.getFiles(randomTracesDir, (name => name.contains("-trace.txt")))
                         FileHelper.copyFiles(randomTraces, scheduleDir)
 
                         var resultFile = scheduleDir+"%s-%s-result.txt".format(criterion.name, opt)
-                        var traceFiles = FileHelper.getFiles(scheduleDir, (name ⇒ name.contains("-trace.txt")))
+                        var traceFiles = FileHelper.getFiles(scheduleDir, (name => name.contains("-trace.txt")))
                         traceFiles = FileHelper.sortTracesByName(traceFiles, "-%s-")
                         criterion.measureCoverage(traceFiles, resultFile, interval)
                     }
@@ -96,7 +96,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     // This is tool dependendant information
     private def summary() = {
         if (verbose >= 2) {
-            for (path ← new File(resultDir).listFiles if path.isDirectory()) { // Iterate over all directories
+            for (path <- new File(resultDir).listFiles if path.isDirectory()) { // Iterate over all directories
                 val file: File = new File(path+"\\time-bug-report.txt")
                 val faulty = Source.fromFile(file).getLines().size
 
@@ -157,7 +157,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
 
     override def beforeEach(td: TestData) {
         val config: Map[String, Any] = td.configMap
-        verbose = config.getOrElse("verbose", "1").asInstanceOf[String].toInt // read out the config passed via scalatest options 
+        verbose = config.getOrElse("verbose", "0").asInstanceOf[String].toInt // read out the config passed via scalatest options 
         randomTime = config.getOrElse("randomTime", "0").asInstanceOf[String].toInt
         randomTraces = config.getOrElse("randomTraces", "1").asInstanceOf[String].toInt
     }

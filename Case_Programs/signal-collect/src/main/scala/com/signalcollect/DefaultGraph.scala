@@ -33,7 +33,7 @@ import akka.dispatch.Await
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
 import akka.pattern.AskTimeoutException
-import akka.pattern.Patterns.ask
+import akka.pattern.ask
 import com.signalcollect.interfaces.LogMessage
 import scala.util.Random
 import akka.japi.Creator
@@ -300,7 +300,7 @@ class DefaultGraph(val config: GraphConfiguration = GraphConfiguration()) extend
 
     def awaitIdle {
         implicit val timeout = Timeout(1000 days)
-        val resultFuture = ask(coordinatorActor, OnIdle((c: DefaultCoordinator, s: ActorRef) => s ! IsIdle(true)), timeout.duration)
+        val resultFuture = coordinatorActor ? OnIdle((c: DefaultCoordinator, s: ActorRef) => s ! IsIdle(true))
         try {
             val result = Await.result(resultFuture, timeout.duration)
         }
@@ -308,7 +308,7 @@ class DefaultGraph(val config: GraphConfiguration = GraphConfiguration()) extend
 
     def awaitIdle(timeoutNanoseconds: Long): Boolean = {
         implicit val timeout = Timeout(new FiniteDuration(timeoutNanoseconds, TimeUnit.NANOSECONDS))
-        val resultFuture = ask(coordinatorActor, OnIdle((c: DefaultCoordinator, s: ActorRef) => s ! IsIdle(true)), timeout.duration)
+        val resultFuture = coordinatorActor ? OnIdle((c: DefaultCoordinator, s: ActorRef) => s ! IsIdle(true))
         try {
             val result = Await.result(resultFuture, timeout.duration)
             true
