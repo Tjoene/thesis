@@ -1,4 +1,4 @@
-// CONTAINS A BUG WHEN DURING SHUTTING ACTOR SYSTEM DOWN.
+// // This test doesn't do anything. It is to test if the Pi Worker does what is suppose to do. 
 
 // package pi
 
@@ -11,12 +11,10 @@
 
 // import util.BitaTests
 
-// class PiSpec extends BitaTests {
+// class PiWorkerSpec extends BitaTests {
 
 //     // The name of this test battery
 //     override def name = "pi"
-
-//     override def expectFailures = false
 
 //     // This will hold the actor/testcase/application under test
 //     def run {
@@ -29,21 +27,18 @@
 //         try {
 //             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
-//             val listener = system.actorOf(Listener.props, "listener")
-//             val master = system.actorOf(Master(4, 100, 100, listener), "master")
+//             val worker = system.actorOf(Worker())
 
-//             probe.send(master, Calculate)
+//             probe.send(worker, Work(2000, 1000)) // Ask the result
 
-//             val result = probe.expectMsgType[Double](timeout.duration)
-//             if (result == 3.1415926535897932384626433832) {
+//             val result = probe.expectMsgType[Result](timeout.duration)
+//             if (result == Result(1.6666664467593578E-4)) {
 //                 println(Console.GREEN + Console.BOLD+"**SUCCESS**"+Console.RESET)
 //                 bugDetected = false
 //             } else {
 //                 println(Console.RED + Console.BOLD+"**FAILURE**"+Console.RESET)
 //                 bugDetected = true
 //             }
-
-//             system.shutdown()
 //         } catch {
 //             case e: AssertionError => {
 //                 bugDetected = true
