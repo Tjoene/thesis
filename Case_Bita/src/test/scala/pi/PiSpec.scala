@@ -1,4 +1,4 @@
-// CONTAINS A BUG WHEN DURING SHUTTING ACTOR SYSTEM DOWN.
+// // CONTAINS A BUG WHEN DURING SHUTTING ACTOR SYSTEM DOWN.
 
 // package pi
 
@@ -30,7 +30,7 @@
 //             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
 
 //             val listener = system.actorOf(Listener.props, "listener")
-//             val master = system.actorOf(Master(4, 100, 100, listener), "master")
+//             val master = system.actorOf(Master(4, 100, 100, probe.ref), "master")
 
 //             probe.send(master, Calculate)
 
