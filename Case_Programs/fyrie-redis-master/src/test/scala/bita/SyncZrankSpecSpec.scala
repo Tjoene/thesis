@@ -22,7 +22,7 @@ import com.typesafe.config.ConfigFactory
  * Ported from net.fyrie.redis.SortedSetSpec
  * Test: zrange should get the proper range
  */
-class ZrankSpec extends BitaTests {
+class SyncZrankSpec extends BitaTests {
 
   override def name = "Fyrie-renamenx"
 

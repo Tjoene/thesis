@@ -158,7 +158,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
   override def beforeEach(td: TestData) {
     val config: Map[String, Any] = td.configMap
     verbose = config.getOrElse("verbose", "1").asInstanceOf[String].toInt // read out the config passed via scalatest options 
-    randomTime = config.getOrElse("randomTime", "0").asInstanceOf[String].toInt
+    randomTime = config.getOrElse("randomTime", "60").asInstanceOf[String].toInt
     randomTraces = config.getOrElse("randomTraces", "1").asInstanceOf[String].toInt
   }
 }

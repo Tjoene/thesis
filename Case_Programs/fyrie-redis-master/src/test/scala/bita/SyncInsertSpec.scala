@@ -20,18 +20,17 @@ import com.typesafe.config.ConfigFactory
 
 /**
  * Ported from net.fyrie.redis.KeysSpec
- * Test: renamenx should give
+ * Test: keys should fetch keys
  */
-class RenamenxSpec extends BitaTests {
+class SyncInsertSpec extends BitaTests {
 
-  override def name = "Fyrie-renamenx"
+  override def name = "Fyrie-insert"
 
   def run {
     system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
         akka {
             event-handlers = ["akka.testkit.TestEventListener"]
-            loglevel = "DEBUG"
-            stdout-loglevel = "DEBUG"
+            loglevel = "WARNING"
             actor {
                 default-dispatcher {
                     core-pool-size-min = 4
@@ -52,11 +51,9 @@ class RenamenxSpec extends BitaTests {
 
     r.set("anshin-1", "debasish")
     r.set("anshin-2", "maulindu")
+    val result = r.sync.keys("anshin*").size
 
-    val result1 = r.sync.renamenx("anshin-2", "anshin-2-new")
-    val result2 = r.sync.renamenx("anshin-1", "anshin-2-new")
-
-    if (result1 == true && result2 == false) {
+    if (result == 2) {
       bugDetected = false
       println(Console.GREEN + Console.BOLD + "***SUCCESS***" + Console.RESET)
     } else {
