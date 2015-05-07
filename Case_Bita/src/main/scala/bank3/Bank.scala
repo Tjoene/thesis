@@ -13,14 +13,17 @@ case object Finish
 // Use bank.prop in the code or Bank() or Bank(-1)
 // See http://doc.akka.io/docs/akka/snapshot/scala/actors.html#Recommended_Practices
 object Bank {
-    def props(): Props = Props(new Bank(0))
-    def apply(): Props = Props(new Bank(0))
+    def props(): Props = Props(new Bank(0, 0))
+    def apply(): Props = Props(new Bank(0, 0))
 
-    def props(delay: Int): Props = Props(new Bank(delay))
-    def apply(delay: Int): Props = Props(new Bank(delay))
+    def props(delay: Int): Props = Props(new Bank(delay, 0))
+    def apply(delay: Int): Props = Props(new Bank(delay, 0))
+
+    def props(delay: Int, extraAccounts: Int): Props = Props(new Bank(delay, extraAccounts))
+    def apply(delay: Int, extraAccounts: Int): Props = Props(new Bank(delay, extraAccounts))
 }
 
-class Bank(val delay: Int) extends Actor {
+class Bank(val delay: Int, val extraAccounts: Int) extends Actor {
     var lastAccount: ActorRef = _
     implicit val timeout = Timeout(5000.millisecond)
     var dest: ActorRef = _
@@ -33,7 +36,14 @@ class Bank(val delay: Int) extends Actor {
 
             // Create child actors that will host the accounts
             lastAccount = context.actorOf(Account("Charlie", 0, null, null), "Account_Charlie")
-            val account3 = context.actorOf(Account("Stevie", 0, null, lastAccount), "Account_Stevie")
+
+            // Dynamicly create extra actors
+            var accounts: List[ActorRef] = List(lastAccount);
+            for (i <- 0 to extraAccounts) {
+                accounts = accounts ::: List(context.actorOf(Account("Account%d".format(i), 0, null, accounts.last), "Account_%d".format(i)))
+            }
+
+            val account3 = context.actorOf(Account("Stevie", 0, null, accounts.last), "Account_Stevie")
             val account2 = context.actorOf(Account("Johnny", 0, self, account3), "Account_Johnny")
             val account1 = context.actorOf(Account("Freddy", testAmount, null, null), "Account_Freddy")
 
