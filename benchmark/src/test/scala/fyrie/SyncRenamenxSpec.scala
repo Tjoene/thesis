@@ -20,11 +20,11 @@ import com.typesafe.config.ConfigFactory
 
 /**
  * Ported from net.fyrie.redis.KeysSpec
- * Test: renamenx should give
+ * Test: keys should fetch keys
  */
-class RenamenxSpec extends BitaTests {
+class SyncRenamenxSpec extends BitaTests {
 
-    override def name = "Fyrie-renamenx"
+    override def name = "Fyrie-renamenx-sync"
 
     def run {
         system = ActorSystem("ActorSystem", ConfigFactory.parseString("""

@@ -19,12 +19,12 @@ import akka.testkit.TestProbe
 import com.typesafe.config.ConfigFactory
 
 /**
- * Ported from net.fyrie.redis.SortedSetSpec
- * Test: zrange should get the proper range
+ * Ported from net.fyrie.redis.KeysSpec
+ * Test: keys should fetch keys
  */
-class ZrankSpec extends BitaTests {
+class SyncInsertSpec extends BitaTests {
 
-    override def name = "Fyrie-renamenx"
+    override def name = "Fyrie-insert-sync"
 
     def run {
         system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
@@ -49,17 +49,11 @@ class ZrankSpec extends BitaTests {
         val probe = new TestProbe(system) // Use a testprobe to represent the tests.
         val r = new RedisClient("localhost", 6379, RedisClientConfig(connections = 1))(system)
 
-        r.sync.zadd("hackers", "yukihiro matsumoto", 1965) === (true)
-        r.sync.zadd("hackers", "richard stallman", 1953) === (true)
-        r.sync.zadd("hackers", "claude shannon", 1916) === (true)
-        r.sync.zadd("hackers", "linus torvalds", 1969) === (true)
-        r.sync.zadd("hackers", "alan kay", 1940) === (true)
-        r.sync.zadd("hackers", "alan turing", 1912) === (true)
+        r.set("anshin-1", "debasish")
+        r.set("anshin-2", "maulindu")
+        val result = r.sync.keys("anshin*").size
 
-        val result1 = r.sync.zrank("hackers", "yukihiro matsumoto")
-        val result2 = r.sync.zrevrank("hackers", "yukihiro matsumoto")
-
-        if (result1 == Some(4) && result2 == Some(1)) {
+        if (result == 2) {
             bugDetected = false
             println(Console.GREEN + Console.BOLD+"***SUCCESS***"+Console.RESET)
         } else {

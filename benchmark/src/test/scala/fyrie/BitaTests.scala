@@ -45,7 +45,7 @@ abstract class BitaTests extends FunSuite with ImprovedTestHelper with BeforeAnd
     var randomTraces = 1
 
     // This test will keep on generating random schedules for 5 minutes or until an bug is found. 
-    test("Test with random sheduler within a timeout", Tag("random-schedule")) {
+    ignore("Test with random sheduler within a timeout", Tag("random-schedule")) {
         random = true
         if (randomTime > 0) {
             testRandomByTime(name, randomTracesTestDir, randomTime)
