@@ -24,7 +24,8 @@ import com.typesafe.config.ConfigFactory
  */
 class AsyncInsertSpec extends util.BitaTests {
 
-    override def name = "Fyrie-insert"
+    override def name = "Fyrie-insert-async"
+    override def expectFailures = true
 
     def run {
         system = ActorSystem("ActorSystem", ConfigFactory.parseString("""

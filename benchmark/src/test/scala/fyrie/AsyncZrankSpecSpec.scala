@@ -24,7 +24,8 @@ import com.typesafe.config.ConfigFactory
  */
 class AsyncZrankSpec extends util.BitaTests {
 
-    override def name = "Fyrie-renamenx"
+    override def name = "Fyrie-zrank-async"
+    override def expectFailures = true
 
     def run {
         system = ActorSystem("ActorSystem", ConfigFactory.parseString("""
@@ -50,15 +51,18 @@ class AsyncZrankSpec extends util.BitaTests {
             val probe = new TestProbe(system) // Use a testprobe to represent the tests.
             val r = new RedisClient("localhost", 6379, RedisClientConfig(connections = 1))(system)
 
-            r.sync.zadd("hackers", "yukihiro matsumoto", 1965) === (true)
-            r.sync.zadd("hackers", "richard stallman", 1953) === (true)
-            r.sync.zadd("hackers", "claude shannon", 1916) === (true)
-            r.sync.zadd("hackers", "linus torvalds", 1969) === (true)
-            r.sync.zadd("hackers", "alan kay", 1940) === (true)
-            r.sync.zadd("hackers", "alan turing", 1912) === (true)
+            r.quiet.zadd("hackers", "yukihiro matsumoto", 1965) === (true)
+            r.quiet.zadd("hackers", "richard stallman", 1953) === (true)
+            r.quiet.zadd("hackers", "claude shannon", 1916) === (true)
+            r.quiet.zadd("hackers", "linus torvalds", 1969) === (true)
+            r.quiet.zadd("hackers", "alan kay", 1940) === (true)
+            r.quiet.zadd("hackers", "alan turing", 1912) === (true)
 
-            val result1 = r.sync.zrank("hackers", "yukihiro matsumoto")
-            val result2 = r.sync.zrevrank("hackers", "yukihiro matsumoto")
+            val futureZRank = r.async.zrank("hackers", "yukihiro matsumoto")
+            val futureZRevRank = r.async.zrevrank("hackers", "yukihiro matsumoto")
+
+            val result1 = Await.result(futureZRank, timeout.duration)
+            val result2 = Await.result(futureZRevRank, timeout.duration)
 
             if (result1 == Some(4) && result2 == Some(1)) {
                 bugDetected = false
@@ -68,17 +72,17 @@ class AsyncZrankSpec extends util.BitaTests {
                 println(Console.RED + Console.BOLD+"***FAILURE***"+Console.RESET)
             }
         } catch {
-            case e: AssertionError ⇒ {
+            case e: AssertionError => {
                 bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
 
-            case e: java.util.concurrent.TimeoutException ⇒ {
+            case e: java.util.concurrent.TimeoutException => {
                 bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
 
-            case e: net.fyrie.redis.RedisProtocolException ⇒ {
+            case e: net.fyrie.redis.RedisProtocolException => {
                 bugDetected = true
                 println(Console.YELLOW + Console.BOLD+"**WARNING** %s".format(e.getMessage()) + Console.RESET)
             }
