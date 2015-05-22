@@ -1,5 +1,8 @@
 package quicksort
 
+/**
+ * @author Samira Tasharofi
+ */
 import akka.actor.{ ActorSystem, Actor, Props, ActorRef }
 
 case class Sort(input: Array[Int])

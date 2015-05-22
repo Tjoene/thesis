@@ -10,6 +10,9 @@ import akka.dispatch.Await
 
 import util.BitaTests
 
+/**
+ * @author Samira Tasharofi
+ */
 class QuickSortSpec extends BitaTests {
 
     // The name of this test battery
